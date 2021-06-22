@@ -18,7 +18,7 @@ class FileOpen {
             intent.setDataAndType(uri, "application/pdf")
         } else if (uri.toString().contains(".wav"))
          {
-            intent.setDataAndType(uri, "x-wav")
+            intent.setDataAndType(uri, "audio/x-wav")
         }
         else if(uri.toString().contains(".zip") || uri.toString().contains(".rar")) {
             // WAV audio file
@@ -35,7 +35,6 @@ class FileOpen {
         else if (uri.toString().contains(".mp3")){
                 intent.setDataAndType(uri,  "audio/*");
         }
-
         else {
             intent.setDataAndType(uri, "*/*")
         }

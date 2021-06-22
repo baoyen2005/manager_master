@@ -193,30 +193,30 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
 
 
     }
-    private fun findMusicFiles(file: File): ArrayList<File> {
+//    private fun findMusicFiles(file: File): ArrayList<File> {
+//
+//        val arrayListMusic = ArrayList<File>()
+//        val files = file.listFiles()
+//
+//
+//        arrayListMusic.clear()
+//         for(fi in files ){
+//              if(fi.isHidden&& !fi.isDirectory)
+//                  arrayListMusic.addAll(findMusicFiles(fi))
+//
+//              else{
+//                  if(fi.name.endsWith(".mp3")||fi.name.endsWith(".mp4")||
+//                      fi.name.endsWith(".wav")){
+//                      arrayListMusic.add(fi)
+//                  }
+//              }
+//         }
+//
+//
+//        return arrayListMusic
+//
 
-        val arrayListMusic = ArrayList<File>()
-        val files = file.listFiles()
-
-
-        arrayListMusic.clear()
-         for(fi in files ){
-              if(fi.isHidden&& !fi.isDirectory)
-                  arrayListMusic.addAll(findMusicFiles(fi))
-
-              else{
-                  if(fi.name.endsWith(".mp3")||fi.name.endsWith(".mp4")||
-                      fi.name.endsWith(".wav")){
-                      arrayListMusic.add(fi)
-                  }
-              }
-         }
-
-
-        return arrayListMusic
-
-
-    }
+    //}
     private fun displayFiles() {
 
 
@@ -248,9 +248,10 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
     }
 
     override fun onItemClick(file: File,position: Int) {
+        stFileClick.add(file.absolutePath)
 
+        Log.d("yen",stFileClick.toString()+ "   "+file.name+"  "+ file.absolutePath)
        if (file.isDirectory){
-           stFileClick.add(file.absolutePath)
            val arrayList = ArrayList<File>()
            val files = file.listFiles()
            if (files != null ) {
@@ -271,22 +272,23 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
                fileAdapter.updateData(fileList)
            }
        }
-        else if(file.name.endsWith(".mp3")||file.name.endsWith(".mp4")||
-                   file.name.endsWith(".wav")){
-            musics.clear()
-
-           musics = findMusicFiles(Environment.getExternalStorageDirectory())
-            for(i in 0 .. musics.size){
-                nameSongs[i] = musics[i].name
-            }
-          // musicAdapter = ArrayAdapter(requireContext(),R.layout.activity_player_music)
-            var intent : Intent=  Intent(context, PlayerMusicActivity::class.java)
-                .putExtra("songsList",musics)
-                .putExtra("position",position)
-            startActivity(intent)
-
-       }
+//        else if(file.name.endsWith(".mp3")||file.name.endsWith(".mp4")||
+//                   file.name.endsWith(".wav")){
+//            musics.clear()
+//
+//           musics = findMusicFiles(Environment.getExternalStorageDirectory())
+//            for(i in 0 .. musics.size){
+//                nameSongs[i] = musics[i].name
+//            }
+//          // musicAdapter = ArrayAdapter(requireContext(),R.layout.activity_player_music)
+//            var intent : Intent=  Intent(context, PlayerMusicActivity::class.java)
+//                .putExtra("songsList",musics)
+//                .putExtra("position",position)
+//            startActivity(intent)
+//
+//       }
         else{
+           //stFileClick.add(file.absolutePath)
            try {
                var fileOpen = FileOpen()
                fileOpen.openFile(requireContext(),file)
@@ -514,22 +516,19 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
             object : OnBackPressedCallback(true /* enabled by default */) {
                 @SuppressLint("WrongConstant")
                 override fun handleOnBackPressed() {
-
-                  if(stFileClick.size >1||drawerLayoutFile.isDrawerOpen(Gravity.RIGHT) ){
-
+                  if(stFileClick.size > 1 ){
                       fileList.clear()
-
                       fileList.addAll(findFiles(File(stFileClick[stFileClick.size-1])))
+                      Log.d("yen","\n"+fileList.toString())
                       stFileClick.pop()
-                      drawerLayoutFile.closeDrawer(Gravity.RIGHT)
+                     // drawerLayoutFile.closeDrawer(Gravity.RIGHT)
                   }
                   else if(stFileClick.size == 1){
                       fileList.clear()
                       fileList.addAll(findFiles(File(Environment.getExternalStorageDirectory().toString())))
                       stFileClick.pop()
-
                   }
-                  else  if(drawerLayoutFile.isDrawerOpen(Gravity.RIGHT)){
+                  else if(drawerLayoutFile.isDrawerOpen(Gravity.RIGHT)){
                             drawerLayoutFile.closeDrawer(Gravity.RIGHT)
                         }
                   else{
@@ -537,14 +536,19 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
                       (context as Activity).finish()
                   }
 
-                    //fileAdapter.notifyDataSetChanged()
-                    setUpRecyclerView()
+                   //fileAdapter.notifyDataSetChanged()
+                    setUpRecyclerViewAdapter()
 
                 }
             }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
-
+    fun setUpRecyclerViewAdapter(){
+        recyclerView?.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        fileAdapter = FileAdapter(true,true,requireContext(), fileList, this)
+        recyclerView?.adapter = fileAdapter
+    }
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         when(item?.itemId){
