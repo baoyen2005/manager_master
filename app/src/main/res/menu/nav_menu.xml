@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/ic_cleanup"
+        android:icon="@drawable/cleanup"
+        android:title= "Làm"
+
+        />
+    <item android:title="Công cụ"
+        android:id="@+id/ic_tool"
+        android:icon="@drawable/tool"/>
+
+
+    <item android:icon="@drawable/file"
+        android:id="@+id/ic_file"
+        android:title="Quản lí tập tin"/>
+</menu>
