@@ -10,46 +10,46 @@ import com.example.filesmanager.BuildConfig
 import java.io.File
 import java.io.IOException
 
-class FileOpen {
+class FileShare {
     @Throws(IOException::class)
-    public fun openFile(context: Context, file: File) {
-
+    fun shareFile(context: Context, file: File) {
         val uri = uriFromFile(context,file)
-        Log.d("uri", "readFile+ uri: "+ uri.toString())
+        Log.d("uri", "shareFile+ uri: "+ uri.toString())
         var intent: Intent = Intent()
-        intent.action = Intent.ACTION_VIEW
+        intent.action = Intent.ACTION_SEND
         if (uri.toString().contains(".docx")) {
-            intent.setDataAndType(uri,"application/msword")
+            intent.type = "application/msword"
         } else if (uri.toString().contains(".pdf")) {
-            intent.setDataAndType(uri,"application/pdf")
+            intent.type = "application/pdf"
         } else if (uri.toString().contains(".pptx")) {
-            intent.setDataAndType(uri,"application/ppt")
+            intent.type = "application/ppt"
         } else if (uri.toString().contains(".wav")) {
-            intent.setDataAndType(uri,"audio/x-wav")
+            intent.type = "audio/x-wav"
         } else if (uri.toString().contains(".zip") || uri.toString().contains(".rar")) {
             // WAV audio file
-            intent.setDataAndType(uri, "application/x-wav")
+            intent.type = "application/x-wav";
         } else if (uri.toString().toLowerCase().contains(".jpeg")
             || uri.toString().toLowerCase().contains(".jpg")
             || uri.toString().toLowerCase().contains(".png")
         ) {
-            intent.setDataAndType(uri,"image/jpeg")
+            intent.type = "image/jpeg"
         } else if (uri.toString().contains(".mp4")) {
-            intent.setDataAndType(uri,"video/*")
+            intent.type = "video/*"
         } else if (uri.toString().contains(".mp3")) {
-            intent.setDataAndType(uri, "audio/*")
+            intent.type = "audio/*"
         } else {
-            intent.setDataAndType(uri, "*/*")
+            intent.type = "*/*"
+        }
+        intent.putExtra(Intent.EXTRA_STREAM, uri)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        try {
+            context.startActivity(Intent.createChooser(intent, "Chia sẻ qua"))
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
 
-      //  intent.putExtra(Intent.EXTRA_STREAM, uri)
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-         try {
-              context.startActivity(Intent.createChooser(intent, "Đọc qua:"))
-          } catch (e: Exception) {
-               e.printStackTrace()
-         }
     }
+
     fun uriFromFile(context: Context, file: File): Uri {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             try {

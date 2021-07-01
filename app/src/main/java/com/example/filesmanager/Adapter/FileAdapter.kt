@@ -1,17 +1,14 @@
 package com.example.filesmanager.Adapter
 
 import android.content.Context
-import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.filesmanager.R
 import java.io.File
 import java.text.SimpleDateFormat
@@ -241,7 +238,7 @@ class FileAdapter (var back:Boolean,var isList :Boolean ,private var context: Co
 
     }
     interface OnItemClickListener{
-        fun onItemClick(file: File,position: Int)
+        fun onItemClick(file: File, position: Int)
         fun  onOptionsMenuClicked(view:View, file: File,position: Int)
       //  fun onBackPressed()
     }

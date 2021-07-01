@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title= "LƯU TRỮ">
+        <menu >
+            <item
+                android:id="@+id/menu_home"
+                android:title="Trang chủ"
+                android:icon="@drawable/ic_baseline_home_24"
+                />
+            <item
+                android:title="Lưu trữ nội bộ"
+                android:id="@+id/luutru_noi_bo"
+                android:icon="@drawable/ic_luutrunoibo"
+                />
+            <item
+                android:icon="@drawable/ic_baseline_phone_android_24"
+                android:id="@+id/luutr_dien_thoai"
+                android:title="Lưu trữ điện thoại" />
+            <item
+                android:icon="@drawable/root"
+                android:id="@+id/root"
+                android:title="Root" />
+        </menu>
+    </item>
+    <item
+        android:title="CÀI ĐẶT" >
+        <menu >
+        <item
+            android:id="@+id/setting"
+            android:title="Cài đặt"
+            android:icon="@drawable/ic_baseline_settings_24"
+            />
+        </menu>
+    </item>
+    <item
+        android:title="ỨNG DỤNG TRUYỀN THỐNG" >
+        <menu >
+            <item
+                android:id="@+id/telegram"
+                android:title="Telegram"
+                android:icon="@drawable/telegram_icon"
+                />
+        </menu>
+    </item>
+    <item
+        android:title="CHUYỂN" >
+        <menu >
+            <item
+                android:id="@+id/shareWifi"
+                android:title="Chia sẻ wiff"
+                android:icon="@drawable/sharewifi"
+                />
+        </menu>
+    </item>
+    <item
+        android:title="MẠNG VÀ ĐÁM MÂY">
+        <menu >
+            <item
+                android:id="@+id/transferToPc"
+                android:title="Transfer to PC\n/storage/emulated/0"
+                android:icon="@drawable/ic_baseline_transfer_to_pc"
+                />
+            <item
+                android:title="Xếp hàng"
+                android:id="@+id/xepHang"
+                android:icon="@drawable/ic_xep_hang"
+                />
+            <item
+                android:icon="@drawable/ic_ketnoi_24"
+                android:id="@+id/ketnoi"
+                android:title="Kết nối" />
+        </menu>
+    </item>
+</menu>

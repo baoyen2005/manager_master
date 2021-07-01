@@ -1,14 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.CleanFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.CleanFragment"
+    android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@color/purple_200"
+        app:navigationIcon="@drawable/ic_baseline_menu_24"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:text="File Master"
+            android:layout_marginLeft="100dp"
+            android:textColor="#FF00"
+            android:textSize="17sp"/>
+        <ImageView
+            android:src="@drawable/canhbao"
+            android:layout_marginLeft="100dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+    </com.google.android.material.appbar.MaterialToolbar>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="40dp">
+
+            <LinearLayout
+                android:id="@+id/view1"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:background="@drawable/custom_drawel_clean"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/cleanup" />
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="500.45kb. Tìm thấy rác"
+                android:textSize="12sp"
+                tools:ignore="HardcodedText" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDonDep"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="Dọn dẹp"
+                android:textSize="17sp"
+                android:textColor="@color/black"
+                app:backgroundTint="@null"
+                android:background="@color/purple_200"
+                android:layout_gravity="center"
+             />
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycle_recently"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:overScrollMode="never"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

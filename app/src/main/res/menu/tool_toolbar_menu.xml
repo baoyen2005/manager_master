@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+        <item android:id="@+id/orderByName_tool"
+            android:title="Theo tên" />
+        <item android:title="Theo thời gian sửa đổi gần nhất"
+            android:id="@+id/orderByTime_tool" />
+        <item android:id="@+id/orderBySize"
+            android:title="Theo kích cỡ_tool" />
+
+</menu>

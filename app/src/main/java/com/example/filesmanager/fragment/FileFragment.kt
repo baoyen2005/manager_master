@@ -1,15 +1,10 @@
 package com.example.filesmanager.fragment
 
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
@@ -17,7 +12,6 @@ import android.view.*
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.ActivityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -25,15 +19,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.filesmanager.Adapter.FileAdapter
-import com.example.filesmanager.activity.PlayerMusicActivity
 import com.example.filesmanager.R
 import com.example.filesmanager.activity.MainActivity
 import com.example.filesmanager.utils.FileOpen
+import com.example.filesmanager.utils.FileShare
 import java.io.File
 import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
-
 
 class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenuItemClickListener{
 
@@ -59,7 +52,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
     private var musics = ArrayList<File>()
     private lateinit var musicAdapter : ArrayAdapter<String>
 
-    fun newInstance(): FileFragment {
+    public fun newInstance(): FileFragment {
         return FileFragment()
     }
 
@@ -67,7 +60,6 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
        // fileAdapter.isList = false
-
         isList = true
         listBackGrid = true
     }
@@ -97,17 +89,15 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val bundle = this.arguments
         filePath = bundle?.getString("path")
         setUpRecyclerView()
-
-        checkPermission()
+        displayFiles()
+      //  checkPermission()
 
     }
 
     private fun setUpRecyclerView() {
-
 
         if(isList&& listBackGrid ){
             recyclerView?.layoutManager =
@@ -120,46 +110,6 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
             fileAdapter = FileAdapter(listBackGrid,isList,requireContext(), fileList, this)
             recyclerView?.adapter = fileAdapter
-        }
-    }
-
-    private fun checkPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(requireContext(), WRITE_EXTERNAL_STORAGE) !=
-                PackageManager.PERMISSION_GRANTED
-            ) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(
-                        context as Activity, READ_EXTERNAL_STORAGE
-                    )
-                ) {
-                    Toast.makeText(context, "Chờ cấp quyền truy cập", Toast.LENGTH_SHORT).show()
-                } else {
-                    ActivityCompat.requestPermissions(
-                        context as Activity, arrayOf(
-                            READ_EXTERNAL_STORAGE,
-                            WRITE_EXTERNAL_STORAGE
-                        ), 305
-                    )
-                }
-            } else {
-                displayFiles()
-            }
-
-
-        } else {
-            displayFiles()
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 305) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                displayFiles()
-            } else {
-                Toast.makeText(context, "permission not run", Toast.LENGTH_SHORT).show()
-            }
         }
     }
 
@@ -193,30 +143,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
 
 
     }
-//    private fun findMusicFiles(file: File): ArrayList<File> {
-//
-//        val arrayListMusic = ArrayList<File>()
-//        val files = file.listFiles()
-//
-//
-//        arrayListMusic.clear()
-//         for(fi in files ){
-//              if(fi.isHidden&& !fi.isDirectory)
-//                  arrayListMusic.addAll(findMusicFiles(fi))
-//
-//              else{
-//                  if(fi.name.endsWith(".mp3")||fi.name.endsWith(".mp4")||
-//                      fi.name.endsWith(".wav")){
-//                      arrayListMusic.add(fi)
-//                  }
-//              }
-//         }
-//
-//
-//        return arrayListMusic
-//
 
-    //}
     private fun displayFiles() {
 
 
@@ -247,7 +174,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onItemClick(file: File,position: Int) {
+    override fun onItemClick(file: File, position: Int) {
         stFileClick.add(file.absolutePath)
 
         Log.d("yen",stFileClick.toString()+ "   "+file.name+"  "+ file.absolutePath)
@@ -272,21 +199,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
                fileAdapter.updateData(fileList)
            }
        }
-//        else if(file.name.endsWith(".mp3")||file.name.endsWith(".mp4")||
-//                   file.name.endsWith(".wav")){
-//            musics.clear()
-//
-//           musics = findMusicFiles(Environment.getExternalStorageDirectory())
-//            for(i in 0 .. musics.size){
-//                nameSongs[i] = musics[i].name
-//            }
-//          // musicAdapter = ArrayAdapter(requireContext(),R.layout.activity_player_music)
-//            var intent : Intent=  Intent(context, PlayerMusicActivity::class.java)
-//                .putExtra("songsList",musics)
-//                .putExtra("position",position)
-//            startActivity(intent)
-//
-//       }
+
         else{
            //stFileClick.add(file.absolutePath)
            try {
@@ -306,15 +219,15 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
                 drawerLayoutFile.openDrawer(Gravity.RIGHT)
                 findInformation(file,position)
 
-                Toast.makeText(context, "Item 1", Toast.LENGTH_SHORT).show()
                 return@OnMenuItemClickListener true
 
 
             } else if (item.itemId == R.id.ic_mark) {
-                Toast.makeText(requireContext(), "Item 2", Toast.LENGTH_SHORT).show()
+
                 return@OnMenuItemClickListener true
 
-            } else if (item.itemId == R.id.ic_rename) {
+            }
+            else if (item.itemId == R.id.ic_rename) {
                 val builder = AlertDialog.Builder(requireContext())
                 builder.setTitle("Rename")
 
@@ -337,25 +250,22 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
 
                 builder.setNegativeButton("No", DialogInterface.OnClickListener { dialog, id ->
 
-
                     dialog.dismiss()
                 })
                 var alertDialog : AlertDialog = builder.create()
                 alertDialog.show()
 
-
-
-
-                Toast.makeText(context, "doi ten", Toast.LENGTH_SHORT).show()
                 return@OnMenuItemClickListener true
             }
             else if (item.itemId == R.id.ic_copy) {
-                Toast.makeText(context, "sao chep", Toast.LENGTH_SHORT).show()
+
                 return@OnMenuItemClickListener true
-            } else if (item.itemId == R.id.ic_cut) {
-                Toast.makeText(requireContext(), "cut", Toast.LENGTH_SHORT).show()
+            }
+            else if (item.itemId == R.id.ic_cut) {
+
                 return@OnMenuItemClickListener true
-            } else if (item.itemId == R.id.ic_delete) {
+            }
+            else if (item.itemId == R.id.ic_delete) {
                     dialogYesOrNo(requireContext(),"Delete","Bạn có chắc muốn xóa file không?",
                     DialogInterface.OnClickListener{dialog, id ->
                         val temp = fileList.remove(file)
@@ -364,13 +274,15 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
                 return@OnMenuItemClickListener true
             }
             else if (item.itemId == R.id.ic_press) {
-                Toast.makeText(context, "nens", Toast.LENGTH_SHORT).show()
                 return@OnMenuItemClickListener true
-            } else if (item.itemId == R.id.ic_share) {
-                Toast.makeText(requireContext(), "share", Toast.LENGTH_SHORT).show()
+            }
+            else if (item.itemId == R.id.ic_share) {
+                    val share  = FileShare()
+                    share.shareFile(requireContext(),file)
                 return@OnMenuItemClickListener true
-            } else if (item.itemId == R.id.ic_bank) {
-                Toast.makeText(context, "bank", Toast.LENGTH_SHORT).show()
+            }
+            else if (item.itemId == R.id.ic_bank) {
+
                 return@OnMenuItemClickListener true
             }
             false
@@ -518,10 +430,9 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
                 override fun handleOnBackPressed() {
                   if(stFileClick.size > 1 ){
                       fileList.clear()
+                      stFileClick.pop()
                       fileList.addAll(findFiles(File(stFileClick[stFileClick.size-1])))
                       Log.d("yen","\n"+fileList.toString())
-                      stFileClick.pop()
-                     // drawerLayoutFile.closeDrawer(Gravity.RIGHT)
                   }
                   else if(stFileClick.size == 1){
                       fileList.clear()

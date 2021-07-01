@@ -7,7 +7,6 @@
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@color/white">
 
-
     <LinearLayout
         android:background="@color/lightgray"
         android:id="@+id/linearLayout3"
