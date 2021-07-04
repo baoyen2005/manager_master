@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     private var fileFrag = FileFragment()
     private var toolFrag = ToolFragment()
     private var cleanFrag = CleanFragment()
+    var sdCard :String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -70,6 +71,15 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        toolFrag.displayImage()
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun setFragment() {

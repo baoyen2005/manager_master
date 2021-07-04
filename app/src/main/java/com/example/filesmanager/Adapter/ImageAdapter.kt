@@ -10,14 +10,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.filesmanager.R
-import com.example.filesmanager.fragment.ToolFragment
+import com.example.filesmanager.model.FolerImage
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-class RecentlyImageAdapter(var back:Boolean, var isList:Boolean, private var context: Context, private var fileImage: ArrayList<File>, private val listener: RecentlyImageAdapter.OnItemClickListenerTool):
+class ImageAdapter(var back:Boolean, var isList:Boolean, private var context: Context, private var fileImage: ArrayList<FolerImage>, private val listener: ImageAdapter.OnItemClickListenerTool):
     RecyclerView.Adapter<RecyclerView. ViewHolder>() {
 
     var quanlityFile = mutableMapOf<Int, Int>()
@@ -55,11 +55,10 @@ class RecentlyImageAdapter(var back:Boolean, var isList:Boolean, private var con
             when(holder){
                 is FileViewHolder1 -> {
                     val f = fileImage[position]
-                    val url: String = f.absolutePath
-                    val myFragment= ToolFragment()
+                    val url: String = f.listImage[f.listImage.size-1].absolutePath
                     Glide
                         .with(context)
-                        .load(File(url))
+                        .load(url)
                         .centerCrop()
                         .into(holder.imgFile)
                     val fileItem = fileImage[position]
@@ -70,59 +69,24 @@ class RecentlyImageAdapter(var back:Boolean, var isList:Boolean, private var con
                 }
                 is FileViewHolder2 ->{
                     val fileItem = fileImage[position]
-                    val url: String = fileItem.absolutePath
+                    val url: String = fileItem.listImage[fileItem.listImage.size-1].absolutePath
                     Glide
                         .with(context)
-                        .load(File(url))
+                        .load(url)
                         .centerCrop()
                         .into(holder.imgFile)
 
                     holder.tvNameFile.text = fileItem.name
                     var date: Date = Date()
-                    date.time = fileItem.lastModified() // tra ve int
+                    date.time = fileItem.lastModify // tra ve int
                     val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("dd/MM")
                     holder.tvDate.text = simpleDateFormat.format(date)
                     lastModified.add(position, simpleDateFormat.format(date))
 
 
                     var length = 0
-                    if (fileItem.isDirectory) {
-                        val files = fileItem.listFiles()
-                        if (files != null) {
-                            length = files.size
-                            Log.d("aaa", "onBindViewHolder: " + length)
-                            if (length >= 1) {
-                                if (length == 1) {
-                                    holder.tvSize.text = "1 file"
-                                    quanlityFile.put(position,1)
-                                } else {
-                                    holder.tvSize.text = "$length files"
-                                    quanlityFile.put(position,length)
-                                }
-                            } else {
-                                holder.tvSize.text = "empty"
-                                if(holder.tvSize.text == "empty")  quanlityFile.put(position ,0)
-                            }
-                        }else {
-                            holder.tvSize.text = "empty"
-                            //quanlityFile.clear()
-                            if(holder.tvSize.text == "empty") quanlityFile.put(position,0)
-                        }
-                        Log.d("bbbb", quanlityFile.toString())
+                    holder.tvSize.text= fileItem.listImage.size.toString()
 
-                    }
-                    else{
-                        val files = fileImage[position]
-                        val size  = files.length()
-                        if(size >= 1024){
-                            var sizeF :Double = (size/1024).toDouble()
-                            holder.tvSize.text = "$sizeF Mb"
-                        }
-                        else
-                        {
-                            holder.tvSize.text = "$size Kb"
-                        }
-                    }
 
                     holder.itemView.setOnClickListener {
                         listener.onItemClickTool(fileItem,position)
@@ -130,7 +94,7 @@ class RecentlyImageAdapter(var back:Boolean, var isList:Boolean, private var con
 
 
                     holder.tvMenu.setOnClickListener {
-                        listener.onOptionsMenuClickedTool(it!!, fileItem,position)
+                        listener.onOptionsMenuClickedTool(it!!, fileItem.file,position)
                     }
                 }
             }
@@ -156,13 +120,13 @@ class RecentlyImageAdapter(var back:Boolean, var isList:Boolean, private var con
 
     }
     interface OnItemClickListenerTool{
-        fun onItemClickTool(file: File,position: Int)
+        fun onItemClickTool(file: FolerImage,position: Int)
         fun  onOptionsMenuClickedTool(view:View, file: File,position: Int)
     }
 
-    fun updateDataTool(newList : List<File>){
-        fileImage = newList as ArrayList<File>
-        Log.d("yenn", "updateData: "+newList.size)
+    fun updateDataTool(newList : List<FolerImage>){
+        fileImage = newList as ArrayList<FolerImage>
+        Log.d("yenn", "updateDataTool: "+newList.size)
         notifyDataSetChanged()
     }
 

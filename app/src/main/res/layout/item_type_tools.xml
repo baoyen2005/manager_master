@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_gravity="center"
+    android:paddingVertical="8dp"
+    android:gravity="center"
     >
     <ImageView
         android:id="@+id/imgType_tool"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:src="@drawable/amthanh"/>
     <TextView
         android:id="@+id/txtNameType_Tool"
-        android:textSize="8sp"
+        android:textSize="10sp"
         android:layout_marginTop="5dp"
         style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="wrap_content"

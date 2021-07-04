@@ -1,7 +1,9 @@
 package com.example.filesmanager.fragment
 
+import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -12,14 +14,17 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.filesmanager.Adapter.OptimalAdapter
 import com.example.filesmanager.Adapter.RecentlyImageAdapter
 import com.example.filesmanager.Adapter.TypeAdapter
 import com.example.filesmanager.R
+import com.example.filesmanager.activity.PhotoActivity
 import com.example.filesmanager.model.Type
 import com.google.android.material.appbar.MaterialToolbar
 import java.io.File
 
-class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool , Toolbar.OnMenuItemClickListener,TypeAdapter.OnItemClickListenerType {
+class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool , Toolbar.OnMenuItemClickListener,TypeAdapter.OnItemClickListenerType,
+OptimalAdapter.OnItemClickListenerOptimal{
 
     private var listImgRecently = ArrayList<File>()
     lateinit var mRecycleViewRecently : RecyclerView
@@ -33,8 +38,12 @@ class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool , 
     lateinit var mList: ArrayList<String>
     lateinit var typeAdapter:TypeAdapter
     lateinit var mGridViewType:RecyclerView
+    private var sdCard = ""
+    lateinit var mGridviewOptimal:RecyclerView
+    lateinit var optimalAdapter:OptimalAdapter
+    private var optimalList = ArrayList<Type>()
 
-    public fun newInstance(): ToolFragment {
+    fun newInstance(): ToolFragment {
         return ToolFragment()
     }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +59,7 @@ class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool , 
         var view = inflater.inflate(R.layout.fragment_tool, container, false)
         mRecycleViewRecently = view.findViewById(R.id.recycle_recently)
         mGridViewType = view.findViewById(R.id.mGridViewType)
+        mGridviewOptimal = view.findViewById(R.id.mGridViewMin)
         toolbarTool = view.findViewById(R.id.toolbarTool)
         toolbarTool.setOnMenuItemClickListener(this)
 
@@ -57,18 +67,41 @@ class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool , 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d("yennn", "tool fragment onViewCreated: ")
         setUpRecyclerView()
         displayImage()
         setUpRecyclerViewType()
         displayType()
+        setUpRecyclerViewOptimal()
+        displayOptimal()
         super.onViewCreated(view, savedInstanceState)
     }
 
+
+    private fun setUpRecyclerViewOptimal() {
+        optimalAdapter = OptimalAdapter(requireContext(),optimalList,this)
+        mGridviewOptimal.layoutManager =
+            GridLayoutManager(context,4)
+        mGridviewOptimal.adapter = optimalAdapter
+    }
+    private fun displayOptimal() {
+
+        optimalList.clear()
+        optimalList.add(Type("Tiết kiệm",R.drawable.tietkiempin))
+        optimalList.add(Type("Làm mát CPU", R.drawable.mat))
+        optimalList.add(Type("Bảo vệ", R.drawable.baove))
+        optimalList.add(Type("Dọn dẹp", R.drawable.dondep))
+
+        Log.d("yenn",listType[1].name.toString())
+
+        optimalAdapter.updateDataOptimal(optimalList)
+    }
     private fun setUpRecyclerViewType() {
         typeAdapter = TypeAdapter(requireContext(),listType,this)
         mGridViewType.layoutManager =
             GridLayoutManager(context,4)
         mGridViewType.adapter = typeAdapter
+        //mGridViewType.isNestedScrollingEnabled = false
     }
 
     private fun displayType() {
@@ -123,13 +156,12 @@ class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool , 
             }
         }
     }
-    private fun displayImage(){
+    fun displayImage(){
         listImgRecently.clear()
-        val sdCard = System.getenv("EXTERNAL_STORAGE")
-
+        sdCard= Environment.getExternalStorageDirectory().absolutePath + "/Pictures"
         Log.d("yenn", sdCard)
         arrayList.clear()
-        findFileImage(File("$sdCard\Pictures"))
+        findFileImage(File(sdCard))
         listImgRecently.addAll(arrayList)
         listImgRecently.sortByDescending { it.lastModified() }
         Log.d("yenn", "listImgRecently: "+listImgRecently.size)
@@ -149,8 +181,26 @@ class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool , 
     }
 
     override fun onItemClickType(type: Type, position: Int) {
-        TODO("Not yet implemented")
+        var bundle = Bundle()
+        if(type.name =="Hình ảnh"){
+            val frag = ImageFragment()
+            bundle.putString("anh",type.name)
+            Log.d("anh", "anh1 "+ bundle.getString("anh"))
+            var intent = Intent(context,PhotoActivity::class.java)
+            intent.putExtras(bundle)
+            startActivity(intent)
+        }
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.d("onresume", "onResume: " + sdCard)
+        if (sdCard == "" ) displayImage()
+
+    }
+
+    override fun onItemClickOptimal(type: Type, position: Int) {
+        TODO("Not yet implemented")
+    }
 
 }

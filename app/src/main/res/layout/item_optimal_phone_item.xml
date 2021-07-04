@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-
+    android:gravity="center"
+    android:padding="8dp"
     android:layout_gravity="center"
     >
     <ImageView
         android:id="@+id/imgToiUu_tool"
         android:layout_margin="3dp"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:src="@drawable/tietkiempin"
         />
     <TextView
         android:id="@+id/txtSave_Tool"
-        android:textSize="8sp"
+        android:textSize="10sp"
         android:text="Tiết kiệm pin"
         style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="wrap_content"

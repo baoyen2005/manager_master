@@ -8,14 +8,8 @@ import androidx.fragment.app.Fragment
 import com.example.filesmanager.R
 
 
-class CleanFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class DisPlayFragment : Fragment() {
 
-    public fun newInstance(): CleanFragment {
-        return CleanFragment()
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -26,10 +20,8 @@ class CleanFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_clean, container, false)
+        return inflater.inflate(R.layout.fragment_dis_play, container, false)
     }
-    override fun onResume() {
-        super.onResume()
-    }
+
 
 }
