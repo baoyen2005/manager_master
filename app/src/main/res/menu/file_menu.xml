@@ -3,17 +3,8 @@
     <item android:id="@+id/ic_information"
         android:title="Thông tin"
         />
-    <item android:id="@+id/ic_mark"
-        android:title="Đánh dấu trang"
-        />
     <item android:id="@+id/ic_rename"
         android:title="Đổi tên"
-        />
-    <item android:id="@+id/ic_copy"
-        android:title="Sao chép"
-        />
-    <item android:id="@+id/ic_cut"
-        android:title="Cắt"
         />
     <item android:id="@+id/ic_delete"
         android:title="Xóa bỏ"
@@ -23,8 +14,5 @@
         />
     <item android:id="@+id/ic_share"
         android:title="Chia sẻ"
-        />
-    <item android:id="@+id/ic_bank"
-        android:title="Chuyển khoản"
         />
 </menu>

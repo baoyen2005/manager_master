@@ -22,8 +22,8 @@
             style="@style/TextAppearance.AppCompat.Title"
             android:text="File Master"
             android:layout_marginLeft="100dp"
-            android:textColor="#FF00"
-            android:textSize="17sp"/>
+            android:textColor="@color/black"
+            android:textSize="20sp"/>
         <ImageView
             android:src="@drawable/canhbao"
             android:layout_marginLeft="100dp"

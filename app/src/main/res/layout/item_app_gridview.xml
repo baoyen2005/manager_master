@@ -4,34 +4,40 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/imgRecently_tool_grid"
+    <LinearLayout
+        android:id="@+id/li1"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_gravity="center"
         android:scaleType="centerCrop"
-        android:src="@drawable/test"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.96" />
+        app:layout_constraintWidth_percent="0.96"
+        android:gravity="center">
+        <ImageView
+            android:id="@+id/imgApp_grid"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center"
+            android:src="@drawable/test"
+           />
+    </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@color/lightgray"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="@id/imgRecently_tool_grid"
+        app:layout_constraintEnd_toEndOf="@id/li1"
 
-        app:layout_constraintBottom_toBottomOf="@id/imgRecently_tool_grid"
-        app:layout_constraintStart_toStartOf="@id/imgRecently_tool_grid">
+        app:layout_constraintBottom_toBottomOf="@id/li1"
+        app:layout_constraintStart_toStartOf="@id/li1">
 
         <TextView
-            android:id="@+id/txtfileNameGrid"
+            android:id="@+id/txtAppNameGridview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="File name.png"
@@ -47,7 +53,7 @@
 
             <TextView
 
-                android:id="@+id/txtTimeImgToolGrid"
+                android:id="@+id/txtTimeAppGridview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
@@ -56,7 +62,7 @@
                 android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/txtSizeImgToolGrid"
+                android:id="@+id/txtSizeAppGridview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -66,13 +72,12 @@
                 android:textSize="15sp" />
 
             <TextView
-
-                android:id="@+id/txtmenuToolImgGrid"
+                android:id="@+id/txtmenuAppGridview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:layout_marginEnd="20dp"
                 android:text="⋮"
                 android:textSize="24sp"
                 android:textColor="@color/white"

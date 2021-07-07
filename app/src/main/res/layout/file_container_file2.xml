@@ -8,31 +8,40 @@
     app:cardBackgroundColor="@color/white">
 
     <LinearLayout
-        android:background="@color/lightgray"
-        android:id="@+id/linearLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:id="@+id/lin1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#80696969"
+        android:gravity="center"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.96">
 
         <ImageView
+            android:id="@+id/imgAnhFile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_marginTop="8dp"
             android:src="@drawable/ic_baseline_folder_24" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/aaa"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:background="@color/lavender"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/lin1"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/lin1"
+        app:layout_constraintTop_toBottomOf="@+id/lin1"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintWidth_percent="0.96">
 
         <TextView
             android:id="@+id/txtfileName"
@@ -57,41 +66,31 @@
             android:weightSum="4">
 
             <TextView
-                android:textColor="@color/white"
                 android:id="@+id/tv_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="2"
                 android:gravity="start"
-                android:text="100" />
+                android:text="100"
+                android:textColor="@color/white" />
 
             <TextView
-                android:textColor="@color/white"
                 android:id="@+id/txtmenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="20dp"
                 android:layout_weight="2"
                 android:gravity="end"
                 android:text="⋮"
-
+                android:textColor="@color/white"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
 
         </LinearLayout>
 
     </LinearLayout>
-    <View
-        android:id="@+id/v_line"
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/lightgray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/aaa"
-        tools:ignore="MissingConstraints" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

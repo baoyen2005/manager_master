@@ -1,12 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/drawerLayout"
     tools:context=".activity.PhotoActivity">
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+   <androidx.constraintlayout.widget.ConstraintLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+       <com.google.android.material.appbar.MaterialToolbar
+           app:layout_constraintTop_toTopOf="parent"
+           android:id="@+id/toolbarTool2222"
+           android:layout_width="match_parent"
+           android:layout_height="50dp"
+           android:layout_gravity="center"
+           android:background="@color/gray">
+
+           <androidx.constraintlayout.widget.ConstraintLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+               <ImageView
+                   app:layout_constraintTop_toTopOf="parent"
+                   app:layout_constraintStart_toStartOf="parent"
+                   android:id="@+id/image_back_hinhanh"
+                   android:layout_width="20dp"
+                   android:layout_height="30dp"
+                   android:src="@drawable/ic_baseline_arrow_back_24" />
+
+               <TextView
+                   android:id="@+id/txtHinhAnh"
+                   style="@style/TextAppearance.AppCompat.Title"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginStart="28dp"
+                   android:layout_marginTop="4dp"
+                   android:gravity="center"
+                   android:text="Hình ảnh"
+                   android:textColor="@color/black"
+                   android:textSize="17sp"
+                   app:layout_constraintStart_toEndOf="@id/image_back_hinhanh"
+                   app:layout_constraintTop_toTopOf="parent" />
+
+               <ImageView
+                   android:id="@+id/imgGridToolBar"
+                   android:layout_width="25dp"
+                   android:layout_height="30dp"
+                   android:layout_marginStart="176dp"
+                   android:src="@drawable/ic_baseline_view_grid"
+                   app:layout_constraintStart_toEndOf="@id/txtHinhAnh"
+                   app:layout_constraintTop_toTopOf="parent" />
+
+               <ImageView
+                   android:id="@+id/imgOrderToolBar"
+                   android:layout_width="25dp"
+                   android:layout_height="30dp"
+                   android:layout_marginStart="16dp"
+                   android:src="@drawable/ic_baseline_order"
+                   app:layout_constraintStart_toEndOf="@id/imgGridToolBar"
+                   app:layout_constraintTop_toTopOf="parent" />
+           </androidx.constraintlayout.widget.ConstraintLayout>
+       </com.google.android.material.appbar.MaterialToolbar>
+
+       <FrameLayout
+           android:layout_marginTop="10dp"
+           android:id="@+id/frameLayout"
+           android:layout_width="match_parent"
+           android:layout_height="0dp"
+           app:layout_constraintBottom_toBottomOf="parent"
+           app:layout_constraintTop_toBottomOf="@+id/toolbarTool2222"
+           />
+   </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.navigation.NavigationView
+        app:layout_constraintStart_toEndOf="parent"
+        android:id="@+id/navigationView3"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:focusableInTouchMode="true"
+        >
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:gravity="center"
+            android:background="#8080D8FF"
+            >
+            <ImageView
+                android:id="@+id/img_folderPhot"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:src="@drawable/doc"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txt_infomationphot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="250dp"
+            android:layout_marginLeft="20dp"
+            android:text="Kiểu"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.273"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </com.google.android.material.navigation.NavigationView>
+</androidx.drawerlayout.widget.DrawerLayout>

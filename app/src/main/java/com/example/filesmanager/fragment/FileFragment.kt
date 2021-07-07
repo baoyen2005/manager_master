@@ -23,6 +23,7 @@ import com.example.filesmanager.R
 import com.example.filesmanager.activity.MainActivity
 import com.example.filesmanager.utils.FileOpen
 import com.example.filesmanager.utils.FileShare
+import com.example.filesmanager.utils.FindInformation
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -51,7 +52,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
     private var nameSongs = ArrayList<String>()
     private var musics = ArrayList<File>()
     private lateinit var musicAdapter : ArrayAdapter<String>
-
+    private var check = 1
     public fun newInstance(): FileFragment {
         return FileFragment()
     }
@@ -102,13 +103,13 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         if(isList&& listBackGrid ){
             recyclerView?.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            fileAdapter = FileAdapter(listBackGrid,isList,requireContext(), fileList, this)
+            fileAdapter = FileAdapter(check,listBackGrid,isList,requireContext(), fileList, this)
             recyclerView?.adapter = fileAdapter
         }
         else{
             recyclerView?.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
-            fileAdapter = FileAdapter(listBackGrid,isList,requireContext(), fileList, this)
+            fileAdapter = FileAdapter(check,listBackGrid,isList,requireContext(), fileList, this)
             recyclerView?.adapter = fileAdapter
         }
     }
@@ -188,13 +189,14 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
 
            fileList.clear()
            fileList.addAll(findFiles(File(file.absolutePath)))
-           if(isList && listBackGrid) fileAdapter.notifyDataSetChanged()
+           if(isList && listBackGrid && check == 1) fileAdapter.notifyDataSetChanged()
            else{
                isList = true
                listBackGrid = true
+               check = 1
                recyclerView?.layoutManager =
                    LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
-               fileAdapter = FileAdapter(listBackGrid,isList,requireContext(), fileList, this)
+               fileAdapter = FileAdapter(check,listBackGrid,isList,requireContext(), fileList, this)
                recyclerView?.adapter = fileAdapter
                fileAdapter.updateData(fileList)
            }
@@ -218,13 +220,8 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
             if (item.itemId == R.id.ic_information) {
                 drawerLayoutFile.openDrawer(Gravity.RIGHT)
                 findInformation(file,position)
-
                 return@OnMenuItemClickListener true
 
-
-            } else if (item.itemId == R.id.ic_mark) {
-
-                return@OnMenuItemClickListener true
 
             }
             else if (item.itemId == R.id.ic_rename) {
@@ -257,14 +254,6 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
 
                 return@OnMenuItemClickListener true
             }
-            else if (item.itemId == R.id.ic_copy) {
-
-                return@OnMenuItemClickListener true
-            }
-            else if (item.itemId == R.id.ic_cut) {
-
-                return@OnMenuItemClickListener true
-            }
             else if (item.itemId == R.id.ic_delete) {
                     dialogYesOrNo(requireContext(),"Delete","Bạn có chắc muốn xóa file không?",
                     DialogInterface.OnClickListener{dialog, id ->
@@ -281,10 +270,6 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
                     share.shareFile(requireContext(),file)
                 return@OnMenuItemClickListener true
             }
-            else if (item.itemId == R.id.ic_bank) {
-
-                return@OnMenuItemClickListener true
-            }
             false
         })
         popupMenu.inflate(R.menu.file_menu)
@@ -292,120 +277,10 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         popupMenu.show()
     }
 
-    private fun findInformation(file: File,position:Int) {
-        val size  = file.length()//Byte
-        var sizeMB :Double = 0.toDouble() // Mb
-        var sizeGB:Double = 0.toDouble() // GB
-        if(size >= 1024){
-            sizeMB = (size/1024).toDouble()
-
-        }
-        else if(size> 1024*1024){
-            sizeGB = (sizeMB)/1024
-        }
-        if(file.isDirectory && size > 1024*1024 && fileAdapter.quanlityFile.get(position)!! >1 ){
-            Log.d("yen", fileAdapter.quanlityFile.toString())
-            tvInformation.text ="${file.name}" +
-                    "\n\nKiểu: folder"+
-                    "\nKích thước: $sizeGB Gb"+
-                    "\nNội dung: ${fileAdapter.quanlityFile.get(position)} files"+
-                    "\nSửa đổi lần cuối: ${fileAdapter.lastModified[position]}"+
-                    "\nQuy trình: ${file.absolutePath}"
-
-        }
-        else if(file.isDirectory && size > 1024*1024 && fileAdapter.quanlityFile.get(position)!! == 1 ){
-            tvInformation.text ="${file.name}" +
-                    "\n\nKiểu: folder"+
-                    "\nKích thước: $sizeGB Gb"+
-                    "\nNội dung: ${fileAdapter.quanlityFile.get(position)} file"+
-                    "\nSửa đổi lần cuối: ${fileAdapter.lastModified[position]}"+
-                    "\nQuy trình: ${file.absolutePath}"
-
-        }
-        else if(file.isDirectory && size > 1024*1024 && fileAdapter.quanlityFile.get(position)!! == 0 ){
-            tvInformation.text ="${file.name}" +
-                    "\n\nKiểu: folder"+
-                    "\nKích thước: $sizeGB Gb"+
-                    "\nNội dung: 0 file"+
-                    "\nSửa đổi lần cuối: ${fileAdapter.lastModified.get(position)}"+
-                    "\nQuy trình: ${file.absolutePath}"
-
-        }
-        else  if(file.isDirectory && 1024 < size && size< 1024*1024&& fileAdapter.quanlityFile.get(position)!!>1 ){
-            tvInformation.text ="${file.name}" +
-                    "\n\nKiểu: folder"+
-                    "\nKích thước: $sizeMB Mb"+
-                    "\nNội dung: ${fileAdapter.quanlityFile.get(position)!!} files"+
-                    "\nSửa đổi lần cuối: ${fileAdapter.lastModified[position]}"+
-                    "\nQuy trình: ${file.absolutePath}"
-
-        }
-        else  if(file.isDirectory && 1024 < size && size< 1024*1024 && fileAdapter.quanlityFile.get(position)==1 ){
-            tvInformation.text ="${file.name}" +
-                    "\n\nKiểu: folder"+
-                    "\nKích thước: $sizeMB Mb"+
-                    "\nNội dung: ${fileAdapter.quanlityFile[position]} file"+
-                    "\nSửa đổi lần cuối: ${fileAdapter.lastModified[position]}"+
-                    "\nQuy trình: ${file.absolutePath}"
-        }
-        else  if(file.isDirectory && 1024 < size && size< 1024*1024 && fileAdapter.quanlityFile.get(position)==0 ){
-            tvInformation.text ="${file.name}" +
-                    "\n\nKiểu: folder"+
-                    "\nKích thước: $sizeMB Mb"+
-                    "\nNội dung: 0 file"+
-                    "\nSửa đổi lần cuối: ${fileAdapter.lastModified[position]}"+
-                    "\nQuy trình: ${file.absolutePath}"
-        }
-        else  if(file.isDirectory && size<1024&& fileAdapter.quanlityFile.get(position)==1 ){
-            tvInformation.text ="${file.name}" +
-                    "\n\nKiểu: folder"+
-                    "\nKích thước: $size Kb"+
-                    "\nNội dung: ${fileAdapter.quanlityFile[position]} file"+
-                    "\nSửa đổi lần cuối: ${fileAdapter.lastModified[position]}"+
-                    "\nQuy trình: ${file.absolutePath}"
-
-        }
-        else  if(file.isDirectory && size<1024&& fileAdapter.quanlityFile.get(position)!!>1 ){
-            tvInformation.text ="${file.name}" +
-                    "\n\nKiểu: folder"+
-                    "\nKích thước: $size Kb"+
-                    "\nNội dung: ${fileAdapter.quanlityFile[position]} files"+
-                    "\nSửa đổi lần cuối: ${fileAdapter.lastModified[position]}"+
-                    "\nQuy trình: ${file.absolutePath}"
-
-        }
-        else  if(file.isDirectory && size<1024&& fileAdapter.quanlityFile.get(position)==1 ){
-            tvInformation.text ="${file.name}" +
-                    "\n\nKiểu: folder"+
-                    "\nKích thước: $size Kb"+
-                    "\nNội dung: 0 file"+
-                    "\nSửa đổi lần cuối: ${fileAdapter.lastModified[position]}"+
-                    "\nQuy trình: ${file.absolutePath}"
-
-        }
-        else if(!file.isDirectory&& size > 1024*1024){
-            tvInformation.text ="${file.name}" +
-                    "\n\nKiểu: file"+
-                    "\nKích thước: $sizeGB Gb"+
-                    "\nSửa đổi lần cuối: ${fileAdapter.lastModified[position]}"+
-                    "\nQuy trình: ${file.absolutePath}"
-
-        }
-        else if(!file.isDirectory&&size>1024 && size < 1024*1024){
-            tvInformation.text ="${file.name}" +
-                    "\n\nKiểu: file"+
-                    "\nKích thước: $sizeMB Mb"+
-                    "\nSửa đổi lần cuối: ${fileAdapter.lastModified[position]}"+
-                    "\nQuy trình: ${file.absolutePath}"
-
-        }
-        else if(!file.isDirectory&&size<1024){
-            tvInformation.text ="${file.name}" +
-                    "\n\nKiểu: file"+
-                    "\nKích thước: $size Kb"+
-                    "\nSửa đổi lần cuối: ${fileAdapter.lastModified[position]}"+
-                    "\nQuy trình: ${file.absolutePath}"
-        }
+    @SuppressLint("SetTextI18n")
+    private fun findInformation(file: File, position:Int) {
+      val find = FindInformation(file , position, fileAdapter)
+        tvInformation.text = find.findInfor()
     }
 
     fun dialogYesOrNo(context: Context,  title: String, message: String, listener: DialogInterface.OnClickListener
@@ -457,7 +332,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
     fun setUpRecyclerViewAdapter(){
         recyclerView?.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        fileAdapter = FileAdapter(true,true,requireContext(), fileList, this)
+        fileAdapter = FileAdapter(1 ,true,true,requireContext(), fileList, this)
         recyclerView?.adapter = fileAdapter
     }
 
@@ -521,7 +396,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
                 listBackGrid = true
                 recyclerView?.layoutManager =
                     LinearLayoutManager(context,  LinearLayoutManager.VERTICAL,false)
-                fileAdapter = FileAdapter(listBackGrid,isList,requireContext(), fileList, this)
+                fileAdapter = FileAdapter(1,listBackGrid,isList,requireContext(), fileList, this)
                 recyclerView?.adapter = fileAdapter
                 fileAdapter.updateData(fileList)
             }
@@ -530,7 +405,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
                 listBackGrid = false
                 recyclerView?.layoutManager =
                     GridLayoutManager(context, 2, GridLayoutManager.VERTICAL,false)
-               fileAdapter = FileAdapter(listBackGrid,isList,requireContext(), fileList, this)
+               fileAdapter = FileAdapter(2,listBackGrid,isList,requireContext(), fileList, this)
                 recyclerView?.adapter = fileAdapter
                 fileAdapter.updateData(fileList)
             }
