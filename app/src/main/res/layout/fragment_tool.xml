@@ -1,179 +1,188 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.CleanFragment">
 
     <!-- TODO: Update blank fragment layout -->
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       android:orientation="vertical"
-       >
-       <com.google.android.material.appbar.MaterialToolbar
-           android:id="@+id/toolbarTool"
-           android:layout_width="match_parent"
-           android:layout_height="50dp"
-           android:layout_gravity="center"
-           android:background="@color/purple_200"
-           app:navigationIcon="@drawable/ic_baseline_menu_24"
-           >
-           <TextView
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               style="@style/TextAppearance.AppCompat.Title"
-               android:text="Công cụ"
-               android:layout_marginLeft="100dp"
-               android:textColor="@color/black"
-               android:textSize="20sp"/>
-           <ImageView
-               android:src="@drawable/canhbao"
-               android:layout_marginLeft="100dp"
-               android:layout_width="30dp"
-               android:layout_height="30dp"/>
-       </com.google.android.material.appbar.MaterialToolbar>
-       <LinearLayout
-           android:layout_height="wrap_content"
-           android:layout_width="match_parent"
-           android:orientation="vertical">
-           <RelativeLayout
-               android:id="@+id/relativeRam"
-               android:padding="10dp"
-               android:layout_gravity="center"
-               android:orientation="horizontal"
-               android:layout_marginBottom="5dp"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content">
-               <ImageView
-                   android:id="@+id/imgRam"
-                   android:layout_alignParentTop="true"
-                   android:layout_alignParentLeft="true"
-                   android:src="@drawable/tangram"
-                   android:layout_width="50dp"
-                   android:layout_height="50dp"
-                   android:layout_alignParentStart="true"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-               <TextView
-                   android:id="@+id/tvRam"
-                   android:layout_marginTop="15dp"
-                   android:gravity="center"
-                   android:layout_marginStart="10dp"
-                   android:layout_centerHorizontal="true"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:textColor="@color/black"
-                   android:textSize="13sp"
-                   android:layout_toEndOf="@id/imgRam"
-                   android:layout_toLeftOf="@+id/imgRam"
-                   android:layout_alignParentTop="true"
-                   android:text="Sử dụng RAM cao và điện thoại chậm hơn. Đẩy nhanh!"/>
-               <Button
-                   android:id="@+id/btnTangTocTool"
-                   app:backgroundTint="@null"
-                   android:background="@color/cafe"
-                   android:layout_marginTop="10dp"
-                   android:textColor="@color/black"
-                   android:text="Tăng tốc ngay"
-                   android:textSize="18sp"
-                   android:textAllCaps="false"
-                   android:layout_alignParentLeft="true"
-                   android:layout_below="@id/imgRam"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"/>
-           </RelativeLayout>
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbarTool"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:background="@color/purple_200"
+
+            >
+
+            <ImageView
+                android:id="@+id/btnNavigation"
+                android:layout_width="30dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_baseline_menu_24" />
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="100dp"
+                android:text="Công cụ"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/canhbao"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="120dp"
+                android:src="@drawable/canhbao" />
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/relativeRam"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/imgRam"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:src="@drawable/tangram" />
+
+                <TextView
+                    android:id="@+id/tvRam"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_toLeftOf="@+id/imgRam"
+                    android:layout_toEndOf="@id/imgRam"
+                    android:gravity="center"
+                    android:text="Sử dụng RAM cao và điện thoại chậm hơn. Đẩy nhanh!"
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+
+                <Button
+                    android:id="@+id/btnTangTocTool"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/imgRam"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/cafe"
+                    android:text="Tăng tốc ngay"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:backgroundTint="@null" />
+            </RelativeLayout>
 
 
-           <RelativeLayout
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_gravity="center"
-               android:layout_marginBottom="2dp"
-               android:background="@color/white"
-               android:gravity="center"
-               android:padding="10dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="2dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:padding="10dp">
 
-               <TextView
-                   android:layout_alignParentTop="true"
-                   android:layout_alignParentStart="true"
-                   android:id="@+id/tvRecently"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="Phương tiện gần đây" />
+                <TextView
+                    android:id="@+id/tvRecently"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:text="Phương tiện gần đây" />
 
-               <ImageButton
-                   android:id="@+id/imgButtonMenu_Tool"
-                   android:src="@drawable/ic_baseline_more_horiz_24"
-                   android:layout_alignParentEnd="true"
-                   android:background="?attr/actionBarItemBackground"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"/>
 
-               <androidx.recyclerview.widget.RecyclerView
-                   android:layout_below="@id/tvRecently"
-                   android:id="@+id/recycle_recently"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:layout_marginTop="10dp"
-                   android:layout_alignParentStart="true"
-                   android:overScrollMode="never"
-                   />
-           </RelativeLayout>
-           <RelativeLayout
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_gravity="center"
-               android:background="@color/white"
-               android:gravity="center"
-               android:padding="10dp"
-               android:overScrollMode="never"
-               >
-               <TextView
-                   android:id="@+id/txt3"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:layout_marginTop="10dp"
-                   android:layout_marginBottom="10dp"
-                   android:text="THỂ LOẠI"
-                   android:textSize="15sp" />
-               <androidx.recyclerview.widget.RecyclerView
-                   android:id="@+id/mGridViewType"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:layout_below="@+id/txt3"
-                   android:layout_marginBottom="5dp"
-                   android:overScrollMode="never"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycle_recently"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvRecently"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="10dp"
+                    android:overScrollMode="never" />
+            </RelativeLayout>
 
-                   />
-           </RelativeLayout>
-           <RelativeLayout
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_gravity="center"
-               android:background="@color/white"
-               android:gravity="center"
-               android:padding="10dp">
-               <TextView
-                   android:id="@+id/txt4"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:layout_marginTop="10dp"
-                   android:layout_marginBottom="10dp"
-                   android:text="TỐI ƯU ĐIỆN THOẠI"
-                   android:textSize="15sp"
-                   tools:ignore="HardcodedText" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/white"
+                android:gravity="center"
+                android:overScrollMode="never"
+                android:padding="10dp">
 
-               <androidx.recyclerview.widget.RecyclerView
-                   android:id="@+id/mGridViewMin"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:layout_marginBottom="5dp"
-                   android:layout_below="@+id/txt4"
-                   android:layout_alignParentStart="true"
-                   android:overScrollMode="never" />
-           </RelativeLayout>
-       </LinearLayout>
-   </LinearLayout>
+                <TextView
+                    android:id="@+id/txt3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="THỂ LOẠI"
+                    android:textSize="15sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/mGridViewType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txt3"
+                    android:layout_marginBottom="5dp"
+                    android:overScrollMode="never"
+
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/white"
+                android:gravity="center"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/txt4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="TỐI ƯU ĐIỆN THOẠI"
+                    android:textSize="15sp"
+                    tools:ignore="HardcodedText" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/mGridViewMin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txt4"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="5dp"
+                    android:overScrollMode="never" />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

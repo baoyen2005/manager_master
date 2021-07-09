@@ -5,6 +5,7 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
+        android:background="#4D696969"
         android:id="@+id/li1"
         android:layout_width="0dp"
         android:layout_height="0dp"

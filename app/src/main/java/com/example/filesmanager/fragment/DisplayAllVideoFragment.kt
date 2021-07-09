@@ -22,6 +22,7 @@ import com.example.filesmanager.R
 import com.example.filesmanager.activity.PhotoActivity
 import com.example.filesmanager.utils.FileOpen
 import com.example.filesmanager.utils.FileShare
+import com.example.filesmanager.utils.FindInformationImg
 import java.io.File
 import java.io.IOException
 
@@ -237,116 +238,8 @@ class DisplayAllVideoFragment : Fragment(), RecentlyImageAdapter.OnItemClickList
     }
 
     private fun findInformation(file: File,position:Int) {
-        val size = file.length()//Byte
-        var sizeMB: Double = 0.toDouble() // Mb
-        var sizeGB: Double = 0.toDouble() // GB
-        if (size >= 1024) {
-            sizeMB = (size / 1024).toDouble()
-
-        } else if (size > 1024 * 1024) {
-            sizeGB = (sizeMB) / 1024
-        }
-        if (file.isDirectory && size > 1024 * 1024 && adapter.quanlityFile.get(position)!! > 1) {
-            Log.d("yen", adapter.quanlityFile.toString())
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: folder" +
-                    "\nKích thước: $sizeGB Gb" +
-                    "\nNội dung: ${adapter.quanlityFile.get(position)} files" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-
-        } else if (file.isDirectory && size > 1024 * 1024 && adapter.quanlityFile.get(position)!! == 1) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: folder" +
-                    "\nKích thước: $sizeGB Gb" +
-                    "\nNội dung: ${adapter.quanlityFile.get(position)} file" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-
-        } else if (file.isDirectory && size > 1024 * 1024 && adapter.quanlityFile.get(position)!! == 0) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: folder" +
-                    "\nKích thước: $sizeGB Gb" +
-                    "\nNội dung: 0 file" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified.get(position)}" +
-                    "\nQuy trình: ${file.absolutePath}"
-
-        } else if (file.isDirectory && 1024 < size && size < 1024 * 1024 && adapter.quanlityFile.get(
-                position
-            )!! > 1
-        ) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: folder" +
-                    "\nKích thước: $sizeMB Mb" +
-                    "\nNội dung: ${adapter.quanlityFile.get(position)!!} files" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-
-        } else if (file.isDirectory && 1024 < size && size < 1024 * 1024 && adapter.quanlityFile.get(
-                position
-            ) == 1
-        ) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: folder" +
-                    "\nKích thước: $sizeMB Mb" +
-                    "\nNội dung: ${adapter.quanlityFile[position]} file" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-        } else if (file.isDirectory && 1024 < size && size < 1024 * 1024 && adapter.quanlityFile.get(
-                position
-            ) == 0
-        ) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: folder" +
-                    "\nKích thước: $sizeMB Mb" +
-                    "\nNội dung: 0 file" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-        } else if (file.isDirectory && size < 1024 && adapter.quanlityFile.get(position) == 1) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: folder" +
-                    "\nKích thước: $size Kb" +
-                    "\nNội dung: ${adapter.quanlityFile[position]} file" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-
-        } else if (file.isDirectory && size < 1024 && adapter.quanlityFile.get(position)!! > 1) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: folder" +
-                    "\nKích thước: $size Kb" +
-                    "\nNội dung: ${adapter.quanlityFile[position]} files" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-
-        } else if (file.isDirectory && size < 1024 && adapter.quanlityFile.get(position) == 1) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: folder" +
-                    "\nKích thước: $size Kb" +
-                    "\nNội dung: 0 file" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-
-        } else if (!file.isDirectory && size > 1024 * 1024) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: file" +
-                    "\nKích thước: $sizeGB Gb" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-
-        } else if (!file.isDirectory && size > 1024 && size < 1024 * 1024) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: file" +
-                    "\nKích thước: $sizeMB Mb" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-
-        } else if (!file.isDirectory && size < 1024) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: file" +
-                    "\nKích thước: $size Kb" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-        }
+        val find = FindInformationImg(file , position, adapter)
+        tvInformation.text = find.findInfor()
     }
     fun dialogYesOrNo(context: Context, title: String, message: String, listener: DialogInterface.OnClickListener
     ) {

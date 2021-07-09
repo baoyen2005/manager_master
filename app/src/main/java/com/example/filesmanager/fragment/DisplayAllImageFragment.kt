@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
@@ -16,12 +17,14 @@ import androidx.annotation.RequiresApi
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.filesmanager.Adapter.RecentlyImageAdapter
 import com.example.filesmanager.R
 import com.example.filesmanager.activity.PhotoActivity
 import com.example.filesmanager.utils.FileOpen
 import com.example.filesmanager.utils.FileShare
+import com.example.filesmanager.utils.FindInformationImg
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -38,6 +41,9 @@ class DisplayAllImageFragment() : Fragment(), RecentlyImageAdapter.OnItemClickLi
     private var ok = false
     lateinit var drawerLayoutFile: DrawerLayout
     lateinit var tvInformation: TextView
+    lateinit var imgTransfer: ImageView
+    lateinit var imgOrder: ImageView
+    private var transferType = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -48,7 +54,9 @@ class DisplayAllImageFragment() : Fragment(), RecentlyImageAdapter.OnItemClickLi
             Log.d("yn", "bundle: "+ bundle)
             Log.d("yn", "path: "+ path)
         }
-
+        imgTransfer = (requireActivity() as PhotoActivity).imgGridToolBar!!
+        imgOrder = (requireActivity() as PhotoActivity).imgOrderToolBar!!
+        transferType = (requireActivity() as PhotoActivity).checkTransfer
 
     }
 
@@ -66,6 +74,7 @@ class DisplayAllImageFragment() : Fragment(), RecentlyImageAdapter.OnItemClickLi
 
         setUpRecyclerViewType()
         displayImg()
+        initTransfer()
     }
     private fun setUpRecyclerViewType() {
         if(!isList){
@@ -194,116 +203,8 @@ class DisplayAllImageFragment() : Fragment(), RecentlyImageAdapter.OnItemClickLi
     }
 
     private fun findInformation(file: File,position:Int) {
-        val size = file.length()//Byte
-        var sizeMB: Double = 0.toDouble() // Mb
-        var sizeGB: Double = 0.toDouble() // GB
-        if (size >= 1024) {
-            sizeMB = (size / 1024).toDouble()
-
-        } else if (size > 1024 * 1024) {
-            sizeGB = (sizeMB) / 1024
-        }
-        if (file.isDirectory && size > 1024 * 1024 && adapter.quanlityFile.get(position)!! > 1) {
-            Log.d("yen", adapter.quanlityFile.toString())
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: folder" +
-                    "\nKích thước: $sizeGB Gb" +
-                    "\nNội dung: ${adapter.quanlityFile.get(position)} files" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-
-        } else if (file.isDirectory && size > 1024 * 1024 && adapter.quanlityFile.get(position)!! == 1) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: folder" +
-                    "\nKích thước: $sizeGB Gb" +
-                    "\nNội dung: ${adapter.quanlityFile.get(position)} file" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-
-        } else if (file.isDirectory && size > 1024 * 1024 && adapter.quanlityFile.get(position)!! == 0) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: folder" +
-                    "\nKích thước: $sizeGB Gb" +
-                    "\nNội dung: 0 file" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified.get(position)}" +
-                    "\nQuy trình: ${file.absolutePath}"
-
-        } else if (file.isDirectory && 1024 < size && size < 1024 * 1024 && adapter.quanlityFile.get(
-                position
-            )!! > 1
-        ) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: folder" +
-                    "\nKích thước: $sizeMB Mb" +
-                    "\nNội dung: ${adapter.quanlityFile.get(position)!!} files" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-
-        } else if (file.isDirectory && 1024 < size && size < 1024 * 1024 && adapter.quanlityFile.get(
-                position
-            ) == 1
-        ) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: folder" +
-                    "\nKích thước: $sizeMB Mb" +
-                    "\nNội dung: ${adapter.quanlityFile[position]} file" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-        } else if (file.isDirectory && 1024 < size && size < 1024 * 1024 && adapter.quanlityFile.get(
-                position
-            ) == 0
-        ) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: folder" +
-                    "\nKích thước: $sizeMB Mb" +
-                    "\nNội dung: 0 file" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-        } else if (file.isDirectory && size < 1024 && adapter.quanlityFile.get(position) == 1) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: folder" +
-                    "\nKích thước: $size Kb" +
-                    "\nNội dung: ${adapter.quanlityFile[position]} file" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-
-        } else if (file.isDirectory && size < 1024 && adapter.quanlityFile.get(position)!! > 1) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: folder" +
-                    "\nKích thước: $size Kb" +
-                    "\nNội dung: ${adapter.quanlityFile[position]} files" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-
-        } else if (file.isDirectory && size < 1024 && adapter.quanlityFile.get(position) == 1) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: folder" +
-                    "\nKích thước: $size Kb" +
-                    "\nNội dung: 0 file" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-
-        } else if (!file.isDirectory && size > 1024 * 1024) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: file" +
-                    "\nKích thước: $sizeGB Gb" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-
-        } else if (!file.isDirectory && size > 1024 && size < 1024 * 1024) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: file" +
-                    "\nKích thước: $sizeMB Mb" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-
-        } else if (!file.isDirectory && size < 1024) {
-            tvInformation.text = "${file.name}" +
-                    "\n\nKiểu: file" +
-                    "\nKích thước: $size Kb" +
-                    "\nSửa đổi lần cuối: ${adapter.lastModified[position]}" +
-                    "\nQuy trình: ${file.absolutePath}"
-        }
+        val find = FindInformationImg(file , position, adapter)
+        tvInformation.text = find.findInfor()
     }
     fun dialogYesOrNo(context: Context, title: String, message: String, listener: DialogInterface.OnClickListener
     ) {
@@ -337,7 +238,63 @@ class DisplayAllImageFragment() : Fragment(), RecentlyImageAdapter.OnItemClickLi
             }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
+    private fun initTransfer() {
 
+        imgTransfer.setOnClickListener {
+            if (transferType) {
+                transferType = false
+                isList = true
+                mRecycleAnh.layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
+                adapter =
+                    RecentlyImageAdapter("Hình ảnh", isList, requireContext(), listAnh, this)
+                mRecycleAnh.adapter = adapter
+                Log.d("islist", "getItemViewType: isList" + isList.toString())
+                imgTransfer.setImageResource(R.drawable.ic_baseline_view_linear)
+            } else {
+                isList = false
+                transferType = true
+                mRecycleAnh.layoutManager =
+                    GridLayoutManager(requireContext(), 2)
+                adapter =
+                    RecentlyImageAdapter("Hình ảnh", isList, requireContext(), listAnh, this)
+                mRecycleAnh.adapter = adapter
+                imgTransfer.setImageResource(R.drawable.ic_baseline_view_grid)
+
+
+            }
+        }
+
+        imgOrder.setOnClickListener {
+            val popup = PopupMenu(requireActivity(), it)
+            val inflater = popup.menuInflater
+            inflater.inflate(R.menu.tool_toolbar_menu, popup.menu)
+            popup.show()
+            popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
+                if (item.itemId == R.id.orderByName_tool) {
+                    listAnh.sortBy { it.name }
+                    adapter.updateDataTool(listAnh)
+                    return@OnMenuItemClickListener true
+
+
+                } else if (item.itemId == R.id.orderByTime_tool) {
+
+                    listAnh.sortBy { it.lastModified() }
+                    adapter.updateDataTool(listAnh)
+
+                    return@OnMenuItemClickListener true
+                } else if (item.itemId == R.id.ic_shareImg) {
+                    listAnh.sortBy { it.length() }
+                    adapter.updateDataTool(listAnh)
+                    return@OnMenuItemClickListener true
+                }
+                false
+            })
+
+
+        }
+    }
     companion object {
 
         fun newInstance(param1: String,s :String ) =

@@ -1,15 +1,16 @@
 package com.example.filesmanager.fragment
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
 import android.os.Environment
+import android.provider.Settings
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,14 +19,18 @@ import com.example.filesmanager.Adapter.OptimalAdapter
 import com.example.filesmanager.Adapter.RecentlyImageAdapter
 import com.example.filesmanager.Adapter.TypeAdapter
 import com.example.filesmanager.R
+import com.example.filesmanager.activity.MainActivity
 import com.example.filesmanager.activity.PhotoActivity
 import com.example.filesmanager.model.Type
+import com.example.filesmanager.utils.FileOpen
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.navigation.NavigationView
 import java.io.File
+import java.io.IOException
 
 class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool,
     Toolbar.OnMenuItemClickListener, TypeAdapter.OnItemClickListenerType,
-    OptimalAdapter.OnItemClickListenerOptimal {
+    OptimalAdapter.OnItemClickListenerOptimal{
 
     private var listImgRecently = ArrayList<File>()
     lateinit var mRecycleViewRecently: RecyclerView
@@ -43,7 +48,10 @@ class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool,
     lateinit var mGridviewOptimal: RecyclerView
     lateinit var optimalAdapter: OptimalAdapter
     private var optimalList = ArrayList<Type>()
-
+    lateinit var canhbao : ImageView
+    lateinit var btnNavigation :ImageView
+    lateinit var drawerLayoutFile :DrawerLayout
+    lateinit var navi :NavigationView
     fun newInstance(): ToolFragment {
         return ToolFragment()
     }
@@ -57,17 +65,28 @@ class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool,
 
     }
 
+    @SuppressLint("WrongConstant")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         var view = inflater.inflate(R.layout.fragment_tool, container, false)
+        drawerLayoutFile = (requireActivity() as MainActivity).drawer!!
+        navi = (requireActivity()as MainActivity).navigationViewStart
         mRecycleViewRecently = view.findViewById(R.id.recycle_recently)
         mGridViewType = view.findViewById(R.id.mGridViewType)
         mGridviewOptimal = view.findViewById(R.id.mGridViewMin)
         toolbarTool = view.findViewById(R.id.toolbarTool)
-        toolbarTool.setOnMenuItemClickListener(this)
+        canhbao = view.findViewById(R.id.canhbao)
+        btnNavigation = view.findViewById(R.id.btnNavigation)
+        canhbao.setOnClickListener {
+            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+            startActivity(intent)
+        }
+        btnNavigation.setOnClickListener{
+            drawerLayoutFile.openDrawer(Gravity.START)
+        }
 
         return view
     }
@@ -80,6 +99,7 @@ class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool,
         displayType()
         setUpRecyclerViewOptimal()
         displayOptimal()
+
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -184,7 +204,12 @@ class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool,
     }
 
     override fun onItemClickTool(file: File, position: Int) {
-        TODO("Not yet implemented")
+        try {
+            var fileOpen = FileOpen()
+            fileOpen.openFile(requireContext(),file)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 
     override fun onOptionsMenuClickedTool(view: View, file: File, position: Int) {
@@ -221,5 +246,6 @@ class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool,
     override fun onItemClickOptimal(type: Type, position: Int) {
         TODO("Not yet implemented")
     }
+
 
 }

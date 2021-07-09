@@ -1,9 +1,14 @@
 package com.example.filesmanager.activity
 
 import android.Manifest.permission
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import android.view.Gravity
+import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -17,18 +22,20 @@ import com.example.filesmanager.fragment.CleanFragment
 import com.example.filesmanager.fragment.FileFragment
 import com.example.filesmanager.fragment.ToolFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var adapter: ViewPagerAdapter
-    var drawer : DrawerLayout? = null
-    var txtInform :TextView ? = null
-    lateinit var viewPager:ViewPager
+    var drawer: DrawerLayout? = null
+    var txtInform: TextView? = null
+    lateinit var viewPager: ViewPager
     lateinit var bottomNavigationView: BottomNavigationView
     private var fileFrag = FileFragment()
     private var toolFrag = ToolFragment()
     private var cleanFrag = CleanFragment()
-    var sdCard :String? = null
+    var sdCard: String? = null
+    lateinit var navigationViewStart: NavigationView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -45,16 +52,18 @@ class MainActivity : AppCompatActivity() {
 
         viewPager = findViewById<ViewPager>(R.id.view_pager)
         bottomNavigationView = findViewById<BottomNavigationView>(R.id.botton_navigation)
-        adapter  = ViewPagerAdapter(supportFragmentManager)
+        navigationViewStart = findViewById(R.id.navigationViewStart)
+        adapter = ViewPagerAdapter(supportFragmentManager)
         adapter.addFragment(cleanFrag, "Làm")
         adapter.addFragment(toolFrag, "Công cụ")
         adapter.addFragment(fileFrag, "Quản lý tập tin")
         viewPager.adapter = adapter
-
+        navigationViewStart.setNavigationItemSelectedListener(this)
 
 
         requestPermission()
         setFragment()
+
     }
 
     private fun requestPermission() {
@@ -62,12 +71,17 @@ class MainActivity : AppCompatActivity() {
             if (ActivityCompat.checkSelfPermission(this, permission.READ_EXTERNAL_STORAGE) !=
                 PackageManager.PERMISSION_GRANTED
             ) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission.READ_EXTERNAL_STORAGE
+                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                        this, permission.READ_EXTERNAL_STORAGE
                     )
                 ) {
                     Toast.makeText(this, "Chờ cấp quyền truy cập", Toast.LENGTH_SHORT).show()
                 } else {
-                    ActivityCompat.requestPermissions(this, arrayOf(permission.WRITE_EXTERNAL_STORAGE), PackageManager.PERMISSION_GRANTED)
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(permission.WRITE_EXTERNAL_STORAGE),
+                        PackageManager.PERMISSION_GRANTED
+                    )
                 }
             }
         }
@@ -83,22 +97,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setFragment() {
-        var fragment : Fragment? = null
-        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+        var fragment: Fragment? = null
+        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
             }
 
             override fun onPageSelected(position: Int) {
-                when(position){
-                    0-> {
+                when (position) {
+                    0 -> {
                         bottomNavigationView.menu.findItem(R.id.ic_cleanup).isChecked = true
                         return
                     }
-                    1-> {
+                    1 -> {
                         bottomNavigationView.menu.findItem(R.id.ic_tool).isChecked = true
                         return
                     }
-                    2-> {
+                    2 -> {
                         bottomNavigationView.menu.findItem(R.id.ic_file).isChecked = true
                         return
                     }
@@ -111,40 +129,67 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-        bottomNavigationView.setOnNavigationItemSelectedListener {item ->
-            return@setOnNavigationItemSelectedListener when (item.itemId){
-                R.id.ic_cleanup  ->{
-                    viewPager.currentItem= 0
+        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            return@setOnNavigationItemSelectedListener when (item.itemId) {
+                R.id.ic_cleanup -> {
+                    viewPager.currentItem = 0
                     fragment = cleanFrag
                     true
                 }
-                R.id.ic_tool  ->{
+                R.id.ic_tool -> {
                     viewPager.currentItem = 1
                     fragment = toolFrag
                     true
 
                 }
-                R.id.ic_file  -> {
+                R.id.ic_file -> {
                     fragment = fileFrag
                     viewPager.currentItem = 2
                     true
                 }
 
-                else -> { false }
+                else -> {
+                    false
+                }
 
             }
 
         }
     }
 
-
     override fun onBackPressed() {
         if (supportFragmentManager.backStackEntryCount > 0) {
             supportFragmentManager.popBackStack()
-        }
-        else {
-                super.onBackPressed()
+        } else {
+            super.onBackPressed()
         }
     }
 
+    @SuppressLint("WrongConstant")
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_home -> {
+                viewPager.currentItem = 0
+                Toast.makeText(this,"Homeeeeeee", Toast.LENGTH_SHORT).show()
+            }
+            R.id.luutru_noi_bo -> {
+
+                viewPager.currentItem = 2
+
+            }
+            R.id.luutr_dien_thoai -> {
+                viewPager.currentItem = 2
+
+            }
+            R.id.setting -> {
+                val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+                startActivity(intent)
+
+            }
+
+        }
+        drawer?.closeDrawer(Gravity.START)
+        return true
+
+    }
 }

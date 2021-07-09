@@ -16,8 +16,12 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class AppAdapter(private var isList: Boolean, private var context: Context, private var appList: ArrayList<App>, private val listener: AppAdapter.OnItemClickListenerApp):
-    RecyclerView.Adapter<RecyclerView. ViewHolder>() {
+class AppAdapter(
+    private var isList: Boolean,
+    private var context: Context,
+    var appList: ArrayList<App>,
+    private val listener: AppAdapter.OnItemClickListenerApp
+    ): RecyclerView.Adapter<RecyclerView. ViewHolder>() {
 
     var quanlityFile = mutableMapOf<Int, Int>()
     var lastModified = ArrayList<String>()
@@ -25,6 +29,7 @@ class AppAdapter(private var isList: Boolean, private var context: Context, priv
     var isPosition: Int = 0
     val TYPE_A = 1
     val TYPE_B= 2
+    private val mAppList by lazy { ArrayList<App>() }
     override fun getItemViewType(position: Int): Int {
         if (isList) {
             return TYPE_A
@@ -50,6 +55,9 @@ class AppAdapter(private var isList: Boolean, private var context: Context, priv
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+
+        Log.w("yennnn", "onBindViewHolder: " + appList.size )
+        Log.w("yennnn", "--------------------------------: " + position )
         holder.setIsRecyclable(false)
         holder.apply {
             when(holder){
@@ -87,6 +95,7 @@ class AppAdapter(private var isList: Boolean, private var context: Context, priv
     }
 
     override fun getItemCount(): Int {
+        Log.e("yennnn", "getItemCount: " + appList.size )
         return appList.size
     }
 
@@ -109,7 +118,12 @@ class AppAdapter(private var isList: Boolean, private var context: Context, priv
     }
 
     fun updateDataApp(newList : List<App>){
-        appList = newList as ArrayList<App>
+        val newList1 = arrayListOf<App>()
+        newList1.addAll(newList)
+
+         appList.clear()
+        appList.addAll(newList1)
+//        appList = newList as ArrayList<App>
         Log.d("yenn", "updateDataTool: "+newList.size)
         notifyDataSetChanged()
     }

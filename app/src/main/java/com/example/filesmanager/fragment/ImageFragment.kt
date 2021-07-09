@@ -1,5 +1,6 @@
 package com.example.filesmanager.fragment
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -8,6 +9,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.*
+import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -31,14 +33,20 @@ class ImageFragment : Fragment(), ImageAdapter.OnItemClickListenerTool {
     lateinit var reAdapter: RecentlyImageAdapter
     var listFolderImage = ArrayList<FolerImage>()
     private var isList = false
-    private var listBackGrid = false
+    private var transferType = true
+
     @RequiresApi(Build.VERSION_CODES.Q)
     lateinit var drawerLayoutFile: DrawerLayout
     lateinit var tvInformation: TextView
+    lateinit var imgTransfer: ImageView
+    lateinit var imgOrder: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         drawerLayoutFile = (requireActivity() as PhotoActivity).drawerPhoto!!
         tvInformation = (requireActivity() as PhotoActivity).txtInformPhoto!!
+        imgTransfer = (requireActivity() as PhotoActivity).imgGridToolBar!!
+        imgOrder = (requireActivity() as PhotoActivity).imgOrderToolBar!!
+        transferType = (requireActivity() as PhotoActivity).checkTransfer
 
     }
 
@@ -46,7 +54,7 @@ class ImageFragment : Fragment(), ImageAdapter.OnItemClickListenerTool {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view= inflater.inflate(R.layout.fragment_image, container, false)
+        val view = inflater.inflate(R.layout.fragment_image, container, false)
 
         return view
     }
@@ -56,6 +64,8 @@ class ImageFragment : Fragment(), ImageAdapter.OnItemClickListenerTool {
         mGridViewImgPhoto = view.findViewById(R.id.mGridViewImgPhoto)
         setUpRecyclerView()
         listAllImage()
+        initTransfer()
+
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -69,11 +79,11 @@ class ImageFragment : Fragment(), ImageAdapter.OnItemClickListenerTool {
         } else {
             mGridViewImgPhoto.layoutManager =
                 GridLayoutManager(requireContext(), 2)
-            imgAdapter = ImageAdapter("Hình ảnh",isList, requireContext(), listFolderImage, this)
+            imgAdapter = ImageAdapter("Hình ảnh", isList, requireContext(), listFolderImage, this)
             mGridViewImgPhoto.adapter = imgAdapter
         }
-    }
 
+    }
 
 
     override fun onItemClickTool(file: FolerImage, position: Int) {
@@ -89,10 +99,11 @@ class ImageFragment : Fragment(), ImageAdapter.OnItemClickListenerTool {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
 
-            inflater.inflate(R.menu.img_menu, menu)
+        inflater.inflate(R.menu.img_menu, menu)
 
         super.onCreateOptionsMenu(menu, inflater)
     }
+
     override fun onOptionsMenuClickedTool(view: View, file: FolerImage, position: Int) {
         val popupMenu = PopupMenu(context, view)
         popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
@@ -104,15 +115,14 @@ class ImageFragment : Fragment(), ImageAdapter.OnItemClickListenerTool {
 
             } else if (item.itemId == R.id.ic_deleteImg) {
 
-                    dialogYesOrNo(requireContext(), "Delete", "Bạn có chắc muốn xóa file không?",
-                        DialogInterface.OnClickListener { dialog, id ->
-                            listFolderImage.remove(file)
-                            imgAdapter.updateDataTool(listFolderImage)
-                        })
+                dialogYesOrNo(requireContext(), "Delete", "Bạn có chắc muốn xóa file không?",
+                    DialogInterface.OnClickListener { dialog, id ->
+                        listFolderImage.remove(file)
+                        imgAdapter.updateDataTool(listFolderImage)
+                    })
 
                 return@OnMenuItemClickListener true
-            }
-            else if (item.itemId == R.id.ic_shareImg) {
+            } else if (item.itemId == R.id.ic_shareImg) {
                 val share = FileShare()
                 share.shareFile(requireContext(), file.file)
                 return@OnMenuItemClickListener true
@@ -132,7 +142,9 @@ class ImageFragment : Fragment(), ImageAdapter.OnItemClickListenerTool {
                 "\nSửa đổi lần cuối: ${imgAdapter.lastModified[position]}"
 
     }
-    fun dialogYesOrNo(context: Context, title: String, message: String, listener: DialogInterface.OnClickListener
+
+    fun dialogYesOrNo(
+        context: Context, title: String, message: String, listener: DialogInterface.OnClickListener
     ) {
         val builder = AlertDialog.Builder(context)
         builder.setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, id ->
@@ -183,10 +195,10 @@ class ImageFragment : Fragment(), ImageAdapter.OnItemClickListenerTool {
         val rootDir = Environment.getExternalStoragePublicDirectory(Environment.MEDIA_BAD_REMOVAL)
         listImage(rootDir)
         val rootDir2 =
-         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-              listImage(rootDir2)
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        listImage(rootDir2)
         val rootDir3 =
-           Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_SCREENSHOTS)
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_SCREENSHOTS)
         listImage(rootDir3)
         val root = Environment.getExternalStorageDirectory().absolutePath + "/Pictures"
         listImage(File(root))
@@ -200,6 +212,65 @@ class ImageFragment : Fragment(), ImageAdapter.OnItemClickListenerTool {
             Log.d("ddd", "listAllImage: " + f.name)
             Log.d("ddd", "listAllImage: " + f.lastModify)
             Log.d("ddd", "listAllImage: " + f.listImage.size)
+        }
+    }
+
+    @SuppressLint("ResourceType")
+    private fun initTransfer() {
+
+        imgTransfer.setOnClickListener {
+            if (transferType) {
+                transferType = false
+                isList = true
+                mGridViewImgPhoto.layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
+                imgAdapter =
+                    ImageAdapter("Hình ảnh", isList, requireContext(), listFolderImage, this)
+                mGridViewImgPhoto.adapter = imgAdapter
+                Log.d("islist", "getItemViewType: isList" + isList.toString())
+                imgTransfer.setImageResource(R.drawable.ic_baseline_view_linear)
+            } else {
+                isList = false
+                transferType = true
+                mGridViewImgPhoto.layoutManager =
+                    GridLayoutManager(requireContext(), 2)
+                imgAdapter =
+                    ImageAdapter("Hình ảnh", isList, requireContext(), listFolderImage, this)
+                mGridViewImgPhoto.adapter = imgAdapter
+                imgTransfer.setImageResource(R.drawable.ic_baseline_view_grid)
+
+
+            }
+        }
+
+        imgOrder.setOnClickListener {
+            val popup = PopupMenu(requireActivity(), it)
+            val inflater = popup.menuInflater
+            inflater.inflate(R.menu.tool_toolbar_menu, popup.menu)
+            popup.show()
+            popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
+                if (item.itemId == R.id.orderByName_tool) {
+                    listFolderImage.sortBy { it.name }
+                    imgAdapter.updateDataTool(listFolderImage)
+                    return@OnMenuItemClickListener true
+
+
+                } else if (item.itemId == R.id.orderByTime_tool) {
+
+                    listFolderImage.sortBy { it.lastModify }
+                    imgAdapter.updateDataTool(listFolderImage)
+
+                    return@OnMenuItemClickListener true
+                } else if (item.itemId == R.id.ic_shareImg) {
+                    listFolderImage.sortBy { it.listImage.size }
+                    imgAdapter.updateDataTool(listFolderImage)
+                    return@OnMenuItemClickListener true
+                }
+                false
+            })
+
+
         }
     }
 }

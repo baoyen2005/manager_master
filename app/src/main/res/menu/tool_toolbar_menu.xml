@@ -5,6 +5,6 @@
         <item android:title="Theo thời gian sửa đổi gần nhất"
             android:id="@+id/orderByTime_tool" />
         <item android:id="@+id/orderBySize"
-            android:title="Theo kích cỡ_tool" />
+            android:title="Theo kích cỡ" />
 
 </menu>

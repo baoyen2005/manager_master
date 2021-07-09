@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.filesmanager.R
@@ -18,7 +19,7 @@ import kotlin.collections.ArrayList
 
 
 class RecentlyImageAdapter(
-    var bundle: String,
+    var nameFolder: String,
     var isList: Boolean,
     private var context: Context,
     private var fileImage: ArrayList<File>,
@@ -35,14 +36,20 @@ class RecentlyImageAdapter(
     val TYPE_IMG = 3
     val TYPE_VIDEO = 4
     val TYPE_MP3 = 5
+    val TYPE_LIST = 6
     override fun getItemViewType(position: Int): Int {
-        if (isList && bundle == "anh") {
+        if (isList && nameFolder == "anh") {
             return TYPE_A
-        } else if (!isList && bundle == "Video" || bundle == "Hình ảnh" || bundle == "anh") {
+        } else if (!isList && nameFolder == "Video" || nameFolder == "Hình ảnh" || nameFolder == "anh") {
             return TYPE_B
-        } else if (!isList && bundle == "Âm nhạc") {
+        } else if (!isList && nameFolder == "Âm nhạc") {
             return TYPE_MP3
-        } else
+        }
+        else if (isList && nameFolder =="Hình ảnh") {
+            Log.d("islist", "getItemViewType: isList"+ isList.toString())
+            return TYPE_LIST
+        }
+        else
             return TYPE_A
     }
 
@@ -224,6 +231,54 @@ class RecentlyImageAdapter(
                         listener.onOptionsMenuClickedTool(it!!, fileItem, position)
                     }
                 }
+                is FileViewHolder4 -> {
+                    val fileItem = fileImage[position]
+                    holder.tvName.text = fileItem.name
+                    var date: Date = Date()
+                    date.time = fileItem.lastModified() // tra ve int
+                    val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("dd/MM")
+                    holder.tvTime.text = simpleDateFormat.format(date)
+                    lastModified.add(position, simpleDateFormat.format(date))
+
+                    if (nameFolder == "Hình ảnh") {
+                        holder.imgFile.setImageResource(R.drawable.anh)
+                    } else if (nameFolder == "Video") {
+                        holder.imgFile.setImageResource(R.drawable.video)
+                    } else if (nameFolder == "Âm nhạc") {
+                        holder.imgFile.setImageResource(R.drawable.nhac)
+                    } else {
+                        holder.imgFile.setImageResource(R.drawable.ungdung)
+                    }
+                    var length = 0
+
+                    val files = fileImage[position]
+                    val size  = files.length()
+                    Log.d("bbss", size.toString())
+                    if(size <1024){
+                        holder.tvSize.text = size.toString() + "B"
+                        fileSize.put(position,size.toDouble().toString())
+                    }
+                    else if(size >= 1024 && size < 1024*1024){
+
+                        var s = String.format("%.2f",(size.toDouble()/1024))
+                        fileSize.put(position,s)
+                        holder.tvSize.text = s +"KB"
+                    }
+                    else
+                    {
+                        //var sizeF :Double = (size/1024*1024).toDouble()
+                        var s = String.format("%.2f", (size.toDouble()/(1024*1024)))
+                        fileSize.put(position,s)
+                        holder.tvSize.text = s+"MB"
+                    }
+                    holder.itemView.setOnClickListener {
+
+                        listener.onItemClickTool(fileItem, position)
+                    }
+                    holder.tvOption.setOnClickListener {
+                        listener.onOptionsMenuClickedTool(it, fileItem, position)
+                    }
+                }
 
             }
         }
@@ -256,6 +311,19 @@ class RecentlyImageAdapter(
         var imgFile: ImageView = itemView.findViewById(R.id.imgRecently_tool_grid)
         var tvMenu: TextView = itemView.findViewById(R.id.txtmenuToolImgGrid)
         var tvSize: TextView = itemView.findViewById(R.id.txtSizeImgToolGrid)
+
+    }
+    inner class FileViewHolder4(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var tvName : TextView =
+            itemView.findViewById(R.id.tv_fileName)
+        var tvSize : TextView = itemView.findViewById(R.id.tvFileSize)
+
+        var tvTime: TextView = itemView.findViewById(R.id.tv_time)
+
+        var container : ConstraintLayout =
+            itemView.findViewById(R.id.container)
+        var imgFile : ImageView = itemView.findViewById(R.id.img_fileType)
+        var tvOption :TextView = itemView.findViewById(R.id.textViewOptions)
 
     }
 

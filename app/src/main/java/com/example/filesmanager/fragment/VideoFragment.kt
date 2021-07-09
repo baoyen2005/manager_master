@@ -4,9 +4,12 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.Settings
 import android.util.Log
 import android.view.*
 import android.widget.PopupMenu
@@ -27,6 +30,7 @@ import com.example.filesmanager.model.FolerImage
 import com.example.filesmanager.utils.AppAsynTask
 import com.example.filesmanager.utils.FileShare
 import java.io.File
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -77,9 +81,12 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
 
             val task = @SuppressLint("StaticFieldLeak")
             object : AppAsynTask(requireActivity()), AppAdapter.OnItemClickListenerApp {
+                val app = ArrayList<App>()
                 override fun onPostExecute(result: ArrayList<App>?) {
 
                     if (result != null) {
+                        Log.e("yennnn", "onPostExecute: " + result.size )
+                        app.addAll(result)
                         if (isList) {
                             mGridViewImgVideo.layoutManager =
                                 LinearLayoutManager(
@@ -95,6 +102,7 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
                             appAdapter = AppAdapter(isList, requireContext(), result, this)
                             mGridViewImgVideo.adapter = appAdapter
                         }
+                        result.sortBy { it.label }
                         appAdapter.updateDataApp(result)
                     }
                     super.onPostExecute(result)
@@ -104,19 +112,45 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
                     val popupMenu = PopupMenu(context, view)
                     popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
                         if (item.itemId == R.id.ic_openApp) {
+                            val launchApp :Intent = requireActivity().packageManager
+                                .getLaunchIntentForPackage(file.packageName)!!
+                            startActivity(launchApp)
                         }
+                        else if(item.itemId == R.id.ic_uninstallApp){
+                            val builder = AlertDialog.Builder(requireContext())
+                            builder.setTitle(file.label)
+                            builder.setMessage("Bạn có muốn gỡ cài đặt không?")
+                            builder.setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, id ->
+                                Log.d("yennnn", "app size start : ${app.size}")
+                                app.remove(file)
+                                appAdapter.updateDataApp(app)
+                                dialog.dismiss()
+                            })
 
+                            builder.setNegativeButton("No", DialogInterface.OnClickListener { dialog, id ->
+
+                                dialog.dismiss()
+                            })
+                            var alertDialog : AlertDialog = builder.create()
+                            alertDialog.show()
+
+                            return@OnMenuItemClickListener true
+                        }
+                        else {
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                            val uri = Uri.fromParts("package", file.packageName, null)
+                            intent.data = uri
+                            startActivity(intent)
+                        }
                         false
                     })
                     popupMenu.inflate(R.menu.app_menu)
-
                     popupMenu.show()
                 }
             }
             task.execute()
         }
     }
-
 
 
     private fun setUpRecyclerView(list: ArrayList<FolerImage>) {
