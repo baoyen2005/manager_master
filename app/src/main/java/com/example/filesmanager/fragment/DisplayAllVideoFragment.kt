@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
@@ -23,6 +24,7 @@ import com.example.filesmanager.activity.PhotoActivity
 import com.example.filesmanager.utils.FileOpen
 import com.example.filesmanager.utils.FileShare
 import com.example.filesmanager.utils.FindInformationImg
+import com.example.filesmanager.utils.TransferLayoutFile
 import java.io.File
 import java.io.IOException
 
@@ -38,6 +40,9 @@ class DisplayAllVideoFragment : Fragment(), RecentlyImageAdapter.OnItemClickList
     private var check: String = ""
     lateinit var drawerLayoutFile: DrawerLayout
     lateinit var tvInformation: TextView
+    lateinit var imgTransfer: ImageView
+    lateinit var imgOrder: ImageView
+    private var transferType = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -45,6 +50,9 @@ class DisplayAllVideoFragment : Fragment(), RecentlyImageAdapter.OnItemClickList
             path = it.getString("video").toString()
             check = it.getString("check").toString()
         }
+        imgTransfer = (requireActivity() as PhotoActivity).imgGridToolBar!!
+        imgOrder = (requireActivity() as PhotoActivity).imgOrderToolBar!!
+        transferType = (requireActivity() as PhotoActivity).checkTransfer
     }
 
     override fun onCreateView(
@@ -70,7 +78,10 @@ class DisplayAllVideoFragment : Fragment(), RecentlyImageAdapter.OnItemClickList
             setUpRecyclerViewType(listMusic)
             displayMusic()
         }
+        initClick()
     }
+
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
 
         inflater.inflate(R.menu.file_menu, menu)
@@ -276,7 +287,19 @@ class DisplayAllVideoFragment : Fragment(), RecentlyImageAdapter.OnItemClickList
             }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
+    private fun initClick() {
 
+        if(check == "Video"){
+            val click = TransferLayoutFile(imgTransfer,imgOrder,transferType,isList,
+                check,mRecycleVideo,adapter,listVideo,requireContext(),this)
+            click.initTransfer()
+        }
+        else if (check == "Âm nhạc"){
+            val click = TransferLayoutFile(imgTransfer,imgOrder,transferType,isList,
+                check,mRecycleVideo,adapter,listMusic,requireContext(),this)
+            click.initTransfer()
+        }
+    }
 
     companion object {
 

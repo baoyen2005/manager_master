@@ -9,12 +9,14 @@ import android.os.Environment
 import android.util.Log
 import android.view.*
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.filesmanager.Adapter.FileAdapter
 import com.example.filesmanager.R
@@ -34,10 +36,16 @@ class DocumentFragment : Fragment(), FileAdapter.OnItemClickListener {
     private var back = false
     lateinit var drawerLayoutFile: DrawerLayout
     lateinit var tvInformation: TextView
+    lateinit var imgTransfer: ImageView
+    lateinit var imgOrder: ImageView
+    private var transferType = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         drawerLayoutFile = (requireActivity() as PhotoActivity).drawerPhoto!!
         tvInformation = (requireActivity() as PhotoActivity).txtInformPhoto!!
+        imgTransfer = (requireActivity() as PhotoActivity).imgGridToolBar!!
+        imgOrder = (requireActivity() as PhotoActivity).imgOrderToolBar!!
+        transferType = (requireActivity() as PhotoActivity).checkTransfer
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -51,6 +59,7 @@ class DocumentFragment : Fragment(), FileAdapter.OnItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         setUpRecyclerViewType()
         displayTaiLieu()
+        initTransfer()
     }
     private fun setUpRecyclerViewType() {
         if(!isList && !back){
@@ -192,5 +201,62 @@ class DocumentFragment : Fragment(), FileAdapter.OnItemClickListener {
         alert.show()
     }
 
+    fun initTransfer() {
 
+        imgTransfer.setOnClickListener {
+            if (transferType) {
+                transferType = false
+                isList = true
+                back = true
+                mGridViewTaiLieu.layoutManager =
+                    LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+                adapter =
+                    FileAdapter(1,true, true, requireContext(), listFolderTaiLieu, this)
+                mGridViewTaiLieu.adapter = adapter
+                Log.d("islist", "getItemViewType: isList" + isList.toString())
+                imgTransfer.setImageResource(R.drawable.ic_baseline_view_linear)
+            } else {
+                back = false
+                isList = false
+                transferType = true
+                adapter= FileAdapter(3,false,false,requireContext(),listFolderTaiLieu,this)
+                mGridViewTaiLieu.layoutManager =
+                    GridLayoutManager(context,2)
+                mGridViewTaiLieu.adapter = adapter
+                imgTransfer.setImageResource(R.drawable.ic_baseline_view_grid)
+
+
+            }
+        }
+
+        imgOrder.setOnClickListener {
+            val popup = PopupMenu(context, it)
+            val inflater = popup.menuInflater
+            inflater.inflate(R.menu.tool_toolbar_menu, popup.menu)
+            popup.show()
+            popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
+                if (item.itemId == R.id.orderByName_tool) {
+                    listFolderTaiLieu.sortBy { it.name }
+                    adapter.updateData(listFolderTaiLieu)
+                    return@OnMenuItemClickListener true
+
+
+                } else if (item.itemId == R.id.orderByTime_tool) {
+
+                    listFolderTaiLieu.sortBy { it.lastModified() }
+                    adapter.updateData(listFolderTaiLieu)
+
+                    return@OnMenuItemClickListener true
+                } else if (item.itemId == R.id.ic_shareImg) {
+                    listFolderTaiLieu.sortBy { it.length() }
+                    adapter.updateData(listFolderTaiLieu)
+                    return@OnMenuItemClickListener true
+                }
+                false
+            })
+
+
+        }
+    }
 }

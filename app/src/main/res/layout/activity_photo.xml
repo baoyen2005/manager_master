@@ -46,7 +46,7 @@
                    android:id="@+id/imgGridToolBar"
                    android:layout_width="25dp"
                    android:layout_height="30dp"
-                   android:layout_marginStart="176dp"
+                   android:layout_marginStart="166dp"
                    android:src="@drawable/ic_baseline_view_grid"
                    app:layout_constraintStart_toEndOf="@id/txtHinhAnh"
                    app:layout_constraintTop_toTopOf="parent" />
@@ -55,7 +55,7 @@
                    android:id="@+id/imgOrderToolBar"
                    android:layout_width="25dp"
                    android:layout_height="30dp"
-                   android:layout_marginStart="16dp"
+                   android:layout_marginStart="20dp"
                    android:src="@drawable/ic_baseline_order"
                    app:layout_constraintStart_toEndOf="@id/imgGridToolBar"
                    app:layout_constraintTop_toTopOf="parent" />

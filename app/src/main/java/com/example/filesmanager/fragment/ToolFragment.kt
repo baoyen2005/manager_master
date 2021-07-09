@@ -8,7 +8,9 @@ import android.os.Environment
 import android.provider.Settings
 import android.util.Log
 import android.view.*
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -52,6 +54,7 @@ class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool,
     lateinit var btnNavigation :ImageView
     lateinit var drawerLayoutFile :DrawerLayout
     lateinit var navi :NavigationView
+    lateinit var btnTangTocTool :Button
     fun newInstance(): ToolFragment {
         return ToolFragment()
     }
@@ -80,6 +83,11 @@ class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool,
         toolbarTool = view.findViewById(R.id.toolbarTool)
         canhbao = view.findViewById(R.id.canhbao)
         btnNavigation = view.findViewById(R.id.btnNavigation)
+        btnTangTocTool = view.findViewById(R.id.btnTangTocTool)
+
+        btnTangTocTool.setOnClickListener {
+            Toast.makeText(context,"Tính năng đang update",Toast.LENGTH_SHORT).show()
+        }
         canhbao.setOnClickListener {
             val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
             startActivity(intent)
@@ -218,22 +226,11 @@ class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool,
 
     override fun onItemClickType(type: Type, position: Int) {
         var bundle = Bundle()
-//        if(type.name =="Hình ảnh"){
         bundle.putString("anh", type.name)
         Log.d("anh", "anh1 " + bundle.getString("anh"))
         var intent = Intent(context, PhotoActivity::class.java)
-        //(activity as PhotoActivity).txtAnh.text = type.name
         intent.putExtras(bundle)
         startActivity(intent)
-//        }
-//        else if(type.name =="Video"){
-//            val frag = ImageFragment()
-//            bundle.putString("anh",type.name)
-//            Log.d("anh", "anh1 "+ bundle.getString("anh"))
-//            var intent = Intent(context,PhotoActivity::class.java)
-//            intent.putExtras(bundle)
-//            startActivity(intent)
-//        }
     }
 
     override fun onResume() {
@@ -244,7 +241,7 @@ class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool,
     }
 
     override fun onItemClickOptimal(type: Type, position: Int) {
-        TODO("Not yet implemented")
+        Toast.makeText(context,"Tính năng đang update!!", Toast.LENGTH_SHORT).show()
     }
 
 

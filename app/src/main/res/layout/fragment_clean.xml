@@ -14,8 +14,13 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:background="@color/purple_200"
-        app:navigationIcon="@drawable/ic_baseline_menu_24"
+
         >
+        <ImageView
+            android:id="@+id/btnNavigationClean"
+            android:layout_width="30dp"
+            android:layout_height="25dp"
+            android:src="@drawable/ic_baseline_menu_24" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -25,6 +30,7 @@
             android:textColor="@color/black"
             android:textSize="20sp"/>
         <ImageView
+            android:id="@+id/canhbaoClean"
             android:src="@drawable/canhbao"
             android:layout_marginLeft="100dp"
             android:layout_width="30dp"

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.widget.TextView
@@ -170,7 +171,6 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
         when (item.itemId) {
             R.id.menu_home -> {
                 viewPager.currentItem = 0
-                Toast.makeText(this,"Homeeeeeee", Toast.LENGTH_SHORT).show()
             }
             R.id.luutru_noi_bo -> {
 
@@ -186,7 +186,46 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
                 startActivity(intent)
 
             }
-
+            R.id.photo -> {
+                var bundle = Bundle()
+                bundle.putString("anh", "ảnh chi tiết")
+                Log.d("anh", "anh1 " + bundle.getString("anh"))
+                var intent = Intent(this, PhotoActivity::class.java)
+                intent.putExtras(bundle)
+                startActivity(intent)
+            }
+            R.id.video -> {
+                var bundle = Bundle()
+                bundle.putString("anh", "video chi tiết")
+                Log.d("anh", "anh1 " + bundle.getString("anh"))
+                var intent = Intent(this, PhotoActivity::class.java)
+                intent.putExtras(bundle)
+                startActivity(intent)
+            }
+            R.id.music -> {
+                var bundle = Bundle()
+                bundle.putString("anh", "music chi tiết")
+                Log.d("anh", "anh1 " + bundle.getString("anh"))
+                var intent = Intent(this, PhotoActivity::class.java)
+                intent.putExtras(bundle)
+                startActivity(intent)
+            }
+            R.id.document -> {
+                var bundle = Bundle()
+                bundle.putString("anh", "tài liệu chi tiết")
+                Log.d("anh", "anh1 " + bundle.getString("anh"))
+                var intent = Intent(this, PhotoActivity::class.java)
+                intent.putExtras(bundle)
+                startActivity(intent)
+            }
+            R.id.apk -> {
+                var bundle = Bundle()
+                bundle.putString("anh", "apk")
+                Log.d("anh", "anh1 " + bundle.getString("anh"))
+                var intent = Intent(this, PhotoActivity::class.java)
+                intent.putExtras(bundle)
+                startActivity(intent)
+            }
         }
         drawer?.closeDrawer(Gravity.START)
         return true

@@ -34,19 +34,18 @@ class RecentlyImageAdapter(
     val TYPE_A = 1
     val TYPE_B = 2
     val TYPE_IMG = 3
-    val TYPE_VIDEO = 4
     val TYPE_MP3 = 5
-    val TYPE_LIST = 6
+    val TYPE_LIST = 4
     override fun getItemViewType(position: Int): Int {
         if (isList && nameFolder == "anh") {
             return TYPE_A
-        } else if (!isList && nameFolder == "Video" || nameFolder == "Hình ảnh" || nameFolder == "anh") {
+        } else if (!isList && (nameFolder == "Video" || nameFolder == "Hình ảnh" || nameFolder == "anh")) {
             return TYPE_B
         } else if (!isList && nameFolder == "Âm nhạc") {
             return TYPE_MP3
         }
-        else if (isList && nameFolder =="Hình ảnh") {
-            Log.d("islist", "getItemViewType: isList"+ isList.toString())
+        else if (isList && ((nameFolder =="Hình ảnh") || (nameFolder == "Video" )||(nameFolder == "Âm nhạc")|| (nameFolder == "Tài liệu"))) {
+            Log.d("islist", "name: isList"+ nameFolder.toString())
             return TYPE_LIST
         }
         else
@@ -61,9 +60,14 @@ class RecentlyImageAdapter(
                 FileViewHolder1(view)
             }
             TYPE_B -> {
+                Log.d("islist", "namejjj: isList"+ nameFolder.toString())
                 val view =
                     inflater.inflate(R.layout.item_image_recently_tools_gridview, parent, false)
                 FileViewHolder2(view)
+            }
+            TYPE_LIST -> {
+                val view = inflater.inflate(R.layout.file_container, parent, false)
+                FileViewHolder4(view)
             }
             else -> {
                 val view =

@@ -53,6 +53,36 @@ class PhotoActivity : AppCompatActivity() {
                 .replace(R.id.frameLayout, DocumentFragment())
                 .commit()
         }
+        else if(bundle.getString("anh") == "ảnh chi tiết"){
+            this.supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.frameLayout, ImageFragment())
+                .commit()
+        }
+        else if(bundle.getString("anh") == "video chi tiết"){
+            this.supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.frameLayout, VideoFragment("Video"))
+                .commit()
+        }
+        else if(bundle.getString("anh") == "music chi tiết"){
+            this.supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.frameLayout, VideoFragment("Âm nhạc"))
+                .commit()
+        }
+        else if(bundle.getString("anh") == "tài liệu chi tiết"){
+            this.supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.frameLayout, DocumentFragment())
+                .commit()
+        }
+        else if(bundle.getString("anh") == "apk"){
+            this.supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.frameLayout, VideoFragment("Ứng dụng"))
+                .commit()
+        }
         else{
             this.supportFragmentManager
                 .beginTransaction()

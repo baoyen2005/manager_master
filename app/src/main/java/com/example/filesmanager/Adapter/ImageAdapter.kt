@@ -35,11 +35,11 @@ class ImageAdapter(
     val TYPE_MP3 = 3
     val TYPE_lIST = 4
     override fun getItemViewType(position: Int): Int {
-        if (!isList && check == "Hình ảnh" || check == "Video") {
+        if (!isList && (check == "Hình ảnh" || check == "Video")) {
             return TYPE_B
         } else if (check == "Âm nhạc" && !isList) {
             return TYPE_MP3
-        } else if (isList && check =="Hình ảnh") {
+        } else if (isList && ((check =="Hình ảnh") || (check == "Video")||(check == "Âm nhạc") ||( check == "Ứng dụng"))) {
             Log.d("islist", "getItemViewType: isList"+ isList.toString())
             return TYPE_lIST
         } else {
@@ -124,11 +124,11 @@ class ImageAdapter(
                     val url: String = fileItem.listImage[fileItem.listImage.size - 1].absolutePath
                     holder.imgFile.setImageResource(R.drawable.zing)
 
-                    holder.tvName.text = fileItem.name
+                    holder.tvNameFile.text = fileItem.name
                     var date: Date = Date()
                     date.time = fileItem.lastModify // tra ve int
                     val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("dd/MM")
-                    holder.tvTime.text = simpleDateFormat.format(date)
+                    holder.tvDate.text = simpleDateFormat.format(date)
                     lastModified.add(position, simpleDateFormat.format(date))
 
 
@@ -141,7 +141,7 @@ class ImageAdapter(
                     }
 
 
-                    holder.tvOption.setOnClickListener {
+                    holder.tvMenu.setOnClickListener {
                         listener.onOptionsMenuClickedTool(it!!, fileItem, position)
                     }
                 }
@@ -153,7 +153,7 @@ class ImageAdapter(
                     val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("dd/MM")
                     holder.tvTime.text = simpleDateFormat.format(date)
                     lastModified.add(position, simpleDateFormat.format(date))
-
+                    Log.d("yennnn", "check = : "+ check)
                     if (check == "Hình ảnh") {
                         holder.imgFile.setImageResource(R.drawable.anh)
                     } else if (check == "Video") {
@@ -219,16 +219,12 @@ class ImageAdapter(
     }
 
     inner class FileViewHolder3(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tvName: TextView =
-            itemView.findViewById(R.id.tv_fileName)
-        var tvSize: TextView = itemView.findViewById(R.id.tvFileSize)
-
-        var tvTime: TextView = itemView.findViewById(R.id.tv_time)
-
-        var container: ConstraintLayout =
-            itemView.findViewById(R.id.container)
-        var imgFile: ImageView = itemView.findViewById(R.id.img_fileType)
-        var tvOption: TextView = itemView.findViewById(R.id.textViewOptions)
+        var tvNameFile: TextView =
+            itemView.findViewById(R.id.txtfileNameGrid)
+        var tvDate: TextView = itemView.findViewById(R.id.txtTimeImgToolGrid)
+        var imgFile: ImageView = itemView.findViewById(R.id.imgRecently_tool_grid)
+        var tvMenu: TextView = itemView.findViewById(R.id.txtmenuToolImgGrid)
+        var tvSize: TextView = itemView.findViewById(R.id.txtSizeImgToolGrid)
 
     }
 

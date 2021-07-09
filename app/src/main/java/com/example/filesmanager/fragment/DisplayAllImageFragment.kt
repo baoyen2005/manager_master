@@ -108,11 +108,7 @@ class DisplayAllImageFragment() : Fragment(), RecentlyImageAdapter.OnItemClickLi
     private fun displayImg(){
         listAnh.clear()
         val txtanh =  (activity as PhotoActivity).txtAnh.text.toString()
-
-
-            listAnh.addAll(findFileImage(File(path)))
-
-
+        listAnh.addAll(findFileImage(File(path)))
         Log.d("yenn", "listImgRecently: "+listAnh.size)
         adapter.updateDataTool(listAnh)
     }
@@ -247,18 +243,16 @@ class DisplayAllImageFragment() : Fragment(), RecentlyImageAdapter.OnItemClickLi
                 mRecycleAnh.layoutManager =
                     LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-                adapter =
-                    RecentlyImageAdapter("Hình ảnh", isList, requireContext(), listAnh, this)
+                adapter = RecentlyImageAdapter("Hình ảnh", true, requireContext(), listAnh, this)
                 mRecycleAnh.adapter = adapter
-                Log.d("islist", "getItemViewType: isList" + isList.toString())
+                Log.d("islist", "click: isList" + isList.toString())
                 imgTransfer.setImageResource(R.drawable.ic_baseline_view_linear)
             } else {
                 isList = false
                 transferType = true
                 mRecycleAnh.layoutManager =
                     GridLayoutManager(requireContext(), 2)
-                adapter =
-                    RecentlyImageAdapter("Hình ảnh", isList, requireContext(), listAnh, this)
+                adapter = RecentlyImageAdapter("Hình ảnh", isList, requireContext(), listAnh, this)
                 mRecycleAnh.adapter = adapter
                 imgTransfer.setImageResource(R.drawable.ic_baseline_view_grid)
 

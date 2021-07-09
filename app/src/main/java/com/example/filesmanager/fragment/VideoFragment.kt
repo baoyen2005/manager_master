@@ -12,6 +12,7 @@ import android.os.Environment
 import android.provider.Settings
 import android.util.Log
 import android.view.*
+import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -29,6 +30,7 @@ import com.example.filesmanager.model.App
 import com.example.filesmanager.model.FolerImage
 import com.example.filesmanager.utils.AppAsynTask
 import com.example.filesmanager.utils.FileShare
+import com.example.filesmanager.utils.TransferLayoutFolder
 import java.io.File
 
 
@@ -48,9 +50,16 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
     private var isList = false
     lateinit var drawerLayoutFile: DrawerLayout
     lateinit var tvInformation: TextView
+    lateinit var imgTransfer: ImageView
+    lateinit var imgOrder: ImageView
+    private var transferType = true
+    private val app = ArrayList<App>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        imgTransfer = (requireActivity() as PhotoActivity).imgGridToolBar!!
+        imgOrder = (requireActivity() as PhotoActivity).imgOrderToolBar!!
+        transferType = (requireActivity() as PhotoActivity).checkTransfer
 
     }
 
@@ -77,16 +86,18 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
         } else if (check == "Âm nhạc") {
             setUpRecyclerView(listFolderMusic)
             listAllMusic()
-        } else if (check == "Ứng dụng") {
+        }
+        else if (check == "Ứng dụng") {
 
             val task = @SuppressLint("StaticFieldLeak")
             object : AppAsynTask(requireActivity()), AppAdapter.OnItemClickListenerApp {
-                val app = ArrayList<App>()
+
                 override fun onPostExecute(result: ArrayList<App>?) {
 
                     if (result != null) {
-                        Log.e("yennnn", "onPostExecute: " + result.size )
+                        Log.e("yennnn", "onPostExecute: " + result.size)
                         app.addAll(result)
+                        Log.e("yennnn", "app: " + app.size)
                         if (isList) {
                             mGridViewImgVideo.layoutManager =
                                 LinearLayoutManager(
@@ -96,14 +107,65 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
                                 )
                             appAdapter = AppAdapter(isList, requireContext(), result, this)
                             mGridViewImgVideo.adapter = appAdapter
-                        } else {
+                        }
+                        else {
                             mGridViewImgVideo.layoutManager =
                                 GridLayoutManager(requireContext(), 2)
                             appAdapter = AppAdapter(isList, requireContext(), result, this)
                             mGridViewImgVideo.adapter = appAdapter
                         }
-                        result.sortBy { it.label }
                         appAdapter.updateDataApp(result)
+                        imgTransfer.setOnClickListener {
+                            if (transferType) {
+                                transferType = false
+                                isList = true
+                                mGridViewImgVideo.layoutManager =
+                                    LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+                                appAdapter = AppAdapter(isList, requireContext(), result, this)
+                                mGridViewImgVideo.adapter = appAdapter
+                                Log.d("islist", "getItemViewType: isList" + isList.toString())
+                                imgTransfer.setImageResource(R.drawable.ic_baseline_view_linear)
+                            } else {
+                                isList = false
+                                transferType = true
+                                mGridViewImgVideo.layoutManager =
+                                    GridLayoutManager(context, 2)
+                                appAdapter = AppAdapter(isList, requireContext(), result, this)
+                                mGridViewImgVideo.adapter = appAdapter
+                                imgTransfer.setImageResource(R.drawable.ic_baseline_view_grid)
+
+
+                            }
+                        }
+
+                        imgOrder.setOnClickListener {
+                            val popup = PopupMenu(context, it)
+                            val inflater = popup.menuInflater
+                            inflater.inflate(R.menu.tool_toolbar_menu, popup.menu)
+                            popup.show()
+                            popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
+                                if (item.itemId == R.id.orderByName_tool) {
+                                    result.sortBy { it.label }
+                                    appAdapter.updateDataApp(result)
+                                    return@OnMenuItemClickListener true
+
+
+                                } else if (item.itemId == R.id.orderByTime_tool) {
+
+                                    result.sortBy { it.date }
+                                    appAdapter.updateDataApp(result)
+
+                                    return@OnMenuItemClickListener true
+                                } else if (item.itemId == R.id.ic_shareImg) {
+                                    result.sortBy { it.sizeee }
+                                    appAdapter.updateDataApp(result)
+                                    return@OnMenuItemClickListener true
+                                }
+                                false
+                            })
+
+                        }
                     }
                     super.onPostExecute(result)
                 }
@@ -112,31 +174,33 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
                     val popupMenu = PopupMenu(context, view)
                     popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
                         if (item.itemId == R.id.ic_openApp) {
-                            val launchApp :Intent = requireActivity().packageManager
+                            val launchApp: Intent = requireActivity().packageManager
                                 .getLaunchIntentForPackage(file.packageName)!!
                             startActivity(launchApp)
-                        }
-                        else if(item.itemId == R.id.ic_uninstallApp){
+                        } else if (item.itemId == R.id.ic_uninstallApp) {
                             val builder = AlertDialog.Builder(requireContext())
                             builder.setTitle(file.label)
                             builder.setMessage("Bạn có muốn gỡ cài đặt không?")
-                            builder.setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, id ->
-                                Log.d("yennnn", "app size start : ${app.size}")
-                                app.remove(file)
-                                appAdapter.updateDataApp(app)
-                                dialog.dismiss()
-                            })
+                            builder.setPositiveButton(
+                                "Yes",
+                                DialogInterface.OnClickListener { dialog, id ->
+                                    Log.d("yennnn", "app size start : ${app.size}")
+                                    app.remove(file)
+                                    appAdapter.updateDataApp(app)
+                                    dialog.dismiss()
+                                })
 
-                            builder.setNegativeButton("No", DialogInterface.OnClickListener { dialog, id ->
+                            builder.setNegativeButton(
+                                "No",
+                                DialogInterface.OnClickListener { dialog, id ->
 
-                                dialog.dismiss()
-                            })
-                            var alertDialog : AlertDialog = builder.create()
+                                    dialog.dismiss()
+                                })
+                            var alertDialog: AlertDialog = builder.create()
                             alertDialog.show()
 
                             return@OnMenuItemClickListener true
-                        }
-                        else {
+                        } else {
                             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                             val uri = Uri.fromParts("package", file.packageName, null)
                             intent.data = uri
@@ -147,11 +211,13 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
                     popupMenu.inflate(R.menu.app_menu)
                     popupMenu.show()
                 }
+
             }
             task.execute()
         }
-    }
 
+        clickTransfer()
+    }
 
     private fun setUpRecyclerView(list: ArrayList<FolerImage>) {
         if (isList) {
@@ -187,6 +253,7 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
         }
         super.onCreateOptionsMenu(menu, inflater)
     }
+
     override fun onOptionsMenuClickedTool(view: View, file: FolerImage, position: Int) {
         val popupMenu = PopupMenu(context, view)
         popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
@@ -197,23 +264,21 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
 
 
             } else if (item.itemId == R.id.ic_deleteImg) {
-               if(check == "Video"){
-                   dialogYesOrNo(requireContext(), "Delete", "Bạn có chắc muốn xóa file không?",
-                       DialogInterface.OnClickListener { dialog, id ->
+                if (check == "Video") {
+                    dialogYesOrNo(requireContext(), "Delete", "Bạn có chắc muốn xóa file không?",
+                        DialogInterface.OnClickListener { dialog, id ->
                             listFolderVideo.remove(file)
-                           imgAdapter.updateDataTool(listFolderVideo)
-                       })
-               }
-                else if(check == "Âm nhạc"){
-                   dialogYesOrNo(requireContext(), "Delete", "Bạn có chắc muốn xóa file không?",
-                       DialogInterface.OnClickListener { dialog, id ->
-                           listFolderMusic.remove(file)
-                           imgAdapter.updateDataTool(listFolderMusic)
-                       })
-               }
+                            imgAdapter.updateDataTool(listFolderVideo)
+                        })
+                } else if (check == "Âm nhạc") {
+                    dialogYesOrNo(requireContext(), "Delete", "Bạn có chắc muốn xóa file không?",
+                        DialogInterface.OnClickListener { dialog, id ->
+                            listFolderMusic.remove(file)
+                            imgAdapter.updateDataTool(listFolderMusic)
+                        })
+                }
                 return@OnMenuItemClickListener true
-            }
-             else if (item.itemId == R.id.ic_shareImg) {
+            } else if (item.itemId == R.id.ic_shareImg) {
                 val share = FileShare()
                 share.shareFile(requireContext(), file.file)
                 return@OnMenuItemClickListener true
@@ -233,7 +298,9 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
                 "\nSửa đổi lần cuối: ${imgAdapter.lastModified[position]}"
 
     }
-    fun dialogYesOrNo(context: Context, title: String, message: String, listener: DialogInterface.OnClickListener
+
+    fun dialogYesOrNo(
+        context: Context, title: String, message: String, listener: DialogInterface.OnClickListener
     ) {
         val builder = AlertDialog.Builder(context)
         builder.setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, id ->
@@ -246,6 +313,7 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
         alert.setMessage(message)
         alert.show()
     }
+
     private fun findVideo(file: File) {
         if (file.isDirectory && !file.isHidden) {
             val listFile = file.listFiles()
@@ -342,5 +410,22 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
         val root2 = Environment.getExternalStorageDirectory().absolutePath + "/Music"
         findMusic(File(root2))
         imgAdapter.updateDataTool(listFolderMusic)
+    }
+
+    private fun clickTransfer() {
+        if(check == "Video"){
+            val click = TransferLayoutFolder(
+                imgTransfer, imgOrder, transferType, isList,
+                mGridViewImgVideo, imgAdapter, listFolderVideo, requireContext(), this,check)
+            click.initTransfer()
+        }
+        else if(check == "Âm nhạc"){
+            val click = TransferLayoutFolder(
+                imgTransfer, imgOrder, transferType, isList,
+                mGridViewImgVideo, imgAdapter, listFolderMusic, requireContext(), this,check)
+            click.initTransfer()
+        }
+        Log.e("yennnn", "app222: " + app.size)
+
     }
 }
