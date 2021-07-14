@@ -15,11 +15,14 @@
            android:layout_width="match_parent"
            android:layout_height="50dp"
            android:layout_gravity="center"
-           android:background="@color/gray">
+           android:background="@color/purple_200"
+           tools:ignore="MissingConstraints">
 
            <androidx.constraintlayout.widget.ConstraintLayout
                android:layout_width="match_parent"
-               android:layout_height="wrap_content">
+               android:layout_height="wrap_content"
+                android:id="@+id/constrain"
+               >
                <ImageView
                    app:layout_constraintTop_toTopOf="parent"
                    app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +30,6 @@
                    android:layout_width="20dp"
                    android:layout_height="30dp"
                    android:src="@drawable/ic_baseline_arrow_back_24" />
-
                <TextView
                    android:id="@+id/txtHinhAnh"
                    style="@style/TextAppearance.AppCompat.Title"
@@ -36,40 +38,42 @@
                    android:layout_marginStart="28dp"
                    android:layout_marginTop="4dp"
                    android:gravity="center"
-                   android:text="Hình ảnh"
+                   android:text="Pictures"
                    android:textColor="@color/black"
                    android:textSize="17sp"
                    app:layout_constraintStart_toEndOf="@id/image_back_hinhanh"
                    app:layout_constraintTop_toTopOf="parent" />
-
                <ImageView
                    android:id="@+id/imgGridToolBar"
                    android:layout_width="25dp"
                    android:layout_height="30dp"
-                   android:layout_marginStart="166dp"
+                   android:layout_marginEnd="20dp"
                    android:src="@drawable/ic_baseline_view_grid"
-                   app:layout_constraintStart_toEndOf="@id/txtHinhAnh"
+                   app:layout_constraintEnd_toStartOf="@id/imgOrderToolBar"
                    app:layout_constraintTop_toTopOf="parent" />
 
                <ImageView
                    android:id="@+id/imgOrderToolBar"
                    android:layout_width="25dp"
                    android:layout_height="30dp"
-                   android:layout_marginStart="20dp"
+                   android:layout_marginStart="4dp"
                    android:src="@drawable/ic_baseline_order"
-                   app:layout_constraintStart_toEndOf="@id/imgGridToolBar"
+                   app:layout_constraintEnd_toEndOf="parent"
                    app:layout_constraintTop_toTopOf="parent" />
            </androidx.constraintlayout.widget.ConstraintLayout>
        </com.google.android.material.appbar.MaterialToolbar>
 
        <FrameLayout
-           android:layout_marginTop="1dp"
            android:id="@+id/frameLayout"
            android:layout_width="match_parent"
            android:layout_height="0dp"
+           android:layout_marginTop="0dp"
            app:layout_constraintBottom_toBottomOf="parent"
            app:layout_constraintTop_toBottomOf="@+id/toolbarTool2222"
-           />
+           app:layout_constraintVertical_bias="1.0"
+           tools:layout_editor_absoluteX="172dp" />
+
+
    </androidx.constraintlayout.widget.ConstraintLayout>
     <com.google.android.material.navigation.NavigationView
         app:layout_constraintStart_toEndOf="parent"

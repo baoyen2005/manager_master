@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="Tăng tốc điện thoại"
+                android:text="Speed up your phone"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -45,20 +45,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Quét các ứng dụng nhiều RAM."
+            android:text="Scan for RAM-intensive applications."
             android:textSize="14sp"
             android:textStyle="normal"
             tools:ignore="HardcodedText" />
 
         <Button
-            android:textColor="@color/black"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@color/white"
             app:backgroundTint="@null"
-            android:background="@color/purple_200"
+            android:background="#BA0000FF"
             android:id="@+id/btnAction_Clean"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Tăng tốc ngay"
+            android:text="Speed up!"
+
             tools:ignore="HardcodedText" />
     </LinearLayout>
 

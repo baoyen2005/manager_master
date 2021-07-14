@@ -48,12 +48,12 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:gravity="center"
-            android:background="#69F0AE"
+            android:background="#0288D1"
             >
             <ImageView
                 android:id="@+id/img_folder"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_baseline_folder_24"
                 />
@@ -80,7 +80,8 @@
         android:layout_gravity="start"
         android:focusableInTouchMode="true"
         app:menu="@menu/navigation_tool_menu"
-        />
+        >
+    </com.google.android.material.navigation.NavigationView>
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

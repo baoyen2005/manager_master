@@ -57,7 +57,7 @@ class CleanFragment : Fragment() {
             drawerLayoutFile.openDrawer(Gravity.START)
         }
         btnDonDep.setOnClickListener {
-            Toast.makeText(context,"Tính năng đang update", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,"Feature is updating!", Toast.LENGTH_SHORT).show()
         }
         super.onViewCreated(view, savedInstanceState)
     }

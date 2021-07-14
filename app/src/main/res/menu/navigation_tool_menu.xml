@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="LƯU TRỮ">
+    <item android:title="SAVE">
         <menu>
             <item
                 android:id="@+id/menu_home"
                 android:icon="@drawable/ic_baseline_home_24"
-                android:title="Trang chủ" />
+                android:title="Home" />
             <item
                 android:id="@+id/luutru_noi_bo"
                 android:icon="@drawable/ic_luutrunoibo"
-                android:title="Lưu trữ nội bộ" />
+                android:title="External storage" />
             <item
                 android:id="@+id/luutr_dien_thoai"
                 android:icon="@drawable/ic_baseline_phone_android_24"
-                android:title="Lưu trữ điện thoại" />
+                android:title="Phone storage" />
         </menu>
     </item>
-    <item android:title="CÀI ĐẶT">
+    <item android:title="SETTING">
         <menu>
             <item
                 android:id="@+id/setting"
                 android:icon="@drawable/ic_baseline_settings_24"
-                android:title="Cài đặt" />
+                android:title="Setting" />
         </menu>
     </item>
-    <item android:title="LOẠI">
+    <item android:title="TYPE">
         <menu>
             <item
                 android:id="@+id/photo"
                 android:icon="@drawable/ic_baseline_photo_24"
-                android:title="Hình ảnh" />
+                android:title="Images" />
             <item
                 android:id="@+id/video"
                 android:icon="@drawable/ic_baseline_videocam_24"
-                android:title="Video" />
+                android:title="Videos" />
             <item
                 android:id="@+id/music"
                 android:icon="@drawable/ic_baseline_music_note_24"
-                android:title="Âm nhạc" />
+                android:title="Music" />
             <item
                 android:id="@+id/document"
                 android:icon="@drawable/ic_baseline_file_copy_24"
-                android:title="Tài liệu" />
+                android:title="Documents" />
             <item
                 android:id="@+id/apk"
                 android:icon="@drawable/apk_icon"
-                android:title="APK" />
+                android:title="APKs" />
         </menu>
     </item>
 

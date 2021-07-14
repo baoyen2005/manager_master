@@ -83,11 +83,11 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
             setUpRecyclerView(listFolderVideo)
             listAllVideo()
 
-        } else if (check == "Âm nhạc") {
+        } else if (check == "Music") {
             setUpRecyclerView(listFolderMusic)
             listAllMusic()
         }
-        else if (check == "Ứng dụng") {
+        else if (check == "Application") {
 
             val task = @SuppressLint("StaticFieldLeak")
             object : AppAsynTask(requireActivity()), AppAdapter.OnItemClickListenerApp {
@@ -126,7 +126,8 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
                                 mGridViewImgVideo.adapter = appAdapter
                                 Log.d("islist", "getItemViewType: isList" + isList.toString())
                                 imgTransfer.setImageResource(R.drawable.ic_baseline_view_linear)
-                            } else {
+                            }
+                            else {
                                 isList = false
                                 transferType = true
                                 mGridViewImgVideo.layoutManager =
@@ -146,19 +147,18 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
                             popup.show()
                             popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
                                 if (item.itemId == R.id.orderByName_tool) {
-                                    result.sortBy { it.label }
+                                    result.sortBy { it.label.lowercase() }
                                     appAdapter.updateDataApp(result)
                                     return@OnMenuItemClickListener true
-
 
                                 } else if (item.itemId == R.id.orderByTime_tool) {
-
-                                    result.sortBy { it.date }
+                                    result.sortByDescending { it.date }
                                     appAdapter.updateDataApp(result)
 
                                     return@OnMenuItemClickListener true
-                                } else if (item.itemId == R.id.ic_shareImg) {
-                                    result.sortBy { it.sizeee }
+                                } else if (item.itemId == R.id.orderBySizeTool) {
+                                    var checkIsDirectory = false
+                                    result.sortByDescending { it.size}
                                     appAdapter.updateDataApp(result)
                                     return@OnMenuItemClickListener true
                                 }
@@ -180,7 +180,7 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
                         } else if (item.itemId == R.id.ic_uninstallApp) {
                             val builder = AlertDialog.Builder(requireContext())
                             builder.setTitle(file.label)
-                            builder.setMessage("Bạn có muốn gỡ cài đặt không?")
+                            builder.setMessage("You want to delete app? Ok?")
                             builder.setPositiveButton(
                                 "Yes",
                                 DialogInterface.OnClickListener { dialog, id ->
@@ -246,7 +246,7 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
 
-        if (check == "Ứng dụng") {
+        if (check == "Application") {
             inflater.inflate(R.menu.app_menu, menu)
         } else {
             inflater.inflate(R.menu.img_menu, menu)
@@ -265,13 +265,13 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
 
             } else if (item.itemId == R.id.ic_deleteImg) {
                 if (check == "Video") {
-                    dialogYesOrNo(requireContext(), "Delete", "Bạn có chắc muốn xóa file không?",
+                    dialogYesOrNo(requireContext(), "Delete", "You want to delete file?",
                         DialogInterface.OnClickListener { dialog, id ->
                             listFolderVideo.remove(file)
                             imgAdapter.updateDataTool(listFolderVideo)
                         })
-                } else if (check == "Âm nhạc") {
-                    dialogYesOrNo(requireContext(), "Delete", "Bạn có chắc muốn xóa file không?",
+                } else if (check == "Music") {
+                    dialogYesOrNo(requireContext(), "Delete", "You want to delete file?",
                         DialogInterface.OnClickListener { dialog, id ->
                             listFolderMusic.remove(file)
                             imgAdapter.updateDataTool(listFolderMusic)
@@ -293,9 +293,9 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
     private fun findInformation(file: FolerImage, position: Int) {
 
         tvInformation.text = "${file.name}" +
-                "\n\nKiểu: folder" +
-                "\nKích thước:" +
-                "\nSửa đổi lần cuối: ${imgAdapter.lastModified[position]}"
+                "\n\nType: folder" +
+                "\nSize:" +
+                "\nLast Modified: ${imgAdapter.lastModified[position]}"
 
     }
 
@@ -382,9 +382,6 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
         val rootDir2 =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         findVideo(rootDir2)
-        val rootDir3 =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_SCREENSHOTS)
-        findVideo(rootDir3)
         val root = Environment.getExternalStorageDirectory().absolutePath + "/Pictures"
         findVideo(File(root))
         val root2 = Environment.getExternalStorageDirectory().absolutePath + "/Movies"
@@ -394,11 +391,7 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
         val root22 = Environment.getExternalStorageDirectory().absolutePath + "/ObjectRemover"
         findVideo(File(root22))
         imgAdapter.updateDataTool(listFolderVideo)
-        for (f in listFolderVideo) {
-            Log.d("ddd", "listAllImage: " + f.name)
-            Log.d("ddd", "listAllImage: " + f.lastModify)
-            Log.d("ddd", "listAllImage: " + f.listImage.size)
-        }
+
     }
 
     private fun listAllMusic() {
@@ -419,7 +412,7 @@ class VideoFragment(val check: String) : Fragment(), ImageAdapter.OnItemClickLis
                 mGridViewImgVideo, imgAdapter, listFolderVideo, requireContext(), this,check)
             click.initTransfer()
         }
-        else if(check == "Âm nhạc"){
+        else if(check == "Music"){
             val click = TransferLayoutFolder(
                 imgTransfer, imgOrder, transferType, isList,
                 mGridViewImgVideo, imgAdapter, listFolderMusic, requireContext(), this,check)

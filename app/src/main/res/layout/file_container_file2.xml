@@ -5,92 +5,93 @@
     android:id="@+id/container2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="@color/white">
+    app:cardBackgroundColor="@color/white"
+    android:layout_marginBottom="3dp"
+    >
 
     <LinearLayout
-        android:id="@+id/lin1"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#80696969"
-        android:gravity="center"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.96">
-
-        <ImageView
-            android:id="@+id/imgAnhFile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_baseline_folder_24" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/aaa"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@color/lavender"
-        android:gravity="center_vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/lin1"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/lin1"
-        app:layout_constraintTop_toBottomOf="@+id/lin1"
-        app:layout_constraintVertical_bias="0.0"
-        app:layout_constraintWidth_percent="0.96">
-
-        <TextView
-            android:id="@+id/txtfileName"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:ellipsize="marquee"
-            android:gravity="center_vertical"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:text="File name.png"
-            android:textAlignment="gravity"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.96"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1">
 
         <LinearLayout
+            android:id="@+id/lin1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#80696969"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/imgAnhFile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+
+                android:src="@drawable/ic_baseline_folder_24" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/aaa"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:orientation="horizontal"
-            android:weightSum="4">
+            android:background="@color/lavender"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_date"
-                android:layout_width="wrap_content"
+                android:id="@+id/txtfileName"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_weight="2"
-                android:gravity="start"
-                android:text="100"
-                android:textColor="@color/white" />
-
-            <TextView
-                android:id="@+id/txtmenu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:layout_weight="2"
-                android:gravity="end"
-                android:text="⋮"
+                android:ellipsize="middle"
+                android:singleLine="true"
+                android:textAlignment="gravity"
                 android:textColor="@color/white"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textSize="18sp" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <TextView
+                    android:id="@+id/tv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="2"
+                    android:gravity="start"
+                    android:text="100"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/txtmenu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:layout_weight="2"
+                    android:gravity="end"
+                    android:text="⋮"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

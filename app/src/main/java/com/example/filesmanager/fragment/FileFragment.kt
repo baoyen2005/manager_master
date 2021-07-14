@@ -10,6 +10,7 @@ import android.os.Environment
 import android.util.Log
 import android.view.*
 import android.widget.*
+import android.widget.LinearLayout
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.filesmanager.Adapter.FileAdapter
 import com.example.filesmanager.R
 import com.example.filesmanager.activity.MainActivity
+import com.example.filesmanager.utils.FileExtractUtils
 import com.example.filesmanager.utils.FileOpen
 import com.example.filesmanager.utils.FileShare
 import com.example.filesmanager.utils.FindInformation
@@ -28,6 +30,7 @@ import java.io.File
 import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
+
 
 class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenuItemClickListener{
 
@@ -44,16 +47,18 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
     lateinit var  linearSearch :LinearLayout
     lateinit var searchView:SearchView
     lateinit var tvDelete :TextView
-    lateinit var linearSave :TextView
+    lateinit var txtSave :TextView
     private var isEnable :Boolean = false
     lateinit var recyclerView:RecyclerView
     private var isList :Boolean = false
     private var listBackGrid = false
+    lateinit var imgSearch:ImageView
     private var nameSongs = ArrayList<String>()
     private var musics = ArrayList<File>()
     private lateinit var musicAdapter : ArrayAdapter<String>
     private var check = 1
-    public fun newInstance(): FileFragment {
+    private var arrayListCopy = ArrayList<File>()
+    fun newInstance(): FileFragment {
         return FileFragment()
     }
 
@@ -71,10 +76,10 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         drawerLayoutFile = (requireActivity() as MainActivity).drawer!!
         tvInformation = (requireActivity() as MainActivity).txtInform!!
 
-         linearSearch = view.findViewById(R.id.linearSearch)
          searchView = view.findViewById(R.id.searchView)
-         tvDelete = view.findViewById(R.id.tvDelete)
-        linearSave = view.findViewById(R.id.txtSave)
+        imgSearch = view.findViewById(R.id.imgSearch)
+        // tvDelete = view.findViewById(R.id.tvDelete)
+        txtSave = view.findViewById(R.id.txtSave)
 
         recyclerView = view.findViewById<RecyclerView>(R.id.recycle_internal)
 
@@ -84,33 +89,80 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         toolbar = view.findViewById<Toolbar>(R.id.toolbar_menu)
         toolbar.setOnMenuItemClickListener(this)
 
-        //setHasOptionsMenu(true)
+        imgSearch.setOnClickListener{
+            searchView.isIconified = false
+//            searchView.requestFocusFromTouch();
+
+            txtSave.visibility = View.INVISIBLE
+            imgSearch.visibility = View.INVISIBLE
+            searchView.visibility =View.VISIBLE
+            searchView.setOnQueryTextListener (object: SearchView.OnQueryTextListener{
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    TODO("Not yet implemented")
+                }
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    var text:String  = newText.toString()
+                    var file :ArrayList<File> = filter(text)
+                    fileAdapter.updateData(file)
+                    return  false
+                }
+            })
+        }
+        searchView.setOnCloseListener {
+            searchView.isIconified = false
+            txtSave.visibility = View.VISIBLE
+            imgSearch.visibility = View.VISIBLE
+            searchView.visibility =View.INVISIBLE
+            fileAdapter.updateData(fileList)
+            return@setOnCloseListener false
+        }
         return view
     }
+    private fun filter(charSequence: String) :ArrayList<File>{
+        arrayListCopy.clear()
+        arrayListCopy.addAll(fileList)
+        Log.d("noti", arrayListCopy.toString())
+        var tempArraylist = ArrayList<File>()
+        tempArraylist.clear()
+        var checkNull = false
+        if (charSequence.isNotEmpty()) {
+            for (file in fileList) {
+                if (file.name.lowercase(Locale.getDefault()).contains(charSequence)) {
+                    tempArraylist.add(file)
+                    checkNull = true
+                }
+            }
+        } else {
+            tempArraylist.addAll(fileList)
+        }
+        arrayListCopy.clear()
 
+        arrayListCopy.addAll(tempArraylist)
+        tempArraylist.clear()
+        return arrayListCopy
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val bundle = this.arguments
         filePath = bundle?.getString("path")
         setUpRecyclerView()
         displayFiles()
-      //  checkPermission()
 
     }
 
     private fun setUpRecyclerView() {
 
         if(isList&& listBackGrid ){
-            recyclerView?.layoutManager =
+            recyclerView.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             fileAdapter = FileAdapter(check,listBackGrid,isList,requireContext(), fileList, this)
-            recyclerView?.adapter = fileAdapter
+            recyclerView.adapter = fileAdapter
         }
         else{
-            recyclerView?.layoutManager =
+            recyclerView.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
             fileAdapter = FileAdapter(check,listBackGrid,isList,requireContext(), fileList, this)
-            recyclerView?.adapter = fileAdapter
+            recyclerView.adapter = fileAdapter
         }
     }
 
@@ -121,7 +173,6 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         if(root.absolutePath == Environment.getExternalStorageDirectory().toString()){
             if (files != null  ) {
                 arrayList.clear()
-                //arrayList.addAll(files)
                 for(fi in files ){
                     if(!fi.isHidden&& fi.isDirectory)
                         arrayList.add(fi)
@@ -152,7 +203,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         val storage = File(DIR_INTERNAL)
             fileList.clear()
             fileList.addAll(findFiles(storage))
-
+        arrayListCopy.addAll(fileList)
         fileAdapter.updateData(fileList)
 
     }
@@ -160,18 +211,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
 
         inflater.inflate(R.menu.toolbar_menu, menu)
-        var menu1: Menu = toolbar.menu
-        var menuItem :MenuItem = menu1.findItem(R.id.search)
-        if(isEnable){
-            isEnable= false
-            menuItem.title = "Delete"
-            menuItem.icon = resources.getDrawable(R.drawable.ic_baseline_clear_24)
-        }
-        else {
-            isEnable = true
-            menuItem.title = "Search"
-            menuItem.icon = resources.getDrawable(R.drawable.ic_baseline_search_24)
-        }
+      //  var menu1: Menu = toolbar.menu
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -194,10 +234,10 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
                isList = true
                listBackGrid = true
                check = 1
-               recyclerView?.layoutManager =
+               recyclerView.layoutManager =
                    LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
                fileAdapter = FileAdapter(check,listBackGrid,isList,requireContext(), fileList, this)
-               recyclerView?.adapter = fileAdapter
+               recyclerView.adapter = fileAdapter
                fileAdapter.updateData(fileList)
            }
        }
@@ -219,7 +259,9 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
             if (item.itemId == R.id.ic_information) {
                 drawerLayoutFile.openDrawer(Gravity.RIGHT)
-                findInformation(file,position)
+                Log.d("size", "onOptionsMenuClicked: infor"+ file.name+ "\n"+ position)
+                val find = FindInformation(file,position)
+                tvInformation.text = find.findInfor()
                 return@OnMenuItemClickListener true
 
 
@@ -227,8 +269,14 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
             else if (item.itemId == R.id.ic_rename) {
                 val builder = AlertDialog.Builder(requireContext())
                 builder.setTitle("Rename")
-
                 var editText :EditText = EditText(context)
+                editText.gravity = Gravity.START
+
+                val params: LinearLayout.LayoutParams =
+                    LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                params.setMargins(50,0,0,0)
+                editText.layoutParams = params
+
                 editText.setText(file.name.toString())
                 builder.setView(editText)
                 builder.setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, id ->
@@ -255,7 +303,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
                 return@OnMenuItemClickListener true
             }
             else if (item.itemId == R.id.ic_delete) {
-                    dialogYesOrNo(requireContext(),"Delete","Bạn có chắc muốn xóa file không?",
+                    dialogYesOrNo(requireContext(),"Delete","You want to delete file?",
                     DialogInterface.OnClickListener{dialog, id ->
                         val temp = fileList.remove(file)
                         fileAdapter.notifyDataSetChanged()
@@ -278,10 +326,10 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
     }
 
     @SuppressLint("SetTextI18n")
-    private fun findInformation(file: File, position:Int) {
-      val find = FindInformation(file , position, fileAdapter)
-        tvInformation.text = find.findInfor()
-    }
+//    private fun findInformation(file: File, position:Int) {
+//      val find = FindInformation(file)
+//        tvInformation.text = find.findInfor()
+//    }
 
     fun dialogYesOrNo(context: Context,  title: String, message: String, listener: DialogInterface.OnClickListener
     ) {
@@ -330,47 +378,20 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
     fun setUpRecyclerViewAdapter(){
-        recyclerView?.layoutManager =
+        recyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         fileAdapter = FileAdapter(1 ,true,true,requireContext(), fileList, this)
-        recyclerView?.adapter = fileAdapter
+        recyclerView.adapter = fileAdapter
     }
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         when(item?.itemId){
-            R.id.search ->{
-                if(item?.title == "Delete" ){
-                    item.icon = resources.getDrawable(R.drawable.sss)
-                    item.title = "Search"
-                    Toast.makeText(context,"${item.title}",Toast.LENGTH_SHORT).show()
-                    linearSearch.visibility = View.INVISIBLE
-                    linearSave.visibility = View.VISIBLE
-                }
-                else{
-                    item.icon = resources.getDrawable(R.drawable.xxx)
-                    item.title = "Delete"
-                  //  Toast.makeText(context,"${item.title}",Toast.LENGTH_SHORT).show()
-                    linearSearch.visibility = View.VISIBLE
-                    linearSave.visibility = View.INVISIBLE
-                    searchView.setOnQueryTextListener (object: SearchView.OnQueryTextListener{
-                        override fun onQueryTextSubmit(query: String?): Boolean {
-                            TODO("Not yet implemented")
-                        }
-                        override fun onQueryTextChange(newText: String?): Boolean {
-                           var text:String  = newText.toString()
-                            fileAdapter.filter(text)
-                            return  false
-                        }
-                    })
-                }
-                return true
 
-            }
             R.id.orderByName ->{
 
                 var fileCopy = ArrayList<File>()
                 fileCopy.addAll(fileList)
-                fileCopy.sortBy{it.name}
+                fileCopy.sortBy{it.name.lowercase()}
                 fileAdapter.updateData(fileCopy)
                // Toast.makeText(context,"Sap xep", Toast.LENGTH_SHORT).show()
                 return true
@@ -378,15 +399,23 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
             R.id.orderBySize ->{
                 var fileCopy = ArrayList<File>()
                 fileCopy.addAll(fileList)
-                fileCopy.sortByDescending{it.totalSpace}
+                var checkIsDirectory = false
+                for (file in fileCopy){
+                    if(!file.isDirectory){
+                        checkIsDirectory = true
+                    }
+                }
+                if(checkIsDirectory){
+                    fileCopy.sortByDescending { FileExtractUtils.getFileSize(it) }
+                }
+                else fileCopy.sortByDescending { FileExtractUtils.getQuanlityFile(it)}
                 fileAdapter.updateData(fileCopy)
-               // Toast.makeText(context,"Sap xep", Toast.LENGTH_SHORT).show()
                 return true
             }
             R.id.orderByTime -> {
                 var fileCopy = ArrayList<File>()
                 fileCopy.addAll(fileList)
-                fileCopy.sortByDescending{it.lastModified()}
+                fileCopy.sortByDescending{ FileExtractUtils.getFileLastModified(it)}
                 fileAdapter.updateData(fileCopy)
                // Toast.makeText(context,"Sap xep", Toast.LENGTH_SHORT).show()
                 return true
@@ -394,26 +423,26 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
             R.id.viewerByList -> {
                 isList = true
                 listBackGrid = true
-                recyclerView?.layoutManager =
+                recyclerView.layoutManager =
                     LinearLayoutManager(context,  LinearLayoutManager.VERTICAL,false)
                 fileAdapter = FileAdapter(1,listBackGrid,isList,requireContext(), fileList, this)
-                recyclerView?.adapter = fileAdapter
+                recyclerView.adapter = fileAdapter
                 fileAdapter.updateData(fileList)
             }
             R.id.viewerByO -> {
                 isList = false
                 listBackGrid = false
-                recyclerView?.layoutManager =
+                recyclerView.layoutManager =
                     GridLayoutManager(context, 2, GridLayoutManager.VERTICAL,false)
                fileAdapter = FileAdapter(2,listBackGrid,isList,requireContext(), fileList, this)
-                recyclerView?.adapter = fileAdapter
+                recyclerView.adapter = fileAdapter
                 fileAdapter.updateData(fileList)
             }
             R.id.createFile ->{
                 val builder = AlertDialog.Builder(requireContext())
                 builder.setTitle("Create")
                 var editText :EditText = EditText(context)
-                editText.hint= "Tên File"
+                editText.hint= "File name"
                 //editText.setText(file.name.toString())
                 builder.setView(editText)
                 builder.setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, id ->
@@ -437,7 +466,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
                 val builder = AlertDialog.Builder(requireContext())
                 builder.setTitle("Create")
                 var editText :EditText = EditText(context)
-                editText.hint= "Tên Folder"
+                editText.hint= "Folder Name"
                 //editText.setText(file.name.toString())
                 builder.setView(editText)
                 builder.setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, id ->

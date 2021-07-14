@@ -1,41 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/search"
-        android:icon="@drawable/sss"
-        android:title="Search"
-        app:showAsAction="always"/>
 
     <item android:id="@+id/orderBy"
-        android:title="Sắp xếp theo">
+        android:title="Sort by">
         <menu >
             <item android:id="@+id/orderByName"
-                android:title="Theo tên" />
-            <item android:title="Theo thời gian sửa đổi gần nhất"
+                android:title="Sort by name" />
+            <item android:title="Sort by lastmodified"
                 android:id="@+id/orderByTime" />
             <item android:id="@+id/orderBySize"
-                android:title="Theo kích cỡ" />
+                android:title="Sort by size" />
         </menu>
     </item>
     <item android:id="@+id/viewer"
-        android:title="Chế độ xem"
+        android:title="View"
         >
         <menu >
             <item android:id="@+id/viewerByList"
 
-                android:title="Hiển thị theo danh sách"/>
-            <item android:title="Hiển thị theo ô"
+                android:title="List view"/>
+            <item android:title="Cell view"
                 android:id="@+id/viewerByO"/>
         </menu>
     </item>
     <item android:id="@+id/create"
-        android:title="Tạo mới"
+        android:title="Create"
         >
         <menu >
             <item
                 android:id="@+id/createFile"
-                android:title="Tạo tập tin"/>
-            <item android:title="Thư mục mới"
+                android:title="Create file"/>
+            <item android:title="Create folder"
                 android:id="@+id/createFolder"/>
         </menu>
     </item>

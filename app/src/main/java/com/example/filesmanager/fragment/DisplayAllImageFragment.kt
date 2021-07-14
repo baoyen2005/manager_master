@@ -93,9 +93,9 @@ class DisplayAllImageFragment() : Fragment(), RecentlyImageAdapter.OnItemClickLi
             if (!singleImg.isHidden && singleImg.isDirectory) {
                 arrayList.addAll(findFileImage(singleImg))
             } else {
-                if (singleImg.name.endsWith("png") ||
-                    singleImg.name.endsWith("jpg") ||
-                    singleImg.name.endsWith("jpeg")
+                if (singleImg.extension=="png" ||
+                    singleImg.extension=="jpg" ||
+                    singleImg.extension=="jpeg"
                 ) {
                     arrayList.add(singleImg)
                 }
@@ -176,7 +176,7 @@ class DisplayAllImageFragment() : Fragment(), RecentlyImageAdapter.OnItemClickLi
                 return@OnMenuItemClickListener true
             }
             else if (item.itemId == R.id.ic_delete) {
-                dialogYesOrNo(requireContext(),"Delete","Bạn có chắc muốn xóa file không?",
+                dialogYesOrNo(requireContext(),"Delete","You want to delete file?",
                     DialogInterface.OnClickListener{ dialog, id ->
                         val temp = listAnh.remove(file)
                         adapter.notifyDataSetChanged()
@@ -199,7 +199,7 @@ class DisplayAllImageFragment() : Fragment(), RecentlyImageAdapter.OnItemClickLi
     }
 
     private fun findInformation(file: File,position:Int) {
-        val find = FindInformationImg(file , position, adapter)
+        val find = FindInformationImg(file )
         tvInformation.text = find.findInfor()
     }
     fun dialogYesOrNo(context: Context, title: String, message: String, listener: DialogInterface.OnClickListener
@@ -225,7 +225,7 @@ class DisplayAllImageFragment() : Fragment(), RecentlyImageAdapter.OnItemClickLi
                     Log.d("sssyen", "handleOnBackPressed: "+ ok.toString())
                     adapter.updateDataTool(listAnh)
 
-                    (activity as PhotoActivity).txtAnh.text = "Hình ảnh"
+                    (activity as PhotoActivity).txtAnh.text = "Image"
                     requireActivity().supportFragmentManager
                         .beginTransaction()
                         .replace(R.id.frameLayout, ImageFragment())
@@ -243,7 +243,7 @@ class DisplayAllImageFragment() : Fragment(), RecentlyImageAdapter.OnItemClickLi
                 mRecycleAnh.layoutManager =
                     LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-                adapter = RecentlyImageAdapter("Hình ảnh", true, requireContext(), listAnh, this)
+                adapter = RecentlyImageAdapter("picture", true, requireContext(), listAnh, this)
                 mRecycleAnh.adapter = adapter
                 Log.d("islist", "click: isList" + isList.toString())
                 imgTransfer.setImageResource(R.drawable.ic_baseline_view_linear)
@@ -252,7 +252,7 @@ class DisplayAllImageFragment() : Fragment(), RecentlyImageAdapter.OnItemClickLi
                 transferType = true
                 mRecycleAnh.layoutManager =
                     GridLayoutManager(requireContext(), 2)
-                adapter = RecentlyImageAdapter("Hình ảnh", isList, requireContext(), listAnh, this)
+                adapter = RecentlyImageAdapter("picture", isList, requireContext(), listAnh, this)
                 mRecycleAnh.adapter = adapter
                 imgTransfer.setImageResource(R.drawable.ic_baseline_view_grid)
 
@@ -274,12 +274,12 @@ class DisplayAllImageFragment() : Fragment(), RecentlyImageAdapter.OnItemClickLi
 
                 } else if (item.itemId == R.id.orderByTime_tool) {
 
-                    listAnh.sortBy { it.lastModified() }
+                    listAnh.sortByDescending { it.lastModified() }
                     adapter.updateDataTool(listAnh)
 
                     return@OnMenuItemClickListener true
-                } else if (item.itemId == R.id.ic_shareImg) {
-                    listAnh.sortBy { it.length() }
+                } else if (item.itemId == R.id.orderBySizeTool) {
+                    listAnh.sortByDescending { it.length() }
                     adapter.updateDataTool(listAnh)
                     return@OnMenuItemClickListener true
                 }

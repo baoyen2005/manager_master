@@ -55,9 +55,9 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
         bottomNavigationView = findViewById<BottomNavigationView>(R.id.botton_navigation)
         navigationViewStart = findViewById(R.id.navigationViewStart)
         adapter = ViewPagerAdapter(supportFragmentManager)
-        adapter.addFragment(cleanFrag, "Làm")
-        adapter.addFragment(toolFrag, "Công cụ")
-        adapter.addFragment(fileFrag, "Quản lý tập tin")
+        adapter.addFragment(cleanFrag, "Clean")
+        adapter.addFragment(toolFrag, "Tool")
+        adapter.addFragment(fileFrag, "Files Manager")
         viewPager.adapter = adapter
         navigationViewStart.setNavigationItemSelectedListener(this)
 
@@ -76,7 +76,8 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
                         this, permission.READ_EXTERNAL_STORAGE
                     )
                 ) {
-                    Toast.makeText(this, "Chờ cấp quyền truy cập", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "\n" +
+                            "Waiting for access permission", Toast.LENGTH_SHORT).show()
                 } else {
                     ActivityCompat.requestPermissions(
                         this,
@@ -85,6 +86,9 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
                     )
                 }
             }
+        }
+        else {
+            toolFrag.displayImage()
         }
     }
 

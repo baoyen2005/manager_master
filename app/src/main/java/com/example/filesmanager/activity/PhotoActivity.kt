@@ -35,7 +35,7 @@ class PhotoActivity : AppCompatActivity() {
             super.onBackPressed()
         }
         Log.d("anh", "anh "+ bundle.getString("anh"))
-        if(bundle.getString("anh") == "Hình ảnh"){
+        if(bundle.getString("anh") == "Image"){
             this.supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.frameLayout, ImageFragment())
@@ -47,7 +47,7 @@ class PhotoActivity : AppCompatActivity() {
                 .replace(R.id.frameLayout, VideoFragment(bundle.getString("anh")!!))
                 .commit()
         }
-        else if(bundle.getString("anh") == "Tài liệu"){
+        else if(bundle.getString("anh") == "Document"){
             this.supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.frameLayout, DocumentFragment())
@@ -68,7 +68,7 @@ class PhotoActivity : AppCompatActivity() {
         else if(bundle.getString("anh") == "music chi tiết"){
             this.supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.frameLayout, VideoFragment("Âm nhạc"))
+                .replace(R.id.frameLayout, VideoFragment("Music"))
                 .commit()
         }
         else if(bundle.getString("anh") == "tài liệu chi tiết"){
@@ -80,7 +80,7 @@ class PhotoActivity : AppCompatActivity() {
         else if(bundle.getString("anh") == "apk"){
             this.supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.frameLayout, VideoFragment("Ứng dụng"))
+                .replace(R.id.frameLayout, VideoFragment("Application"))
                 .commit()
         }
         else{

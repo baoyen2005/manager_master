@@ -15,7 +15,7 @@
         app:navigationIcon="@drawable/ic_baseline_chevron_left_24" >
         <TextView
             android:id="@+id/musicTool"
-            android:text="Âm thanh"
+            android:text="Music"
             style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

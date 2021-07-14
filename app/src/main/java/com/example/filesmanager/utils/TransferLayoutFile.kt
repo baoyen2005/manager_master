@@ -57,19 +57,17 @@ class TransferLayoutFile(var imgTransfer: ImageView,
             popup.show()
             popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
                 if (item.itemId == R.id.orderByName_tool) {
-                    listFile.sortBy { it.name }
+                    listFile.sortBy { it.name.lowercase() }
                     imgAdapter.updateDataTool(listFile)
                     return@OnMenuItemClickListener true
-
 
                 } else if (item.itemId == R.id.orderByTime_tool) {
-
-                    listFile.sortBy { it.lastModified() }
+                    listFile.sortByDescending { FileExtractUtils.getFileLastModified(it) }
                     imgAdapter.updateDataTool(listFile)
 
                     return@OnMenuItemClickListener true
-                } else if (item.itemId == R.id.ic_shareImg) {
-                    listFile.sortBy { it.length() }
+                } else if (item.itemId == R.id.orderBySizeTool) {
+                    listFile.sortByDescending { it.length()}
                     imgAdapter.updateDataTool(listFile)
                     return@OnMenuItemClickListener true
                 }

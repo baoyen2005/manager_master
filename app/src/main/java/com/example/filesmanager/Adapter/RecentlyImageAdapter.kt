@@ -11,11 +11,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.filesmanager.R
-import com.example.filesmanager.fragment.ToolFragment
+import com.example.filesmanager.utils.FileExtractUtils
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class RecentlyImageAdapter(
@@ -27,9 +26,9 @@ class RecentlyImageAdapter(
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var quanlityFile = mutableMapOf<Int, Int>()
-    var lastModified = ArrayList<String>()
-    var fileSize = mutableMapOf<Int, String>()
+    //    var quanlityFile = mutableMapOf<Int, Int>()
+//    var lastModified = ArrayList<String>()
+    // var fileSize = mutableMapOf<Int, String>()
     var isPosition: Int = 0
     val TYPE_A = 1
     val TYPE_B = 2
@@ -39,16 +38,16 @@ class RecentlyImageAdapter(
     override fun getItemViewType(position: Int): Int {
         if (isList && nameFolder == "anh") {
             return TYPE_A
-        } else if (!isList && (nameFolder == "Video" || nameFolder == "Hình ảnh" || nameFolder == "anh")) {
+        } else if (!isList && (nameFolder == "Video" || nameFolder == "picture" || nameFolder == "anh")) {
             return TYPE_B
-        } else if (!isList && nameFolder == "Âm nhạc") {
+        } else if (!isList && nameFolder == "Music") {
             return TYPE_MP3
-        }
-        else if (isList && ((nameFolder =="Hình ảnh") || (nameFolder == "Video" )||(nameFolder == "Âm nhạc")|| (nameFolder == "Tài liệu"))) {
-            Log.d("islist", "name: isList"+ nameFolder.toString())
+        } else if (isList && ((nameFolder == "picture") || (nameFolder == "Video") || (nameFolder == "Music")
+                    || (nameFolder == "Document"))
+        ) {
+            Log.d("islist", "name: isList" + nameFolder.toString())
             return TYPE_LIST
-        }
-        else
+        } else
             return TYPE_A
     }
 
@@ -60,7 +59,7 @@ class RecentlyImageAdapter(
                 FileViewHolder1(view)
             }
             TYPE_B -> {
-                Log.d("islist", "namejjj: isList"+ nameFolder.toString())
+                Log.d("islist", "namejjj: isList" + nameFolder.toString())
                 val view =
                     inflater.inflate(R.layout.item_image_recently_tools_gridview, parent, false)
                 FileViewHolder2(view)
@@ -71,7 +70,7 @@ class RecentlyImageAdapter(
             }
             else -> {
                 val view =
-                    inflater.inflate(R.layout.item_image_recently_tools_gridview, parent, false)
+                    inflater.inflate(R.layout.item_video_recently_tools_gridview, parent, false)
                 FileViewHolder3(view)
             }
         }
@@ -84,7 +83,6 @@ class RecentlyImageAdapter(
                 is FileViewHolder1 -> {
                     val f = fileImage[position]
                     val url: String = f.absolutePath
-                    val myFragment = ToolFragment()
                     Glide
                         .with(context)
                         .load(File(url))
@@ -105,38 +103,24 @@ class RecentlyImageAdapter(
                         .centerCrop()
                         .into(holder.imgFile)
 
+
                     holder.tvNameFile.text = fileItem.name
+
                     var date: Date = Date()
                     date.time = fileItem.lastModified() // tra ve int
                     val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("dd/MM")
                     holder.tvDate.text = simpleDateFormat.format(date)
-                    lastModified.add(position, simpleDateFormat.format(date))
-
 
                     var length = 0
                     if (fileItem.isDirectory) {
-                        val files = fileItem.listFiles()
-                        if (files != null) {
-                            length = files.size
-                            Log.d("aaa", "onBindViewHolder: " + length)
-                            if (length >= 1) {
-                                if (length == 1) {
-                                    holder.tvSize.text = "1 file"
-                                    quanlityFile.put(position, 1)
-                                } else {
-                                    holder.tvSize.text = "$length files"
-                                    quanlityFile.put(position, length)
-                                }
-                            } else {
-                                holder.tvSize.text = "empty"
-                                if (holder.tvSize.text == "empty") quanlityFile.put(position, 0)
-                            }
-                        } else {
+                        val quanlity = FileExtractUtils.getQuanlityFile(fileItem)
+                        if (quanlity == 0) {
                             holder.tvSize.text = "empty"
-                            //quanlityFile.clear()
-                            if (holder.tvSize.text == "empty") quanlityFile.put(position, 0)
+                        } else if (quanlity == 1) {
+                            holder.tvSize.text = "1 file"
+                        } else {
+                            holder.tvSize.text = "$quanlity files"
                         }
-                        Log.d("bbbb", quanlityFile.toString())
 
                     } else {
 
@@ -145,16 +129,13 @@ class RecentlyImageAdapter(
                         Log.d("bbss", size.toString())
                         if (size < 1024) {
                             holder.tvSize.text = size.toString() + "B"
-                            fileSize.put(position, size.toDouble().toString())
+
                         } else if (size >= 1024 && size < 1024 * 1024) {
 
                             var s = String.format("%.2f", (size.toDouble() / 1024))
-                            fileSize.put(position, s)
                             holder.tvSize.text = s + "KB"
                         } else {
-                            //var sizeF :Double = (size/1024*1024).toDouble()
                             var s = String.format("%.2f", (size.toDouble() / (1024 * 1024)))
-                            fileSize.put(position, s)
                             holder.tvSize.text = s + "MB"
                         }
                     }
@@ -177,51 +158,34 @@ class RecentlyImageAdapter(
                     date.time = fileItem.lastModified() // tra ve int
                     val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("dd/MM")
                     holder.tvDate.text = simpleDateFormat.format(date)
-                    lastModified.add(position, simpleDateFormat.format(date))
+                    //lastModified.add(position, simpleDateFormat.format(date))
 
 
                     var length = 0
                     if (fileItem.isDirectory) {
-                        val files = fileItem.listFiles()
-                        if (files != null) {
-                            length = files.size
-                            Log.d("aaa", "onBindViewHolder: " + length)
-                            if (length >= 1) {
-                                if (length == 1) {
-                                    holder.tvSize.text = "1 file"
-                                    quanlityFile.put(position, 1)
-                                } else {
-                                    holder.tvSize.text = "$length files"
-                                    quanlityFile.put(position, length)
-                                }
-                            } else {
-                                holder.tvSize.text = "empty"
-                                if (holder.tvSize.text == "empty") quanlityFile.put(position, 0)
-                            }
-                        } else {
+                        val quanlity = FileExtractUtils.getQuanlityFile(fileItem)
+                        if (quanlity == 0) {
                             holder.tvSize.text = "empty"
-                            //quanlityFile.clear()
-                            if (holder.tvSize.text == "empty") quanlityFile.put(position, 0)
+                        } else if (quanlity == 1) {
+                            holder.tvSize.text = "1 file"
+                        } else {
+                            holder.tvSize.text = "$quanlity files"
                         }
-                        Log.d("bbbb", quanlityFile.toString())
 
-                    }  else {
+                    } else {
 
                         val files = fileImage[position]
                         val size = files.length()
                         Log.d("bbss", size.toString())
                         if (size < 1024) {
                             holder.tvSize.text = size.toString() + "B"
-                            fileSize.put(position, size.toDouble().toString())
                         } else if (size >= 1024 && size < 1024 * 1024) {
 
                             var s = String.format("%.2f", (size.toDouble() / 1024))
-                            fileSize.put(position, s)
                             holder.tvSize.text = s + "KB"
                         } else {
-                            //var sizeF :Double = (size/1024*1024).toDouble()
+
                             var s = String.format("%.2f", (size.toDouble() / (1024 * 1024)))
-                            fileSize.put(position, s)
                             holder.tvSize.text = s + "MB"
                         }
                     }
@@ -238,17 +202,17 @@ class RecentlyImageAdapter(
                 is FileViewHolder4 -> {
                     val fileItem = fileImage[position]
                     holder.tvName.text = fileItem.name
+
                     var date: Date = Date()
                     date.time = fileItem.lastModified() // tra ve int
                     val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("dd/MM")
                     holder.tvTime.text = simpleDateFormat.format(date)
-                    lastModified.add(position, simpleDateFormat.format(date))
 
-                    if (nameFolder == "Hình ảnh") {
+                    if (nameFolder == "picture") {
                         holder.imgFile.setImageResource(R.drawable.anh)
                     } else if (nameFolder == "Video") {
                         holder.imgFile.setImageResource(R.drawable.video)
-                    } else if (nameFolder == "Âm nhạc") {
+                    } else if (nameFolder == "Music") {
                         holder.imgFile.setImageResource(R.drawable.nhac)
                     } else {
                         holder.imgFile.setImageResource(R.drawable.ungdung)
@@ -256,24 +220,18 @@ class RecentlyImageAdapter(
                     var length = 0
 
                     val files = fileImage[position]
-                    val size  = files.length()
+                    val size = files.length()
                     Log.d("bbss", size.toString())
-                    if(size <1024){
+                    if (size < 1024) {
                         holder.tvSize.text = size.toString() + "B"
-                        fileSize.put(position,size.toDouble().toString())
-                    }
-                    else if(size >= 1024 && size < 1024*1024){
 
-                        var s = String.format("%.2f",(size.toDouble()/1024))
-                        fileSize.put(position,s)
-                        holder.tvSize.text = s +"KB"
-                    }
-                    else
-                    {
-                        //var sizeF :Double = (size/1024*1024).toDouble()
-                        var s = String.format("%.2f", (size.toDouble()/(1024*1024)))
-                        fileSize.put(position,s)
-                        holder.tvSize.text = s+"MB"
+                    } else if (size >= 1024 && size < 1024 * 1024) {
+
+                        var s = String.format("%.2f", (size.toDouble() / 1024))
+                        holder.tvSize.text = s + "KB"
+                    } else {
+                        var s = String.format("%.2f", (size.toDouble() / (1024 * 1024)))
+                        holder.tvSize.text = s + "MB"
                     }
                     holder.itemView.setOnClickListener {
 
@@ -310,24 +268,25 @@ class RecentlyImageAdapter(
 
     inner class FileViewHolder3(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var tvNameFile: TextView =
-            itemView.findViewById(R.id.txtfileNameGrid)
-        var tvDate: TextView = itemView.findViewById(R.id.txtTimeImgToolGrid)
-        var imgFile: ImageView = itemView.findViewById(R.id.imgRecently_tool_grid)
-        var tvMenu: TextView = itemView.findViewById(R.id.txtmenuToolImgGrid)
-        var tvSize: TextView = itemView.findViewById(R.id.txtSizeImgToolGrid)
+            itemView.findViewById(R.id.txtVideoName)
+        var tvDate: TextView = itemView.findViewById(R.id.txtVideTime)
+        var imgFile: ImageView = itemView.findViewById(R.id.video)
+        var tvMenu: TextView = itemView.findViewById(R.id.txtVideoMenu)
+        var tvSize: TextView = itemView.findViewById(R.id.txtVideoSize)
 
     }
+
     inner class FileViewHolder4(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tvName : TextView =
+        var tvName: TextView =
             itemView.findViewById(R.id.tv_fileName)
-        var tvSize : TextView = itemView.findViewById(R.id.tvFileSize)
+        var tvSize: TextView = itemView.findViewById(R.id.tvFileSize)
 
         var tvTime: TextView = itemView.findViewById(R.id.tv_time)
 
-        var container : ConstraintLayout =
+        var container: ConstraintLayout =
             itemView.findViewById(R.id.container)
-        var imgFile : ImageView = itemView.findViewById(R.id.img_fileType)
-        var tvOption :TextView = itemView.findViewById(R.id.textViewOptions)
+        var imgFile: ImageView = itemView.findViewById(R.id.img_fileType)
+        var tvOption: TextView = itemView.findViewById(R.id.textViewOptions)
 
     }
 

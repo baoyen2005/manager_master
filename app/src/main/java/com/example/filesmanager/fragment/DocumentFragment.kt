@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.filesmanager.Adapter.FileAdapter
 import com.example.filesmanager.R
 import com.example.filesmanager.activity.PhotoActivity
+import com.example.filesmanager.utils.FileExtractUtils
 import com.example.filesmanager.utils.FileOpen
 import com.example.filesmanager.utils.FileShare
 import com.example.filesmanager.utils.FindInformation
@@ -46,6 +47,7 @@ class DocumentFragment : Fragment(), FileAdapter.OnItemClickListener {
         imgTransfer = (requireActivity() as PhotoActivity).imgGridToolBar!!
         imgOrder = (requireActivity() as PhotoActivity).imgOrderToolBar!!
         transferType = (requireActivity() as PhotoActivity).checkTransfer
+        (activity as PhotoActivity).txtAnh.text = "Document"
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -78,11 +80,11 @@ class DocumentFragment : Fragment(), FileAdapter.OnItemClickListener {
             if (!singleImg.isHidden && singleImg.isDirectory) {
                 arrayList.addAll(findFileTaiLieu(singleImg))
             } else {
-                if (singleImg.name.endsWith("docx")
-                    ||singleImg.name.endsWith("pdf")
-                    || singleImg.name.endsWith("pptx")
-                    ||singleImg.name.endsWith("doc")
-                    ||singleImg.name.endsWith("ppt")) {
+                if (singleImg.extension =="docx"
+                    ||singleImg.extension=="pdf"
+                    || singleImg.extension=="pptx"
+                    ||singleImg.extension=="doc"
+                    ||singleImg.extension=="ppt") {
                     arrayList.add(singleImg)
                 }
             }
@@ -94,7 +96,6 @@ class DocumentFragment : Fragment(), FileAdapter.OnItemClickListener {
     private fun displayTaiLieu(){
         listFolderTaiLieu.clear()
         val txtanh =  (activity as PhotoActivity).txtAnh.text.toString()
-
 
         val rootDir2 = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         listFolderTaiLieu.addAll(findFileTaiLieu(rootDir2))
@@ -161,7 +162,7 @@ class DocumentFragment : Fragment(), FileAdapter.OnItemClickListener {
                 return@OnMenuItemClickListener true
             }
             else if (item.itemId == R.id.ic_delete) {
-                dialogYesOrNo(requireContext(),"Delete","Bạn có chắc muốn xóa file không?",
+                dialogYesOrNo(requireContext(),"Delete","You want to delete file?",
                     DialogInterface.OnClickListener{dialog, id ->
                         val temp = listFolderTaiLieu.remove(file)
                         adapter.notifyDataSetChanged()
@@ -184,7 +185,7 @@ class DocumentFragment : Fragment(), FileAdapter.OnItemClickListener {
     }
 
     private fun findInformation(file: File,position:Int) {
-        val find = FindInformation(file , position, adapter)
+        val find = FindInformation(file ,position)
         tvInformation.text = find.findInfor()
     }
     fun dialogYesOrNo(context: Context, title: String, message: String, listener: DialogInterface.OnClickListener
@@ -237,19 +238,26 @@ class DocumentFragment : Fragment(), FileAdapter.OnItemClickListener {
             popup.show()
             popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
                 if (item.itemId == R.id.orderByName_tool) {
-                    listFolderTaiLieu.sortBy { it.name }
+                    listFolderTaiLieu.sortBy { it.name.lowercase() }
                     adapter.updateData(listFolderTaiLieu)
                     return@OnMenuItemClickListener true
-
 
                 } else if (item.itemId == R.id.orderByTime_tool) {
-
-                    listFolderTaiLieu.sortBy { it.lastModified() }
+                    listFolderTaiLieu.sortByDescending { FileExtractUtils.getFileLastModified(it) }
                     adapter.updateData(listFolderTaiLieu)
 
                     return@OnMenuItemClickListener true
-                } else if (item.itemId == R.id.ic_shareImg) {
-                    listFolderTaiLieu.sortBy { it.length() }
+                } else if (item.itemId == R.id.orderBySizeTool) {
+                    var checkIsDirectory = false
+                    for (file in listFolderTaiLieu){
+                        if(!file.isDirectory){
+                            checkIsDirectory = true
+                        }
+                    }
+                    if(checkIsDirectory){
+                        listFolderTaiLieu.sortByDescending { FileExtractUtils.getFileSize(it) }
+                    }
+                    else listFolderTaiLieu.sortByDescending { FileExtractUtils.getQuanlityFile(it)}
                     adapter.updateData(listFolderTaiLieu)
                     return@OnMenuItemClickListener true
                 }

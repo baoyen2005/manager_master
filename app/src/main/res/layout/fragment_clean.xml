@@ -13,7 +13,7 @@
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:gravity="center"
-        android:background="@color/purple_200"
+        android:background="#BA0000FF"
 
         >
         <ImageView
@@ -27,7 +27,7 @@
             style="@style/TextAppearance.AppCompat.Title"
             android:text="File Master"
             android:layout_marginLeft="100dp"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="20sp"/>
         <ImageView
             android:id="@+id/canhbaoClean"
@@ -67,7 +67,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:padding="10dp"
-                android:text="500.45kb. Tìm thấy rác"
+                android:text="500.45kb. Find trash"
                 android:textSize="12sp"
                 tools:ignore="HardcodedText" />
 
@@ -75,11 +75,11 @@
                 android:id="@+id/btnDonDep"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:text="Dọn dẹp"
+                android:text="Clean"
                 android:textSize="17sp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 app:backgroundTint="@null"
-                android:background="@color/purple_200"
+                android:background="#BA0000FF"
                 android:layout_gravity="center"
              />
             <androidx.recyclerview.widget.RecyclerView

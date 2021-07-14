@@ -86,7 +86,7 @@ class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool,
         btnTangTocTool = view.findViewById(R.id.btnTangTocTool)
 
         btnTangTocTool.setOnClickListener {
-            Toast.makeText(context,"Tính năng đang update",Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,"Feature is updating",Toast.LENGTH_SHORT).show()
         }
         canhbao.setOnClickListener {
             val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
@@ -122,10 +122,10 @@ class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool,
     private fun displayOptimal() {
 
         optimalList.clear()
-        optimalList.add(Type("Tiết kiệm", R.drawable.tietkiempin))
-        optimalList.add(Type("Làm mát CPU", R.drawable.mat))
-        optimalList.add(Type("Bảo vệ", R.drawable.baove))
-        optimalList.add(Type("Dọn dẹp", R.drawable.dondep))
+        optimalList.add(Type("Saving", R.drawable.tietkiempin))
+        optimalList.add(Type("Fresh CPU", R.drawable.mat))
+        optimalList.add(Type("Security", R.drawable.baove))
+        optimalList.add(Type("Clean", R.drawable.dondep))
 
         Log.d("yenn", listType[1].name.toString())
 
@@ -143,11 +143,11 @@ class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool,
     private fun displayType() {
         listType = ArrayList()
         listType.clear()
-        listType.add(Type("Hình ảnh", R.drawable.anh))
+        listType.add(Type("Image", R.drawable.anh))
         listType.add(Type("Video", R.drawable.video))
-        listType.add(Type("Âm nhạc", R.drawable.amthanh))
-        listType.add(Type("Tài liệu", R.drawable.tailieu))
-        listType.add(Type("Ứng dụng", R.drawable.ungdung))
+        listType.add(Type("Music", R.drawable.amthanh))
+        listType.add(Type("Document", R.drawable.tailieu))
+        listType.add(Type("Application", R.drawable.ungdung))
         Log.d("yenn", listType[1].name.toString())
 
         typeAdapter.updateDataType(listType)

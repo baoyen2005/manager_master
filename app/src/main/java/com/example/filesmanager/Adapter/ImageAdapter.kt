@@ -35,11 +35,11 @@ class ImageAdapter(
     val TYPE_MP3 = 3
     val TYPE_lIST = 4
     override fun getItemViewType(position: Int): Int {
-        if (!isList && (check == "Hình ảnh" || check == "Video")) {
+        if (!isList && (check == "picture" || check == "Video")) {
             return TYPE_B
-        } else if (check == "Âm nhạc" && !isList) {
+        } else if (check == "Music" && !isList) {
             return TYPE_MP3
-        } else if (isList && ((check =="Hình ảnh") || (check == "Video")||(check == "Âm nhạc") ||( check == "Ứng dụng"))) {
+        } else if (isList && ((check =="picture") || (check == "Video")||(check == "Music") ||( check == "Application"))) {
             Log.d("islist", "getItemViewType: isList"+ isList.toString())
             return TYPE_lIST
         } else {
@@ -65,7 +65,7 @@ class ImageAdapter(
             }
             else -> {
                 val view =
-                    inflater.inflate(R.layout.item_image_recently_tools_gridview, parent, false)
+                    inflater.inflate(R.layout.item_video_recently_tools_gridview, parent, false)
                 FileViewHolder3(view)
             }
         }
@@ -154,11 +154,11 @@ class ImageAdapter(
                     holder.tvTime.text = simpleDateFormat.format(date)
                     lastModified.add(position, simpleDateFormat.format(date))
                     Log.d("yennnn", "check = : "+ check)
-                    if (check == "Hình ảnh") {
+                    if (check == "picture") {
                         holder.imgFile.setImageResource(R.drawable.anh)
                     } else if (check == "Video") {
                         holder.imgFile.setImageResource(R.drawable.video)
-                    } else if (check == "Âm nhạc") {
+                    } else if (check == "Music") {
                         holder.imgFile.setImageResource(R.drawable.nhac)
                     } else {
                         holder.imgFile.setImageResource(R.drawable.ungdung)
@@ -220,11 +220,11 @@ class ImageAdapter(
 
     inner class FileViewHolder3(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var tvNameFile: TextView =
-            itemView.findViewById(R.id.txtfileNameGrid)
-        var tvDate: TextView = itemView.findViewById(R.id.txtTimeImgToolGrid)
-        var imgFile: ImageView = itemView.findViewById(R.id.imgRecently_tool_grid)
-        var tvMenu: TextView = itemView.findViewById(R.id.txtmenuToolImgGrid)
-        var tvSize: TextView = itemView.findViewById(R.id.txtSizeImgToolGrid)
+            itemView.findViewById(R.id.txtVideoName)
+        var tvDate: TextView = itemView.findViewById(R.id.txtVideTime)
+        var imgFile: ImageView = itemView.findViewById(R.id.video)
+        var tvMenu: TextView = itemView.findViewById(R.id.txtVideoMenu)
+        var tvSize: TextView = itemView.findViewById(R.id.txtVideoSize)
 
     }
 

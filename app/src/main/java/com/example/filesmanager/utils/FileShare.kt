@@ -22,10 +22,14 @@ class FileShare {
         } else if (uri.toString().contains(".pdf")) {
             intent.type = "application/pdf"
         } else if (uri.toString().contains(".pptx")) {
-            intent.type = "application/ppt"
+            intent.type = "application/vnd.ms-powerpoint"
         } else if (uri.toString().contains(".wav")) {
             intent.type = "audio/x-wav"
-        } else if (uri.toString().contains(".zip") || uri.toString().contains(".rar")) {
+        }
+        else if (uri.toString().contains(".xlsx") ) {
+            intent.type ="application/vnd.ms-excel"
+        }
+        else if (uri.toString().contains(".zip") || uri.toString().contains(".rar")) {
             // WAV audio file
             intent.type = "application/x-wav";
         } else if (uri.toString().toLowerCase().contains(".jpeg")

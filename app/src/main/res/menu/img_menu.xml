@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/ic_inforImg"
-        android:title="Thông tin"
+        android:title="Information"
         />
 
     <item android:id="@+id/ic_deleteImg"
-        android:title="Xóa bỏ"
+        android:title="Delete"
         />
     <item android:id="@+id/ic_shareImg"
-        android:title="Chia sẻ"
+        android:title="Share"
         />
 </menu>

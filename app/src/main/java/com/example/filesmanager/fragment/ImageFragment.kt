@@ -19,10 +19,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.filesmanager.Adapter.ImageAdapter
-import com.example.filesmanager.Adapter.RecentlyImageAdapter
 import com.example.filesmanager.R
 import com.example.filesmanager.activity.PhotoActivity
 import com.example.filesmanager.model.FolerImage
+import com.example.filesmanager.utils.FileExtractUtils
 import com.example.filesmanager.utils.FileShare
 import java.io.File
 
@@ -30,7 +30,6 @@ import java.io.File
 class ImageFragment : Fragment(), ImageAdapter.OnItemClickListenerTool {
     lateinit var mGridViewImgPhoto: RecyclerView
     lateinit var imgAdapter: ImageAdapter
-    lateinit var reAdapter: RecentlyImageAdapter
     var listFolderImage = ArrayList<FolerImage>()
     private var isList = false
     private var transferType = true
@@ -74,12 +73,12 @@ class ImageFragment : Fragment(), ImageAdapter.OnItemClickListenerTool {
         if (isList) {
             mGridViewImgPhoto.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            imgAdapter = ImageAdapter("Hình ảnh", isList, requireContext(), listFolderImage, this)
+            imgAdapter = ImageAdapter("picture", isList, requireContext(), listFolderImage, this)
             mGridViewImgPhoto.adapter = imgAdapter
         } else {
             mGridViewImgPhoto.layoutManager =
                 GridLayoutManager(requireContext(), 2)
-            imgAdapter = ImageAdapter("Hình ảnh", isList, requireContext(), listFolderImage, this)
+            imgAdapter = ImageAdapter("picture", isList, requireContext(), listFolderImage, this)
             mGridViewImgPhoto.adapter = imgAdapter
         }
 
@@ -115,7 +114,7 @@ class ImageFragment : Fragment(), ImageAdapter.OnItemClickListenerTool {
 
             } else if (item.itemId == R.id.ic_deleteImg) {
 
-                dialogYesOrNo(requireContext(), "Delete", "Bạn có chắc muốn xóa file không?",
+                dialogYesOrNo(requireContext(), "Delete", "You want to delete file?",
                     DialogInterface.OnClickListener { dialog, id ->
                         listFolderImage.remove(file)
                         imgAdapter.updateDataTool(listFolderImage)
@@ -137,9 +136,9 @@ class ImageFragment : Fragment(), ImageAdapter.OnItemClickListenerTool {
     private fun findInformation(file: FolerImage, position: Int) {
 
         tvInformation.text = "${file.name}" +
-                "\n\nKiểu: folder" +
-                "\nKích thước:" +
-                "\nSửa đổi lần cuối: ${imgAdapter.lastModified[position]}"
+                "\n\nType: folder" +
+                "\nSize:" +
+                "\nLast Modified: ${imgAdapter.lastModified[position]}"
 
     }
 
@@ -192,14 +191,11 @@ class ImageFragment : Fragment(), ImageAdapter.OnItemClickListenerTool {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     fun listAllImage() {
-        val rootDir = Environment.getExternalStoragePublicDirectory(Environment.MEDIA_BAD_REMOVAL)
-        listImage(rootDir)
+
         val rootDir2 =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         listImage(rootDir2)
-        val rootDir3 =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_SCREENSHOTS)
-        listImage(rootDir3)
+
         val root = Environment.getExternalStorageDirectory().absolutePath + "/Pictures"
         listImage(File(root))
         val root4 = Environment.getExternalStorageDirectory().absolutePath + "/DCIM"
@@ -226,7 +222,7 @@ class ImageFragment : Fragment(), ImageAdapter.OnItemClickListenerTool {
                     LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
                 imgAdapter =
-                    ImageAdapter("Hình ảnh", isList, requireContext(), listFolderImage, this)
+                    ImageAdapter("picture", isList, requireContext(), listFolderImage, this)
                 mGridViewImgPhoto.adapter = imgAdapter
                 Log.d("islist", "getItemViewType: isList" + isList.toString())
                 imgTransfer.setImageResource(R.drawable.ic_baseline_view_linear)
@@ -236,7 +232,7 @@ class ImageFragment : Fragment(), ImageAdapter.OnItemClickListenerTool {
                 mGridViewImgPhoto.layoutManager =
                     GridLayoutManager(requireContext(), 2)
                 imgAdapter =
-                    ImageAdapter("Hình ảnh", isList, requireContext(), listFolderImage, this)
+                    ImageAdapter("picture", isList, requireContext(), listFolderImage, this)
                 mGridViewImgPhoto.adapter = imgAdapter
                 imgTransfer.setImageResource(R.drawable.ic_baseline_view_grid)
 
@@ -251,19 +247,18 @@ class ImageFragment : Fragment(), ImageAdapter.OnItemClickListenerTool {
             popup.show()
             popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
                 if (item.itemId == R.id.orderByName_tool) {
-                    listFolderImage.sortBy { it.name }
+                    listFolderImage.sortBy { it.name.lowercase() }
                     imgAdapter.updateDataTool(listFolderImage)
                     return@OnMenuItemClickListener true
-
 
                 } else if (item.itemId == R.id.orderByTime_tool) {
-
-                    listFolderImage.sortBy { it.lastModify }
+                    listFolderImage.sortByDescending { FileExtractUtils.getFileLastModified(it.file) }
                     imgAdapter.updateDataTool(listFolderImage)
 
                     return@OnMenuItemClickListener true
-                } else if (item.itemId == R.id.ic_shareImg) {
-                    listFolderImage.sortBy { it.listImage.size }
+                } else if (item.itemId == R.id.orderBySizeTool) {
+                    var checkIsDirectory = false
+                    listFolderImage.sortByDescending { it.listImage.size}
                     imgAdapter.updateDataTool(listFolderImage)
                     return@OnMenuItemClickListener true
                 }

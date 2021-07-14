@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
         <item android:id="@+id/orderByName_tool"
-            android:title="Theo tên" />
-        <item android:title="Theo thời gian sửa đổi gần nhất"
+            android:title="Sort by name" />
+        <item android:title="Sort by lastmodified"
             android:id="@+id/orderByTime_tool" />
-        <item android:id="@+id/orderBySize"
-            android:title="Theo kích cỡ" />
+        <item android:id="@+id/orderBySizeTool"
+            android:title="Sort by size" />
 
 </menu>

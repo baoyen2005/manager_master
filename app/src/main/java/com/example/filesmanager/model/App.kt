@@ -21,7 +21,7 @@ class App {
     var className: String
     var userHandle: UserHandle? = null
     var sizeee: String =""
-
+    var size :Double =0.0
     constructor(pm: PackageManager, info: ResolveInfo) {
         icon = info.loadIcon(pm)
 
@@ -51,7 +51,7 @@ class App {
 
         date += dateFormat.format(fdate)
         var file = File(pm.getApplicationInfo(packageName,0).publicSourceDir);
-        val size  = file.length().toInt()//Byte
+         size  = file.length().toDouble()//Byte
         Log.d("sizeeee", "size: "+ size)
         var sizeMB :Double = 0.toDouble() // Mb
         var sizeGB:Double = 0.toDouble() // GB

@@ -37,7 +37,7 @@
                 android:resource="@xml/provider_path" />
         </provider>
 
-        <activity android:name=".activity.PlayerMusicActivity" />
+
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,6 +51,7 @@
             <action android:name="android.intent.action.SEND" />
             <data android:mimeType="image/jpeg" />
         </intent>
+
     </queries>
 
 </manifest>

@@ -17,7 +17,7 @@
     <TextView
         android:id="@+id/txtSave_Tool"
         android:textSize="10sp"
-        android:text="Tiết kiệm pin"
+        android:text="Save battery"
         style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>

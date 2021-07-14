@@ -74,7 +74,7 @@ class DisplayAllVideoFragment : Fragment(), RecentlyImageAdapter.OnItemClickList
         if (check == "Video") {
             setUpRecyclerViewType(listVideo)
             displayVideo()
-        } else if (check == "Âm nhạc") {
+        } else if (check == "Music") {
             setUpRecyclerViewType(listMusic)
             displayMusic()
         }
@@ -106,8 +106,8 @@ class DisplayAllVideoFragment : Fragment(), RecentlyImageAdapter.OnItemClickList
             if (!singleImg.isHidden && singleImg.isDirectory) {
                 arrayList.addAll(findFileVideo(singleImg))
             } else {
-                if (singleImg.name.endsWith("mp4")
-                ) {
+                if (singleImg.extension =="mp4")
+                 {
                     arrayList.add(singleImg)
                 }
             }
@@ -123,8 +123,8 @@ class DisplayAllVideoFragment : Fragment(), RecentlyImageAdapter.OnItemClickList
             if (!singleImg.isHidden && singleImg.isDirectory) {
                 arrayList.addAll(findFileMusic(singleImg))
             } else {
-                if (singleImg.name.endsWith(".mp3")
-                ) {
+                if (singleImg.extension =="mp3")
+                 {
                     arrayList.add(singleImg)
                 }
             }
@@ -197,7 +197,7 @@ class DisplayAllVideoFragment : Fragment(), RecentlyImageAdapter.OnItemClickList
                                 adapter.notifyDataSetChanged()
                             }
                         }
-                        else if(check == "Âm nhạc"){
+                        else if(check == "Music"){
                             if(current.renameTo(destination)){
                                 listVideo.set(position,destination)
                                 adapter.notifyDataSetChanged()
@@ -218,14 +218,14 @@ class DisplayAllVideoFragment : Fragment(), RecentlyImageAdapter.OnItemClickList
             }
             else if (item.itemId == R.id.ic_delete) {
                 if(check == "Video"){
-                    dialogYesOrNo(requireContext(), "Delete", "Bạn có chắc muốn xóa file không?",
+                    dialogYesOrNo(requireContext(), "Delete", "You wanna delete file?",
                         DialogInterface.OnClickListener { dialog, id ->
                             listVideo.remove(file)
                             adapter.updateDataTool(listVideo)
                         })
                 }
-                else if(check == "Âm nhạc"){
-                    dialogYesOrNo(requireContext(), "Delete", "Bạn có chắc muốn xóa file không?",
+                else if(check == "Music"){
+                    dialogYesOrNo(requireContext(), "Delete", "You wanna delete file?",
                         DialogInterface.OnClickListener { dialog, id ->
                             listMusic.remove(file)
                             adapter.updateDataTool(listMusic)
@@ -249,7 +249,7 @@ class DisplayAllVideoFragment : Fragment(), RecentlyImageAdapter.OnItemClickList
     }
 
     private fun findInformation(file: File,position:Int) {
-        val find = FindInformationImg(file , position, adapter)
+        val find = FindInformationImg(file)
         tvInformation.text = find.findInfor()
     }
     fun dialogYesOrNo(context: Context, title: String, message: String, listener: DialogInterface.OnClickListener
@@ -275,7 +275,7 @@ class DisplayAllVideoFragment : Fragment(), RecentlyImageAdapter.OnItemClickList
                     if (check == "Video") {
                         adapter.updateDataTool(listVideo)
                         (activity as PhotoActivity).txtAnh.text == bundle
-                    } else if (check == "Âm nhạc") {
+                    } else if (check == "Music") {
                         adapter.updateDataTool(listMusic)
                         (activity as PhotoActivity).txtAnh.text == bundle
                     }
@@ -294,7 +294,7 @@ class DisplayAllVideoFragment : Fragment(), RecentlyImageAdapter.OnItemClickList
                 check,mRecycleVideo,adapter,listVideo,requireContext(),this)
             click.initTransfer()
         }
-        else if (check == "Âm nhạc"){
+        else if (check == "Music"){
             val click = TransferLayoutFile(imgTransfer,imgOrder,transferType,isList,
                 check,mRecycleVideo,adapter,listMusic,requireContext(),this)
             click.initTransfer()

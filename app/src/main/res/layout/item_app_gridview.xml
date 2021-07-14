@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="3dp">
 
     <LinearLayout
         android:background="#4D696969"
@@ -41,9 +42,11 @@
             android:id="@+id/txtAppNameGridview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="File name.png"
             android:textColor="@color/white"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            />
 
         <LinearLayout
             android:id="@+id/linearLayout3"
@@ -58,9 +61,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="File name.png"
                 android:textColor="@color/white"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:ellipsize="marquee"
+                android:singleLine="true"/>
 
             <TextView
                 android:id="@+id/txtSizeAppGridview"

@@ -22,9 +22,13 @@ class FileOpen {
             intent.setDataAndType(uri,"application/msword")
         } else if (uri.toString().contains(".pdf")) {
             intent.setDataAndType(uri,"application/pdf")
-        } else if (uri.toString().contains(".pptx")) {
-            intent.setDataAndType(uri,"application/ppt")
-        } else if (uri.toString().contains(".wav")) {
+        } else if (uri.toString().contains(".pptx")||uri.toString().contains(".ppt") ) {
+            intent.setDataAndType(uri,"application/vnd.ms-powerpoint")
+        }
+        else if (uri.toString().contains(".xlsx") ) {
+            intent.setDataAndType(uri,"application/vnd.ms-excel")
+        }
+        else if (uri.toString().contains(".wav")) {
             intent.setDataAndType(uri,"audio/x-wav")
         } else if (uri.toString().contains(".zip") || uri.toString().contains(".rar")) {
             // WAV audio file
