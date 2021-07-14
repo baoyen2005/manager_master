@@ -10,16 +10,21 @@ class FindInformation (var file: File, var position: Int){
 
     fun sizeFolder(file: File) :Long{
         var lenght: Long =0
-        if (file.isDirectory) {
-            for (child in file.listFiles()) {
-                lenght += child.length()
+        for (child in file.listFiles()) {
+            if(child.isDirectory){
+                lenght += sizeFolder(child)
             }
+            else lenght += child.length()
         }
         return lenght
     }
     fun findInfor():String{
         val size  = FileExtractUtils.getFileSize(file)
-        val lenght = sizeFolder(file)
+        var lenght :Long = 0
+        if(file.isDirectory){
+           lenght = sizeFolder(file)
+        }
+        else lenght = file.length()
         Log.d("size", "findInfor: "+ size)
         if(file.isDirectory && lenght >= 1024*1024 && FileExtractUtils.getQuanlityFile(file) >1 ){
             tvInformation+="${file.name}" +

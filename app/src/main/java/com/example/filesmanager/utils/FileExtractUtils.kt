@@ -37,17 +37,23 @@ object FileExtractUtils {
             return 0
         }
     }
-    fun getFileSize(file:File):Double{
-
-        var size: Long
+    private fun folderSize(file: File):Long{
+        var size: Long = 0
         if (file.isDirectory) {
-            size = 0
             for (child in file.listFiles()) {
-                size += child.length()
+               if(child.isDirectory){
+                   size += folderSize(child)
+               }
+                else size += child.length()
             }
         } else {
             size = file.length()
         }
+        return size
+    }
+    fun getFileSize(file:File):Double{
+
+        val size = folderSize(file)
         if (size < 1024) {
             return size.toDouble()
         } else if (size >= 1024 && size < 1024 * 1024) {

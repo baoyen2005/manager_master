@@ -249,7 +249,7 @@ class DisplayAllVideoFragment : Fragment(), RecentlyImageAdapter.OnItemClickList
     }
 
     private fun findInformation(file: File,position:Int) {
-        val find = FindInformationImg(file)
+        val find = FindInformationImg(file,position)
         tvInformation.text = find.findInfor()
     }
     fun dialogYesOrNo(context: Context, title: String, message: String, listener: DialogInterface.OnClickListener

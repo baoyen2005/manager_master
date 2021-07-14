@@ -137,7 +137,7 @@ class ImageFragment : Fragment(), ImageAdapter.OnItemClickListenerTool {
 
         tvInformation.text = "${file.name}" +
                 "\n\nType: folder" +
-                "\nSize:" +
+                "\nSize:"+
                 "\nLast Modified: ${imgAdapter.lastModified[position]}"
 
     }

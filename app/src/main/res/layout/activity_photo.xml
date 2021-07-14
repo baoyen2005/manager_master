@@ -92,10 +92,10 @@
             >
             <ImageView
                 android:id="@+id/img_folderPhot"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:src="@drawable/doc"
+                android:src="@drawable/icondoc"
                 />
         </LinearLayout>
 
