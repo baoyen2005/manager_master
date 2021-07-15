@@ -29,12 +29,7 @@
             android:layout_marginLeft="100dp"
             android:textColor="@color/white"
             android:textSize="20sp"/>
-        <ImageView
-            android:id="@+id/canhbaoClean"
-            android:src="@drawable/canhbao"
-            android:layout_marginLeft="100dp"
-            android:layout_width="30dp"
-            android:layout_height="30dp"/>
+
     </com.google.android.material.appbar.MaterialToolbar>
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

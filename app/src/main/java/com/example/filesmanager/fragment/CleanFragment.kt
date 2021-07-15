@@ -1,9 +1,7 @@
 package com.example.filesmanager.fragment
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +19,6 @@ class CleanFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    lateinit var canhbao : ImageView
     lateinit var btnNavigation : ImageView
     lateinit var drawerLayoutFile : DrawerLayout
     lateinit var btnDonDep :Button
@@ -45,14 +42,9 @@ class CleanFragment : Fragment() {
     @SuppressLint("WrongConstant")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        canhbao = view.findViewById(R.id.canhbaoClean)
         btnNavigation = view.findViewById(R.id.btnNavigationClean)
         btnDonDep = view.findViewById(R.id.btnDonDep)
 
-        canhbao.setOnClickListener {
-            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
-            startActivity(intent)
-        }
         btnNavigation.setOnClickListener{
             drawerLayoutFile.openDrawer(Gravity.START)
         }

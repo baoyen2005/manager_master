@@ -196,7 +196,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
 
     }
 
-    private fun displayFiles() {
+     fun displayFiles() {
 
 
         val DIR_INTERNAL = Environment.getExternalStorageDirectory().toString()
@@ -310,9 +310,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
                     })
                 return@OnMenuItemClickListener true
             }
-            else if (item.itemId == R.id.ic_press) {
-                return@OnMenuItemClickListener true
-            }
+
             else if (item.itemId == R.id.ic_share) {
                     val share  = FileShare()
                     share.shareFile(requireContext(),file)

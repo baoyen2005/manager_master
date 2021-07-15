@@ -5,7 +5,6 @@ import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
 import android.os.Environment
-import android.provider.Settings
 import android.util.Log
 import android.view.*
 import android.widget.Button
@@ -50,7 +49,6 @@ class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool,
     lateinit var mGridviewOptimal: RecyclerView
     lateinit var optimalAdapter: OptimalAdapter
     private var optimalList = ArrayList<Type>()
-    lateinit var canhbao : ImageView
     lateinit var btnNavigation :ImageView
     lateinit var drawerLayoutFile :DrawerLayout
     lateinit var navi :NavigationView
@@ -81,17 +79,13 @@ class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool,
         mGridViewType = view.findViewById(R.id.mGridViewType)
         mGridviewOptimal = view.findViewById(R.id.mGridViewMin)
         toolbarTool = view.findViewById(R.id.toolbarTool)
-        canhbao = view.findViewById(R.id.canhbao)
         btnNavigation = view.findViewById(R.id.btnNavigation)
         btnTangTocTool = view.findViewById(R.id.btnTangTocTool)
 
         btnTangTocTool.setOnClickListener {
             Toast.makeText(context,"Feature is updating",Toast.LENGTH_SHORT).show()
         }
-        canhbao.setOnClickListener {
-            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
-            startActivity(intent)
-        }
+
         btnNavigation.setOnClickListener{
             drawerLayoutFile.openDrawer(Gravity.START)
         }
@@ -241,7 +235,7 @@ class ToolFragment : Fragment(), RecentlyImageAdapter.OnItemClickListenerTool,
     }
 
     override fun onItemClickOptimal(type: Type, position: Int) {
-        Toast.makeText(context,"Tính năng đang update!!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context,"Feature is updating!!", Toast.LENGTH_SHORT).show()
     }
 
 

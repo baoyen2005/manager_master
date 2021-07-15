@@ -55,9 +55,9 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
         bottomNavigationView = findViewById<BottomNavigationView>(R.id.botton_navigation)
         navigationViewStart = findViewById(R.id.navigationViewStart)
         adapter = ViewPagerAdapter(supportFragmentManager)
-        adapter.addFragment(cleanFrag, "Clean")
+        adapter.addFragment(fileFrag, "File Manager")
         adapter.addFragment(toolFrag, "Tool")
-        adapter.addFragment(fileFrag, "Files Manager")
+        adapter.addFragment(cleanFrag, "Clean")
         viewPager.adapter = adapter
         navigationViewStart.setNavigationItemSelectedListener(this)
 
@@ -70,11 +70,9 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
     private fun requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, permission.READ_EXTERNAL_STORAGE) !=
-                PackageManager.PERMISSION_GRANTED
-            ) {
+                PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(
-                        this, permission.READ_EXTERNAL_STORAGE
-                    )
+                        this, permission.READ_EXTERNAL_STORAGE)
                 ) {
                     Toast.makeText(this, "\n" +
                             "Waiting for access permission", Toast.LENGTH_SHORT).show()
@@ -88,6 +86,7 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
             }
         }
         else {
+            fileFrag.displayFiles()
             toolFrag.displayImage()
         }
     }
@@ -97,6 +96,7 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
+        fileFrag.displayFiles()
         toolFrag.displayImage()
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
             override fun onPageSelected(position: Int) {
                 when (position) {
                     0 -> {
-                        bottomNavigationView.menu.findItem(R.id.ic_cleanup).isChecked = true
+                        bottomNavigationView.menu.findItem(R.id.ic_file).isChecked = true
                         return
                     }
                     1 -> {
@@ -122,7 +122,7 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
                         return
                     }
                     2 -> {
-                        bottomNavigationView.menu.findItem(R.id.ic_file).isChecked = true
+                        bottomNavigationView.menu.findItem(R.id.ic_cleanup).isChecked = true
                         return
                     }
                 }
@@ -136,9 +136,9 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
 
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             return@setOnNavigationItemSelectedListener when (item.itemId) {
-                R.id.ic_cleanup -> {
+                R.id.ic_file -> {
                     viewPager.currentItem = 0
-                    fragment = cleanFrag
+                    fragment = fileFrag
                     true
                 }
                 R.id.ic_tool -> {
@@ -147,8 +147,8 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
                     true
 
                 }
-                R.id.ic_file -> {
-                    fragment = fileFrag
+                R.id.ic_cleanup -> {
+                    fragment = cleanFrag
                     viewPager.currentItem = 2
                     true
                 }
@@ -178,12 +178,18 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
             }
             R.id.luutru_noi_bo -> {
 
-                viewPager.currentItem = 2
+                viewPager.currentItem = 0
 
             }
             R.id.luutr_dien_thoai -> {
-                viewPager.currentItem = 2
+                viewPager.currentItem = 0
 
+            }
+            R.id.cleanPhone ->{
+                viewPager.currentItem = 2
+            }
+            R.id.tool -> {
+                viewPager.currentItem= 1
             }
             R.id.setting -> {
                 val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)

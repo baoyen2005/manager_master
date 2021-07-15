@@ -233,9 +233,7 @@ class DisplayAllVideoFragment : Fragment(), RecentlyImageAdapter.OnItemClickList
                 }
                 return@OnMenuItemClickListener true
             }
-            else if (item.itemId == R.id.ic_press) {
-                return@OnMenuItemClickListener true
-            }
+
             else if (item.itemId == R.id.ic_share) {
                 val share  = FileShare()
                 share.shareFile(requireContext(),file)
