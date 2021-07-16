@@ -156,13 +156,14 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
             if (files != null && !files.isEmpty() ) {
                 arrayList.clear()
                 for(fi in files ){
-                    if(!fi.isHidden&& fi.isDirectory&& !files.isEmpty() )
+                    if(!fi.isHidden && fi.isDirectory)
                         arrayList.add(fi)
                 }
+
             }
         }
         else{
-            if (files != null  ) {
+            if (files != null && !files.isEmpty() ) {
                 arrayList.clear()
                 for(fi in files){
                     arrayList.add(fi)

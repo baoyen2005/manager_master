@@ -74,13 +74,13 @@ class FileAdapter(
 
                         val ext = fileItem.extension
                         when (ext) {
-                            "mp3", "mp4" -> holder.imgFile.setImageResource(R.drawable.nhacmp3)
+                            "mp3" -> holder.imgFile.setImageResource(R.drawable.nhacmp3)
 
                             "gif" -> holder.imgFile.setImageResource(R.drawable.gif)
 
                             "apk" -> holder.imgFile.setImageResource(R.drawable.apk)
 
-                            "jpeg", "jpg", "png" -> {
+                            "jpeg", "jpg", "png" ,"mp4"-> {
                                 val url: String = fileItem.absolutePath
                                 Glide
                                     .with(context)
