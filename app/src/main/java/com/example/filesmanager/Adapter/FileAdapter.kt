@@ -15,6 +15,7 @@ import com.example.filesmanager.utils.FileExtractUtils
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class FileAdapter(
     var check: Int,
@@ -28,6 +29,7 @@ class FileAdapter(
     val TYPE_A = 1
     val TYPE_B = 2
     val TYPE_C = 3
+    var arrayListCopy = ArrayList<File>()
     override fun getItemViewType(position: Int): Int {
         if (isList && back && check == 1) {
             return TYPE_A
@@ -233,6 +235,25 @@ class FileAdapter(
         Log.d("aaa", "updateData: " + newList.size)
         notifyDataSetChanged()
     }
-
+    fun filter(charSequence: String) {
+        arrayListCopy.clear()
+        arrayListCopy.addAll(fileList)
+        Log.d("noti", arrayListCopy.toString())
+        var tempArraylist = ArrayList<File>()
+        tempArraylist.clear()
+        if (charSequence!= null && charSequence.isNotEmpty() ) {
+            for (file in fileList) {
+                if (file.name.lowercase(Locale.getDefault()).contains(charSequence)) {
+                    tempArraylist.add(file)
+                }
+            }
+        } else {
+            tempArraylist.addAll(fileList)
+        }
+        arrayListCopy.clear()
+        arrayListCopy.addAll(tempArraylist)
+        tempArraylist.clear()
+        notifyDataSetChanged()
+    }
 
 }

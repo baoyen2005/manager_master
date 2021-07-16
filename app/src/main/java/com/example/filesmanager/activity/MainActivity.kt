@@ -3,6 +3,7 @@ package com.example.filesmanager.activity
 import android.Manifest.permission
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -24,8 +25,10 @@ import com.example.filesmanager.fragment.FileFragment
 import com.example.filesmanager.fragment.ToolFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import com.xuandq.rate.ProxRateDialog
+import com.xuandq.rate.RatingDialogListener
 
-class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var adapter: ViewPagerAdapter
     var drawer: DrawerLayout? = null
@@ -36,10 +39,16 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
     private var toolFrag = ToolFragment()
     private var cleanFrag = CleanFragment()
     var sdCard: String? = null
+    lateinit var share: SharedPreferences
     lateinit var navigationViewStart: NavigationView
+    lateinit var shareEdit :SharedPreferences.Editor
+    @SuppressLint("CommitPrefEdits")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        share = getSharedPreferences("ck", MODE_PRIVATE)
+        shareEdit = share.edit()
+      //  Toast.makeText(this, "share "+ share.getBoolean("check", false), Toast.LENGTH_SHORT).show()
 
         drawer = findViewById<DrawerLayout>(R.id.drawerLayoutFile)
         txtInform = findViewById(R.id.txt_infomation)
@@ -70,12 +79,16 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
     private fun requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, permission.READ_EXTERNAL_STORAGE) !=
-                PackageManager.PERMISSION_GRANTED) {
+                PackageManager.PERMISSION_GRANTED
+            ) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(
-                        this, permission.READ_EXTERNAL_STORAGE)
+                        this, permission.READ_EXTERNAL_STORAGE
+                    )
                 ) {
-                    Toast.makeText(this, "\n" +
-                            "Waiting for access permission", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this, "\n" +
+                                "Waiting for access permission", Toast.LENGTH_SHORT
+                    ).show()
                 } else {
                     ActivityCompat.requestPermissions(
                         this,
@@ -84,8 +97,7 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
                     )
                 }
             }
-        }
-        else {
+        } else {
             fileFrag.displayFiles()
             toolFrag.displayImage()
         }
@@ -139,9 +151,11 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
                 R.id.ic_file -> {
                     viewPager.currentItem = 0
                     fragment = fileFrag
+                    fileFrag.displayFiles()
                     true
                 }
                 R.id.ic_tool -> {
+                    toolFrag.displayImage()
                     viewPager.currentItem = 1
                     fragment = toolFrag
                     true
@@ -163,11 +177,42 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
     }
 
     override fun onBackPressed() {
+
         if (supportFragmentManager.backStackEntryCount > 0) {
             supportFragmentManager.popBackStack()
-        } else {
+
+        }
+        if (share.getBoolean("check", false) == false) {
+            val config = ProxRateDialog.Config()
+            config.setListener(object : RatingDialogListener {
+                override fun onSubmitButtonClicked(rate: Int, comment: String?) {
+                    shareEdit.putBoolean("check", true)
+                    shareEdit.apply()
+                    finish()
+                }
+
+                override fun onLaterButtonClicked() {
+
+                }
+
+                override fun onChangeStar(rate: Int) {
+                    if (rate >= 4) {
+                        shareEdit.putBoolean("check", true)
+                        shareEdit.apply()
+                        finish()
+
+                    }
+
+                }
+            })
+            ProxRateDialog.init(this, config)
+            ProxRateDialog.showIfNeed(supportFragmentManager)
+        }
+
+        if (share.getBoolean("check", false) == true) {
             super.onBackPressed()
         }
+
     }
 
     @SuppressLint("WrongConstant")
@@ -185,11 +230,11 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
                 viewPager.currentItem = 0
 
             }
-            R.id.cleanPhone ->{
+            R.id.cleanPhone -> {
                 viewPager.currentItem = 2
             }
             R.id.tool -> {
-                viewPager.currentItem= 1
+                viewPager.currentItem = 1
             }
             R.id.setting -> {
                 val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)

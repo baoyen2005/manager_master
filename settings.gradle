@@ -1,2 +1,3 @@
 rootProject.name = "Files Manager"
 include ':app'
+include ':rate'

@@ -21,7 +21,7 @@
 
             <item
                 android:id="@+id/tool"
-                android:icon="@drawable/ic_baseline_cleaning_services_24"
+                android:icon="@drawable/ic_baseline_verified_24"
                 android:title="Tool" />
         </menu>
     </item>

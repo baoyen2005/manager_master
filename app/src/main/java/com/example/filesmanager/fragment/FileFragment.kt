@@ -12,6 +12,7 @@ import android.view.*
 import android.widget.*
 import android.widget.LinearLayout
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -45,7 +46,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
     private var title :String = "Search"
     private var icon: Int = R.drawable.ic_baseline_search_24
     lateinit var  linearSearch :LinearLayout
-    lateinit var searchView:SearchView
+    lateinit var searchView:androidx.appcompat.widget.SearchView
     lateinit var tvDelete :TextView
     lateinit var txtSave :TextView
     private var isEnable :Boolean = false
@@ -91,22 +92,25 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
 
         imgSearch.setOnClickListener{
             searchView.isIconified = false
-//            searchView.requestFocusFromTouch();
 
             txtSave.visibility = View.INVISIBLE
             imgSearch.visibility = View.INVISIBLE
             searchView.visibility =View.VISIBLE
-            searchView.setOnQueryTextListener (object: SearchView.OnQueryTextListener{
+           // var fileClick = ArrayList<File>()
+            searchView.setOnQueryTextListener (object : SearchView.OnQueryTextListener{
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    TODO("Not yet implemented")
+                    var text:String  = query.toString()
+                    fileAdapter.filter(text)
+                    return  false
                 }
                 override fun onQueryTextChange(newText: String?): Boolean {
                     var text:String  = newText.toString()
-                    var file :ArrayList<File> = filter(text)
-                    fileAdapter.updateData(file)
+                   fileAdapter.filter(text)
                     return  false
                 }
-            })
+            }
+            )
+
         }
         searchView.setOnCloseListener {
             searchView.isIconified = false
@@ -118,29 +122,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         }
         return view
     }
-    private fun filter(charSequence: String) :ArrayList<File>{
-        arrayListCopy.clear()
-        arrayListCopy.addAll(fileList)
-        Log.d("noti", arrayListCopy.toString())
-        var tempArraylist = ArrayList<File>()
-        tempArraylist.clear()
-        var checkNull = false
-        if (charSequence.isNotEmpty()) {
-            for (file in fileList) {
-                if (file.name.lowercase(Locale.getDefault()).contains(charSequence)) {
-                    tempArraylist.add(file)
-                    checkNull = true
-                }
-            }
-        } else {
-            tempArraylist.addAll(fileList)
-        }
-        arrayListCopy.clear()
 
-        arrayListCopy.addAll(tempArraylist)
-        tempArraylist.clear()
-        return arrayListCopy
-    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val bundle = this.arguments
@@ -171,10 +153,10 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         val arrayList = ArrayList<File>()
         val files = root.listFiles()
         if(root.absolutePath == Environment.getExternalStorageDirectory().toString()){
-            if (files != null  ) {
+            if (files != null && !files.isEmpty() ) {
                 arrayList.clear()
                 for(fi in files ){
-                    if(!fi.isHidden&& fi.isDirectory)
+                    if(!fi.isHidden&& fi.isDirectory&& !files.isEmpty() )
                         arrayList.add(fi)
                 }
             }
@@ -182,23 +164,16 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         else{
             if (files != null  ) {
                 arrayList.clear()
-                //arrayList.addAll(files)
                 for(fi in files){
-                    if(!fi.isHidden)
-                        arrayList.add(fi)
+                    arrayList.add(fi)
                 }
             }
         }
         Log.d("aaa", "findFiles: " + arrayList.size)
-
         return arrayList
-
-
     }
 
      fun displayFiles() {
-
-
         val DIR_INTERNAL = Environment.getExternalStorageDirectory().toString()
         val storage = File(DIR_INTERNAL)
             fileList.clear()
@@ -209,9 +184,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-
         inflater.inflate(R.menu.toolbar_menu, menu)
-      //  var menu1: Menu = toolbar.menu
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -226,7 +199,6 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
                arrayList.clear()
                arrayList.addAll(files)
            }
-
            fileList.clear()
            fileList.addAll(findFiles(File(file.absolutePath)))
            if(isList && listBackGrid && check == 1) fileAdapter.notifyDataSetChanged()
@@ -243,7 +215,6 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
        }
 
         else{
-           //stFileClick.add(file.absolutePath)
            try {
                var fileOpen = FileOpen()
                fileOpen.openFile(requireContext(),file)
@@ -322,12 +293,6 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
 
         popupMenu.show()
     }
-
-    @SuppressLint("SetTextI18n")
-//    private fun findInformation(file: File, position:Int) {
-//      val find = FindInformation(file)
-//        tvInformation.text = find.findInfor()
-//    }
 
     fun dialogYesOrNo(context: Context,  title: String, message: String, listener: DialogInterface.OnClickListener
     ) {
