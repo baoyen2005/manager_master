@@ -190,19 +190,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Log.d("yen","main + click 1 before pop "+ "   "+ fileFrag.stFileClick)
                 fileFrag.stFileClick.pop()
                 Log.d("yen","main + click 1 after pop"+ "   "+ fileFrag.stFileClick)
+                fileFrag.fileList.clear()
                 fileFrag.fileList.addAll(fileFrag.findFiles(File(fileFrag.stFileClick[fileFrag.stFileClick.size-1])))
                 fileFrag.fileAdapter.updateData(fileFrag.fileList)
 
                 Log.d("yen","main + click 1 list"+ "   "+ fileFrag.fileList)
 
             }
-            else if(fileFrag.stFileClick.size ==1){
-                Log.d("yen","main + click 3"+ "   "+ fileFrag.stFileClick)
-                fileFrag.fileList.addAll(fileFrag.findFiles(File(fileFrag.stFileClick[fileFrag.stFileClick.size-1])))
-                fileFrag.fileAdapter.updateData(fileFrag.fileList)
-                fileFrag.stFileClick.pop()
-                Log.d("yen","main + click 3 list"+ "   "+ fileFrag.fileList)
-            } else {
+             else {
                 Log.d("yen","main + click 4")
                 if (!share.getBoolean("check", false)) {
                     val config = ProxRateDialog.Config()
@@ -216,7 +211,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         override fun onLaterButtonClicked() {
                             lateRate.putBoolean("late",false)
                             lateRate.apply()
-                            fileFrag.displayFiles()
+//                            fileFrag.displayFiles()
                         }
 
                         override fun onChangeStar(rate: Int) {
@@ -244,7 +239,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             override fun onLaterButtonClicked() {
                                 lateRate.putBoolean("late",false)
                                 lateRate.apply()
-                                fileFrag.displayFiles()
+//                                fileFrag.displayFiles()
                             }
 
                             override fun onChangeStar(rate: Int) {
@@ -265,9 +260,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             fileFrag.setUpRecyclerViewAdapter()
 
         }
-        else if(viewPager.currentItem> 0){
-            viewPager.currentItem =0
-            fileFrag.displayFiles()
+        else {
+            viewPager.currentItem = viewPager.currentItem - 1
+//            fileFrag.displayFiles()
         }
 
     }

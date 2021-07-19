@@ -184,6 +184,10 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
      fun displayFiles() {
         val DIR_INTERNAL = Environment.getExternalStorageDirectory().toString()
         val storage = File(DIR_INTERNAL)
+
+         if (!stFileClick.contains(storage.absolutePath)) {
+             stFileClick.add(storage.absolutePath)
+         }
             fileList.clear()
             fileList.addAll(findFiles(storage))
         arrayListCopy.addAll(fileList)
