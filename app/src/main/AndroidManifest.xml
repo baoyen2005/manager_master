@@ -2,15 +2,25 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.filesmanager">
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+
+            <data android:mimeType="image/jpeg" />
+        </intent>
+    </queries>
 
     <application
         android:allowBackup="true"
@@ -20,7 +30,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FilesManager">
-        <activity android:name=".activity.PhotoActivity"></activity>
+        <activity android:name=".activity.SplashScreenActivity"
+            android:theme="@style/SplashscreenTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.PhotoActivity" />
         <activity android:name=".activity.MusicActivity" />
 
         <meta-data
@@ -37,21 +55,9 @@
                 android:resource="@xml/provider_path" />
         </provider>
 
-
         <activity android:name=".activity.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.SEND" />
-            <data android:mimeType="image/jpeg" />
-        </intent>
-
-    </queries>
 
 </manifest>

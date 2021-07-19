@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="center"
-            android:background="#BA0000FF"
+            android:background="#2B65EC"
             >
 
             <ImageView
@@ -84,7 +84,7 @@
                     android:layout_below="@id/imgRam"
                     android:layout_alignParentLeft="true"
                     android:layout_marginTop="10dp"
-                    android:background="#BA0000FF"
+                    android:background="#2B65EC"
                     android:text="Speed up now"
                     android:textAllCaps="false"
                     android:textColor="@color/white"

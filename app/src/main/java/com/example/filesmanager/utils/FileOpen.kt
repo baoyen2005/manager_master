@@ -49,7 +49,7 @@ class FileOpen {
       //  intent.putExtra(Intent.EXTRA_STREAM, uri)
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
          try {
-              context.startActivity(Intent.createChooser(intent, "Đọc qua:"))
+              context.startActivity(Intent.createChooser(intent, "Read by:"))
           } catch (e: Exception) {
                e.printStackTrace()
          }

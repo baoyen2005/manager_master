@@ -1,7 +1,5 @@
 package com.example.filesmanager.fragment
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -11,12 +9,10 @@ import android.util.Log
 import android.view.*
 import android.widget.*
 import android.widget.LinearLayout
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,11 +31,11 @@ import kotlin.collections.ArrayList
 
 class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenuItemClickListener{
 
-    private val fileList = ArrayList<File>()
+     val fileList = ArrayList<File>()
     lateinit var fileAdapter: FileAdapter
     private var filePath: String? = null
     private var fileClick : File? = null
-    private var stFileClick = Stack<String>()
+    var stFileClick = Stack<String>()
     lateinit var tvInformation :TextView
     lateinit var drawerLayoutFile:DrawerLayout
     lateinit var toolbar : Toolbar
@@ -54,10 +50,9 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
     private var isList :Boolean = false
     private var listBackGrid = false
     lateinit var imgSearch:ImageView
-    private var nameSongs = ArrayList<String>()
-    private var musics = ArrayList<File>()
-    private lateinit var musicAdapter : ArrayAdapter<String>
+
     private var check = 1
+    var isOpeningFile = false
     private var arrayListCopy = ArrayList<File>()
     fun newInstance(): FileFragment {
         return FileFragment()
@@ -77,48 +72,60 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         drawerLayoutFile = (requireActivity() as MainActivity).drawer!!
         tvInformation = (requireActivity() as MainActivity).txtInform!!
 
-         searchView = view.findViewById(R.id.searchView)
+        searchView = view.findViewById(R.id.searchView)
         imgSearch = view.findViewById(R.id.imgSearch)
         // tvDelete = view.findViewById(R.id.tvDelete)
         txtSave = view.findViewById(R.id.txtSave)
 
         recyclerView = view.findViewById<RecyclerView>(R.id.recycle_internal)
 
-        Log.d("aaaaaa",tvInformation.text.toString())
+        Log.d("aaaaaa", tvInformation.text.toString())
 
 
         toolbar = view.findViewById<Toolbar>(R.id.toolbar_menu)
         toolbar.setOnMenuItemClickListener(this)
 
-        imgSearch.setOnClickListener{
+        imgSearch.setOnClickListener {
             searchView.isIconified = false
 
             txtSave.visibility = View.INVISIBLE
             imgSearch.visibility = View.INVISIBLE
-            searchView.visibility =View.VISIBLE
-           // var fileClick = ArrayList<File>()
-            searchView.setOnQueryTextListener (object : SearchView.OnQueryTextListener{
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    var text:String  = query.toString()
-                    fileAdapter.filter(text)
-                    return  false
-                }
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    var text:String  = newText.toString()
-                   fileAdapter.filter(text)
-                    return  false
-                }
-            }
-            )
+            searchView.visibility = View.VISIBLE
 
-        }
-        searchView.setOnCloseListener {
-            searchView.isIconified = false
-            txtSave.visibility = View.VISIBLE
-            imgSearch.visibility = View.VISIBLE
-            searchView.visibility =View.INVISIBLE
-            fileAdapter.updateData(fileList)
-            return@setOnCloseListener false
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+
+                    if(query == null || query.isEmpty()){
+                        fileAdapter.updateData(fileList)
+                    }
+                    else{
+                        fileAdapter.filter.filter(query)
+                    }
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    Log.d("filter", "onQueryTextChange: " + newText)
+                    Log.d("filter", "onQueryTextChange: length= " + newText!!.length)
+                    if(newText == null || newText.isEmpty()){
+                        fileAdapter.updateData(fileList)
+                    }
+                    else{
+                        fileAdapter.filter.filter(newText)
+                    }
+                    return false
+                }
+            })
+
+
+            searchView.setOnCloseListener {
+                searchView.isIconified = false
+                txtSave.visibility = View.VISIBLE
+                imgSearch.visibility = View.VISIBLE
+                searchView.visibility = View.INVISIBLE
+                fileAdapter.updateData(fileList)
+                return@setOnCloseListener false
+            }
         }
         return view
     }
@@ -148,7 +155,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         }
     }
 
-    private fun findFiles(root: File): ArrayList<File> {
+    fun findFiles(root: File): ArrayList<File> {
         Log.d("aaa", "findFiles: "+root.absolutePath)
         val arrayList = ArrayList<File>()
         val files = root.listFiles()
@@ -190,8 +197,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
     }
 
     override fun onItemClick(file: File, position: Int) {
-        stFileClick.add(file.absolutePath)
-
+        stFileClick.add(file.absolutePath) // luuw đường daanxx mỗi khi click 1 file or folder
         Log.d("yen",stFileClick.toString()+ "   "+file.name+"  "+ file.absolutePath)
        if (file.isDirectory){
            val arrayList = ArrayList<File>()
@@ -216,6 +222,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
        }
 
         else{
+           stFileClick.pop() // click file thì xóa đường dẫn
            try {
                var fileOpen = FileOpen()
                fileOpen.openFile(requireContext(),file)
@@ -309,38 +316,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         alert.show()
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val callback: OnBackPressedCallback =
-            object : OnBackPressedCallback(true /* enabled by default */) {
-                @SuppressLint("WrongConstant")
-                override fun handleOnBackPressed() {
-                  if(stFileClick.size > 1 ){
-                      fileList.clear()
-                      stFileClick.pop()
-                      fileList.addAll(findFiles(File(stFileClick[stFileClick.size-1])))
-                      Log.d("yen","\n"+fileList.toString())
-                  }
-                  else if(stFileClick.size == 1){
-                      fileList.clear()
-                      fileList.addAll(findFiles(File(Environment.getExternalStorageDirectory().toString())))
-                      stFileClick.pop()
-                  }
-                  else if(drawerLayoutFile.isDrawerOpen(Gravity.RIGHT)){
-                            drawerLayoutFile.closeDrawer(Gravity.RIGHT)
-                        }
-                  else{
-                      activity?.supportFragmentManager?.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                      (context as Activity).finish()
-                  }
 
-                   //fileAdapter.notifyDataSetChanged()
-                    setUpRecyclerViewAdapter()
-
-                }
-            }
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
-    }
     fun setUpRecyclerViewAdapter(){
         recyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

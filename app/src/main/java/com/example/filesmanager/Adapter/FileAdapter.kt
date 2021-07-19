@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -25,11 +27,13 @@ class FileAdapter(
     private var fileList: ArrayList<File>,
     private val listener: OnItemClickListener
 ) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() ,Filterable{
     val TYPE_A = 1
     val TYPE_B = 2
     val TYPE_C = 3
     var arrayListCopy = ArrayList<File>()
+
+
     override fun getItemViewType(position: Int): Int {
         if (isList && back && check == 1) {
             return TYPE_A
@@ -69,7 +73,12 @@ class FileAdapter(
                     var date: Date = Date()
                     date.time = fileItem.lastModified() // tra ve int
                     val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("dd/MM")
-                    holder.tvTime.text = simpleDateFormat.format(date)
+                   if(fileItem.isDirectory){
+                       holder.tvTime.text = ""
+                   }
+                    else {
+                       holder.tvTime.text = simpleDateFormat.format(date)
+                   }
                     if (!fileList[position].isDirectory) {
 
                         val ext = fileItem.extension
@@ -235,25 +244,61 @@ class FileAdapter(
         Log.d("aaa", "updateData: " + newList.size)
         notifyDataSetChanged()
     }
-    fun filter(charSequence: String) {
-        arrayListCopy.clear()
-        arrayListCopy.addAll(fileList)
-        Log.d("noti", arrayListCopy.toString())
-        var tempArraylist = ArrayList<File>()
-        tempArraylist.clear()
-        if (charSequence!= null && charSequence.isNotEmpty() ) {
-            for (file in fileList) {
-                if (file.name.lowercase(Locale.getDefault()).contains(charSequence)) {
-                    tempArraylist.add(file)
+
+    override fun getFilter(): Filter {
+        return object :Filter(){
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charSearch = constraint.toString()
+                if(charSearch== null ||charSearch.isEmpty()){
+                    arrayListCopy.clear()
+                    arrayListCopy.addAll(fileList)
+                    Log.d("filter", "performFiltering: filelist "+ fileList.size)
+                    Log.d("filter", "performFiltering: "+ arrayListCopy)
                 }
+                else{
+                    val result = ArrayList<File>()
+                    for(file in fileList){
+                        if (file.name.lowercase().contains(charSearch.lowercase())) {
+                            val boolean = file.name.lowercase().contains(charSearch.lowercase())
+                            result.add(file)
+                            Log.d("filter", "performFiltering if not null: "+ file.name)
+                        }
+                    }
+                    arrayListCopy.clear()
+                    arrayListCopy.addAll(result)
+                    Log.d("filter", "performFiltering: if not null "+ arrayListCopy)
+                }
+                val filterResut = FilterResults()
+                filterResut.values = arrayListCopy
+                return filterResut
             }
-        } else {
-            tempArraylist.addAll(fileList)
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+               var newList = ArrayList<File>()
+                newList.clear()
+                newList.addAll(results!!.values as ArrayList<File>)
+                updateData(newList)
+            }
+
         }
-        arrayListCopy.clear()
-        arrayListCopy.addAll(tempArraylist)
-        tempArraylist.clear()
-        notifyDataSetChanged()
     }
+//    fun filter(charSequence: String) {
+//        arrayListCopy.clear()
+//        arrayListCopy.addAll(fileList)
+//        Log.d("noti", arrayListCopy.toString())
+//        var tempArraylist = ArrayList<File>()
+//        tempArraylist.clear()
+//        for (file in fileList) {
+//            if (file.name.lowercase(Locale.getDefault()).contains(charSequence)) {
+//                    tempArraylist.add(file)
+//            }
+//        }
+//        arrayListCopy.clear()
+//        arrayListCopy.addAll(tempArraylist)
+//        tempArraylist.clear()
+//        updateData(tempArraylist)
+//    }
+
+
+
 
 }

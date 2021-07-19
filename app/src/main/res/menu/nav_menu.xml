@@ -6,10 +6,10 @@
         android:title="Files Manager"/>
     <item android:title="Tool"
         android:id="@+id/ic_tool"
-        android:icon="@drawable/tool"/>
+        android:icon="@drawable/tool3"/>
 
     <item android:id="@+id/ic_cleanup"
-        android:icon="@drawable/cleanup"
+        android:icon="@drawable/clean"
         android:title= "Clean"
 
         />

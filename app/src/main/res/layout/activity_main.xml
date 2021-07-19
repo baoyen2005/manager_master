@@ -48,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:gravity="center"
-            android:background="#0288D1">
+            android:background="#9902CAD1">
             <ImageView
                 android:id="@+id/img_folder"
                 android:layout_width="100dp"
@@ -64,7 +64,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="230dp"
             android:layout_marginLeft="20dp"
-            android:text="Kiểu"
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.273"

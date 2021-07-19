@@ -49,7 +49,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:visibility = "invisible"
-                android:imeOptions="actionSearch"
+                android:imeOptions="actionSearch|actionNone"
+
                 >
             </androidx.appcompat.widget.SearchView>
 

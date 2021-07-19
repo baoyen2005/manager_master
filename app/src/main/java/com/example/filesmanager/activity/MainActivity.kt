@@ -27,6 +27,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.xuandq.rate.ProxRateDialog
 import com.xuandq.rate.RatingDialogListener
+import java.io.File
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -40,15 +41,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var cleanFrag = CleanFragment()
     var sdCard: String? = null
     lateinit var share: SharedPreferences
+    lateinit var late :SharedPreferences
     lateinit var navigationViewStart: NavigationView
-    lateinit var shareEdit :SharedPreferences.Editor
+    lateinit var shareEdit: SharedPreferences.Editor
+    lateinit var lateRate:SharedPreferences.Editor
+
     @SuppressLint("CommitPrefEdits")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         share = getSharedPreferences("ck", MODE_PRIVATE)
         shareEdit = share.edit()
-      //  Toast.makeText(this, "share "+ share.getBoolean("check", false), Toast.LENGTH_SHORT).show()
+        late = getSharedPreferences("ckccc", MODE_PRIVATE)
+        lateRate = late.edit()
+        //  Toast.makeText(this, "share "+ share.getBoolean("check", false), Toast.LENGTH_SHORT).show()
 
         drawer = findViewById<DrawerLayout>(R.id.drawerLayoutFile)
         txtInform = findViewById(R.id.txt_infomation)
@@ -178,39 +184,90 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onBackPressed() {
 
-        if (supportFragmentManager.backStackEntryCount > 0) {
-            supportFragmentManager.popBackStack()
+        if(viewPager.currentItem == 0){
 
-        }
-        if (share.getBoolean("check", false) == false) {
-            val config = ProxRateDialog.Config()
-            config.setListener(object : RatingDialogListener {
-                override fun onSubmitButtonClicked(rate: Int, comment: String?) {
-                    shareEdit.putBoolean("check", true)
-                    shareEdit.apply()
-                    finish()
+            if(fileFrag.stFileClick.size > 1 ){
+                Log.d("yen","main + click 1 before pop "+ "   "+ fileFrag.stFileClick)
+                fileFrag.stFileClick.pop()
+                Log.d("yen","main + click 1 after pop"+ "   "+ fileFrag.stFileClick)
+                fileFrag.fileList.addAll(fileFrag.findFiles(File(fileFrag.stFileClick[fileFrag.stFileClick.size-1])))
+                fileFrag.fileAdapter.updateData(fileFrag.fileList)
+
+                Log.d("yen","main + click 1 list"+ "   "+ fileFrag.fileList)
+
+            }
+            else if(fileFrag.stFileClick.size ==1){
+                Log.d("yen","main + click 3"+ "   "+ fileFrag.stFileClick)
+                fileFrag.fileList.addAll(fileFrag.findFiles(File(fileFrag.stFileClick[fileFrag.stFileClick.size-1])))
+                fileFrag.fileAdapter.updateData(fileFrag.fileList)
+                fileFrag.stFileClick.pop()
+                Log.d("yen","main + click 3 list"+ "   "+ fileFrag.fileList)
+            } else {
+                Log.d("yen","main + click 4")
+                if (!share.getBoolean("check", false)) {
+                    val config = ProxRateDialog.Config()
+                    config.setListener(object : RatingDialogListener {
+                        override fun onSubmitButtonClicked(rate: Int, comment: String?) {
+                            shareEdit.putBoolean("check", true)
+                            shareEdit.apply()
+                            finish()
+                        }
+
+                        override fun onLaterButtonClicked() {
+                            lateRate.putBoolean("late",false)
+                            lateRate.apply()
+                            fileFrag.displayFiles()
+                        }
+
+                        override fun onChangeStar(rate: Int) {
+                            if (rate >= 4) {
+                                shareEdit.putBoolean("check", true)
+                                shareEdit.apply()
+                                finish()
+
+                            }
+                        }
+                    })
+                    ProxRateDialog.init(this, config)
+                    ProxRateDialog.showIfNeed(supportFragmentManager)
                 }
+                else  super.onBackPressed()
+                if(!late.getBoolean("late",false)){
+                        val config = ProxRateDialog.Config()
+                        config.setListener(object : RatingDialogListener {
+                            override fun onSubmitButtonClicked(rate: Int, comment: String?) {
+                                shareEdit.putBoolean("check", true)
+                                shareEdit.apply()
+                                finish()
+                            }
 
-                override fun onLaterButtonClicked() {
+                            override fun onLaterButtonClicked() {
+                                lateRate.putBoolean("late",false)
+                                lateRate.apply()
+                                fileFrag.displayFiles()
+                            }
 
-                }
+                            override fun onChangeStar(rate: Int) {
+                                if (rate >= 4) {
+                                    shareEdit.putBoolean("check", true)
+                                    shareEdit.apply()
+                                    finish()
 
-                override fun onChangeStar(rate: Int) {
-                    if (rate >= 4) {
-                        shareEdit.putBoolean("check", true)
-                        shareEdit.apply()
-                        finish()
-
+                                }
+                            }
+                        })
+                        ProxRateDialog.init(this, config)
+                        ProxRateDialog.showIfNeed(supportFragmentManager)
                     }
 
-                }
-            })
-            ProxRateDialog.init(this, config)
-            ProxRateDialog.showIfNeed(supportFragmentManager)
-        }
 
-        if (share.getBoolean("check", false) == true) {
-            super.onBackPressed()
+            }
+            fileFrag.setUpRecyclerViewAdapter()
+
+        }
+        else if(viewPager.currentItem> 0){
+            viewPager.currentItem =0
+            fileFrag.displayFiles()
         }
 
     }

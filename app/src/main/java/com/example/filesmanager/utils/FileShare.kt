@@ -47,7 +47,7 @@ class FileShare {
         intent.putExtra(Intent.EXTRA_STREAM, uri)
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         try {
-            context.startActivity(Intent.createChooser(intent, "Chia sẻ qua"))
+            context.startActivity(Intent.createChooser(intent, "Share by:"))
         } catch (e: Exception) {
             e.printStackTrace()
         }
