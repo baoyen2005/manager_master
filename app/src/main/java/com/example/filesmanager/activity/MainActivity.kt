@@ -197,7 +197,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Log.d("yen","main + click 1 list"+ "   "+ fileFrag.fileList)
 
             }
+<<<<<<< HEAD
             else {
+=======
+             else {
+>>>>>>> github/master
                 Log.d("yen","main + click 4")
                 if (!share.getBoolean("check", false)) {
                     val config = ProxRateDialog.Config()
@@ -248,6 +252,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 shareEdit.apply()
                                 finish()
 
+<<<<<<< HEAD
+=======
+                            override fun onLaterButtonClicked() {
+                                lateRate.putBoolean("late",false)
+                                lateRate.apply()
+//                                fileFrag.displayFiles()
+>>>>>>> github/master
                             }
                         }
                     })
