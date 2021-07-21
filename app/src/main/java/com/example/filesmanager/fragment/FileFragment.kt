@@ -16,6 +16,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ads.control.Admod
+import com.ads.control.funtion.AdCallback
 import com.example.filesmanager.Adapter.FileAdapter
 import com.example.filesmanager.R
 import com.example.filesmanager.activity.MainActivity
@@ -23,6 +25,8 @@ import com.example.filesmanager.utils.FileExtractUtils
 import com.example.filesmanager.utils.FileOpen
 import com.example.filesmanager.utils.FileShare
 import com.example.filesmanager.utils.FindInformation
+import com.google.android.gms.ads.formats.UnifiedNativeAd
+import com.google.android.gms.ads.formats.UnifiedNativeAdView
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -53,6 +57,9 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
 
     private var check = 1
     var isOpeningFile = false
+    val PRODUCT_ID = "android.test.purchased"
+    private var frAds: FrameLayout? = null
+    private val unifiedNativeAd: UnifiedNativeAd? = null
     private var arrayListCopy = ArrayList<File>()
     fun newInstance(): FileFragment {
         return FileFragment()
@@ -78,13 +85,12 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         txtSave = view.findViewById(R.id.txtSave)
 
         recyclerView = view.findViewById<RecyclerView>(R.id.recycle_internal)
-
+        frAds = view.findViewById<FrameLayout>(R.id.fr_ads)
         Log.d("aaaaaa", tvInformation.text.toString())
 
 
         toolbar = view.findViewById<Toolbar>(R.id.toolbar_menu)
         toolbar.setOnMenuItemClickListener(this)
-
         imgSearch.setOnClickListener {
             searchView.isIconified = false
 
@@ -129,6 +135,20 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         }
         return view
     }
+
+    private fun loadAds() {
+        Admod.getInstance().loadUnifiedNativeAd(context,getString(R.string.id_native_top_list_file),object :AdCallback(){
+            override fun onUnifiedNativeAdLoaded(unifiedNativeAd: UnifiedNativeAd?) {
+                super.onUnifiedNativeAdLoaded(unifiedNativeAd)
+                val adview = LayoutInflater.from(context).inflate(R.layout.custom_native,null)
+                frAds!!.addView(adview)
+                Admod.getInstance().populateUnifiedNativeAdView(unifiedNativeAd,
+                    adview as UnifiedNativeAdView?
+                )
+            }
+        })
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -186,6 +206,10 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         val storage = File(DIR_INTERNAL)
             fileList.clear()
             fileList.addAll(findFiles(storage))
+
+         if (!stFileClick.contains(storage.absolutePath)) {
+             stFileClick.add(storage.absolutePath)
+         }
         arrayListCopy.addAll(fileList)
         fileAdapter.updateData(fileList)
 
@@ -200,6 +224,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         stFileClick.add(file.absolutePath) // luuw đường daanxx mỗi khi click 1 file or folder
         Log.d("yen",stFileClick.toString()+ "   "+file.name+"  "+ file.absolutePath)
        if (file.isDirectory){
+           loadAds()
            val arrayList = ArrayList<File>()
            val files = file.listFiles()
            if (files != null ) {

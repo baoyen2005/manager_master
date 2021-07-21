@@ -17,9 +17,8 @@ object FileExtractUtils {
         var date = simpleDateFormat.format(dateLong)
         return date
     }
-
     fun getQuanlityFile(file: File): Int {
-        var length = 0
+        var length =0;
         val files = file.listFiles()
         if (files != null) {
             length = files.size
