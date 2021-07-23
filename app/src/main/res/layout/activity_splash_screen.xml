@@ -12,15 +12,15 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="File Manager"
+        android:text="This action can contain ads"
         android:textColor="@color/black"
-        android:textSize="26sp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBar"
-        app:layout_constraintVertical_bias="0.178" />
+        app:layout_constraintVertical_bias="0.078" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -31,10 +31,10 @@
         android:max="100"
         android:min="0"
         android:indeterminate="true"
-        android:indeterminateTint="#F00"
+        android:indeterminateTint="@color/blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintWidth_percent="0.75" />
+        app:layout_constraintWidth_percent="0.5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

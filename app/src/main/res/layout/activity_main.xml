@@ -29,7 +29,7 @@
            android:layout_height="wrap_content"
            android:id="@+id/botton_navigation"
            android:background="?android:attr/windowBackground"
-           app:itemBackground="@color/gray"
+           app:itemBackground="@color/white"
            app:itemIconTint="@color/custom_color_navigation"
            app:itemTextColor="@color/custom_color_navigation"
            app:menu="@menu/nav_menu"

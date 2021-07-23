@@ -13,4 +13,7 @@
     <color name="lavender">#696969</color>
     <color name="green">#FF00B59C</color>
     <color name="app">#FF6A3B</color>
+
+    <color name="underline">#d6d6d6</color>
+    <color name="blue">#2B65EC</color>
 </resources>

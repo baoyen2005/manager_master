@@ -73,12 +73,12 @@ class FileAdapter(
                     var date: Date = Date()
                     date.time = fileItem.lastModified() // tra ve int
                     val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("dd/MM")
-                   if(fileItem.isDirectory){
-                       holder.tvTime.text = ""
-                   }
-                    else {
+//                   if(fileItem.isDirectory){
+//                       holder.tvTime.text = ""
+//                   }
+//                    else {
                        holder.tvTime.text = simpleDateFormat.format(date)
-                   }
+//                   }
                     if (!fileList[position].isDirectory) {
 
                         val ext = fileItem.extension
