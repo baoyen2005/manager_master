@@ -187,22 +187,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if(viewPager.currentItem == 0){
 
             if(fileFrag.stFileClick.size > 1 ){
-                Log.d("yen","main + click 1 before pop "+ "   "+ fileFrag.stFileClick)
                 fileFrag.stFileClick.pop()
-                Log.d("yen","main + click 1 after pop"+ "   "+ fileFrag.stFileClick)
                 fileFrag.fileList.clear()
                 fileFrag.fileList.addAll(fileFrag.findFiles(File(fileFrag.stFileClick[fileFrag.stFileClick.size-1])))
                 fileFrag.fileAdapter.updateData(fileFrag.fileList)
-
-                Log.d("yen","main + click 1 list"+ "   "+ fileFrag.fileList)
-
             }
-<<<<<<< HEAD
             else {
-=======
-             else {
->>>>>>> github/master
-                Log.d("yen","main + click 4")
                 if (!share.getBoolean("check", false)) {
                     val config = ProxRateDialog.Config()
                     config.setListener(object : RatingDialogListener {
@@ -215,7 +205,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         override fun onLaterButtonClicked() {
                             lateRate.putBoolean("late",false)
                             lateRate.apply()
-//                            fileFrag.displayFiles()
                         }
 
                         override fun onChangeStar(rate: Int) {
@@ -252,13 +241,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 shareEdit.apply()
                                 finish()
 
-<<<<<<< HEAD
-=======
-                            override fun onLaterButtonClicked() {
-                                lateRate.putBoolean("late",false)
-                                lateRate.apply()
-//                                fileFrag.displayFiles()
->>>>>>> github/master
                             }
                         }
                     })
@@ -273,7 +255,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         else {
             viewPager.currentItem = viewPager.currentItem - 1
-//            fileFrag.displayFiles()
         }
     }
 
