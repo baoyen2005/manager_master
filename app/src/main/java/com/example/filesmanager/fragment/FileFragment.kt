@@ -25,8 +25,13 @@ import com.example.filesmanager.utils.FileExtractUtils
 import com.example.filesmanager.utils.FileOpen
 import com.example.filesmanager.utils.FileShare
 import com.example.filesmanager.utils.FindInformation
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.formats.UnifiedNativeAd
 import com.google.android.gms.ads.formats.UnifiedNativeAdView
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -61,6 +66,9 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
     private var frAds: FrameLayout? = null
     private val unifiedNativeAd: UnifiedNativeAd? = null
     private var arrayListCopy = ArrayList<File>()
+    private var countToShowAds = 0
+    private var countToShowFirebase = 0
+    lateinit var firebaseAnalytics : FirebaseAnalytics
     fun newInstance(): FileFragment {
         return FileFragment()
     }
@@ -71,6 +79,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
        // fileAdapter.isList = false
         isList = true
         listBackGrid = true
+        firebaseAnalytics = Firebase.analytics
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -135,6 +144,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         }
         return view
     }
+
 
     private fun loadAds() {
         Admod.getInstance().loadUnifiedNativeAd(context,getString(R.string.id_native_top_list_file),object :AdCallback(){
@@ -228,6 +238,8 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         stFileClick.add(file.absolutePath) // luuw đường daanxx mỗi khi click 1 file or folder
         Log.d("yen",stFileClick.toString()+ "   "+file.name+"  "+ file.absolutePath)
        if (file.isDirectory){
+           countToShowAds ++
+           countToShowFirebase++
            loadAds()
            val arrayList = ArrayList<File>()
            val files = file.listFiles()
@@ -235,19 +247,21 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
                arrayList.clear()
                arrayList.addAll(files)
            }
+
+
            fileList.clear()
            fileList.addAll(findFiles(File(file.absolutePath)))
-           if(isList && listBackGrid && check == 1) fileAdapter.notifyDataSetChanged()
-           else{
-               isList = true
-               listBackGrid = true
-               check = 1
-               recyclerView.layoutManager =
-                   LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
-               fileAdapter = FileAdapter(check,listBackGrid,isList,requireContext(), fileList, this)
-               recyclerView.adapter = fileAdapter
-               fileAdapter.updateData(fileList)
+           if(countToShowAds % 3==0){
+               showInterstitialAds(fileList)
            }
+
+           showListFile(fileList)
+           Log.d("fire",countToShowFirebase.toString())
+           firebaseAnalytics.logEvent("prox_rating_layout") {
+               param("event_type", "click_Folder")
+               param("click", countToShowFirebase.toString())
+           }
+
        }
 
         else{
@@ -261,7 +275,36 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
        }
     }
 
+    private fun showListFile(list: ArrayList<File>){
+        if(isList && listBackGrid && check == 1) fileAdapter.notifyDataSetChanged()
+        else{
+            isList = true
+            listBackGrid = true
+            check = 1
+            recyclerView.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
+            fileAdapter = FileAdapter(check,listBackGrid,isList,requireContext(), list, this)
+            recyclerView.adapter = fileAdapter
+            fileAdapter.updateData(list)
+        }
+    }
+    private fun showInterstitialAds(list : ArrayList<File>) {
+        Admod.getInstance().loadSplashInterstitalAds(
+            context,
+            getString(R.string.id_interstitial_click_file),
+            12000,
+            object : AdCallback() {
+                override fun onAdClosed() {
+                    showListFile(list)
+                }
 
+                override fun onAdFailedToLoad(i: LoadAdError?) {
+                    showListFile(list)
+                }
+            }
+        )
+        countToShowAds = 0
+    }
     override fun onOptionsMenuClicked(view: View, file: File,position:Int) {
         val popupMenu = PopupMenu(context,view)
         popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->

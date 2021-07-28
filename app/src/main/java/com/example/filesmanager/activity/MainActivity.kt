@@ -25,6 +25,10 @@ import com.example.filesmanager.fragment.FileFragment
 import com.example.filesmanager.fragment.ToolFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import com.xuandq.rate.ProxRateDialog
 import com.xuandq.rate.RatingDialogListener
 import java.io.File
@@ -45,7 +49,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var navigationViewStart: NavigationView
     lateinit var shareEdit: SharedPreferences.Editor
     lateinit var lateRate:SharedPreferences.Editor
-
+    lateinit var firebaseAnalytics : FirebaseAnalytics
     @SuppressLint("CommitPrefEdits")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +62,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawer = findViewById<DrawerLayout>(R.id.drawerLayoutFile)
         txtInform = findViewById(R.id.txt_infomation)
+        firebaseAnalytics = Firebase.analytics
 
         val home = CleanFragment()
         val tool = ToolFragment()
@@ -194,25 +199,37 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             else {
                 if (!share.getBoolean("check", false)) {
+
                     val config = ProxRateDialog.Config()
                     config.setListener(object : RatingDialogListener {
                         override fun onSubmitButtonClicked(rate: Int, comment: String?) {
                             shareEdit.putBoolean("check", true)
                             shareEdit.apply()
+                            firebaseAnalytics.logEvent("prox_rating_layout") {
+                                param("event_type", "rated")
+                                param("star", rate.toString())
+                                param("comment", comment.toString())
+                            }
                             finish()
                         }
 
                         override fun onLaterButtonClicked() {
                             lateRate.putBoolean("late",false)
                             lateRate.apply()
+                            firebaseAnalytics.logEvent("prox_rating_layout") {
+                                param("event_type", "cancel")
+                            }
                         }
 
                         override fun onChangeStar(rate: Int) {
                             if (rate >= 4) {
                                 shareEdit.putBoolean("check", true)
                                 shareEdit.apply()
+                                firebaseAnalytics.logEvent("prox_rating_layout") {
+                                    param("event_type", "rated")
+                                    param("star", rate.toString())
+                                }
                                 finish()
-
                             }
                         }
                     })
@@ -226,12 +243,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         override fun onSubmitButtonClicked(rate: Int, comment: String?) {
                             shareEdit.putBoolean("check", true)
                             shareEdit.apply()
+                            firebaseAnalytics.logEvent("prox_rating_layout") {
+                                param("event_type", "rated")
+                                param("star", rate.toString())
+                                param("comment", comment.toString())
+                            }
                             finish()
                         }
 
                         override fun onLaterButtonClicked() {
                             lateRate.putBoolean("late",false)
                             lateRate.apply()
+                            firebaseAnalytics.logEvent("prox_rating_layout") {
+                                param("event_type", "cancel")
+
+                            }
 //                                fileFrag.displayFiles()
                         }
 
@@ -239,6 +265,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             if (rate >= 4) {
                                 shareEdit.putBoolean("check", true)
                                 shareEdit.apply()
+                                firebaseAnalytics.logEvent("prox_rating_layout") {
+                                    param("event_type", "rated")
+                                    param("star", rate.toString())
+                                }
                                 finish()
 
                             }
