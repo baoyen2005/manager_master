@@ -62,13 +62,15 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
     private var check = 1
     var isOpeningFile = false
     val PRODUCT_ID = "android.test.purchased"
-    private var frAds: FrameLayout? = null
+     var frAds: FrameLayout? = null
     private val unifiedNativeAd: UnifiedNativeAd? = null
     private var arrayListCopy = ArrayList<File>()
     private var countToShowAds = 0
     private var countToShowFirebase = 0
     lateinit var firebaseAnalytics : FirebaseAnalytics
     lateinit var   mInterstitialAd :com.google.android.gms.ads.InterstitialAd
+     var checkNativeds = false
+
     fun newInstance(): FileFragment {
         return FileFragment()
     }
@@ -151,7 +153,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
     }
 
 
-    private fun loadAds() {
+    fun loadAds() {
         Admod.getInstance().loadUnifiedNativeAd(context,getString(R.string.id_native_top_list_file),object :AdCallback(){
             override fun onUnifiedNativeAdLoaded(unifiedNativeAd: UnifiedNativeAd?) {
                 super.onUnifiedNativeAdLoaded(unifiedNativeAd)
@@ -233,7 +235,9 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
 
          if (!stFileClick.contains(storage.absolutePath)) {
              stFileClick.add(storage.absolutePath)
+
          }
+         checkNativeds = false
         arrayListCopy.addAll(fileList)
         fileAdapter.updateData(fileList)
 
@@ -251,6 +255,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
            countToShowAds ++
            countToShowFirebase++
            loadAds()
+           checkNativeds = true
            val arrayList = ArrayList<File>()
            val files = file.listFiles()
            if (files != null ) {

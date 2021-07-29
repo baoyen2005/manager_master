@@ -208,8 +208,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 fileFrag.fileList.clear()
                 fileFrag.fileList.addAll(fileFrag.findFiles(File(fileFrag.stFileClick[fileFrag.stFileClick.size-1])))
                 fileFrag.fileAdapter.updateData(fileFrag.fileList)
+                if(fileFrag.stFileClick.size == 1){
+                    fileFrag.frAds!!.visibility = View.GONE
+                }
             }
             else {
+
                 if (!share.getBoolean("check", false)) {
 
                     val config = ProxRateDialog.Config()
@@ -289,7 +293,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     ProxRateDialog.init(this, config)
                     ProxRateDialog.showIfNeed(supportFragmentManager)
                 }
-
 
             }
             fileFrag.setUpRecyclerViewAdapter()
