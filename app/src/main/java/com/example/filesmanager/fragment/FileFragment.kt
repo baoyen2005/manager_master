@@ -3,6 +3,7 @@ package com.example.filesmanager.fragment
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
@@ -21,13 +22,11 @@ import com.ads.control.funtion.AdCallback
 import com.example.filesmanager.Adapter.FileAdapter
 import com.example.filesmanager.R
 import com.example.filesmanager.activity.MainActivity
-import com.example.filesmanager.utils.FileExtractUtils
-import com.example.filesmanager.utils.FileOpen
-import com.example.filesmanager.utils.FileShare
-import com.example.filesmanager.utils.FindInformation
+import com.example.filesmanager.utils.*
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.formats.UnifiedNativeAd
 import com.google.android.gms.ads.formats.UnifiedNativeAdView
+import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
@@ -58,7 +57,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
     lateinit var recyclerView:RecyclerView
     private var isList :Boolean = false
     private var listBackGrid = false
-    lateinit var imgSearch:ImageView
+     lateinit var imgSearch:ImageView
 
     private var check = 1
     var isOpeningFile = false
@@ -69,6 +68,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
     private var countToShowAds = 0
     private var countToShowFirebase = 0
     lateinit var firebaseAnalytics : FirebaseAnalytics
+    lateinit var   mInterstitialAd :com.google.android.gms.ads.InterstitialAd
     fun newInstance(): FileFragment {
         return FileFragment()
     }
@@ -90,16 +90,21 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
 
         searchView = view.findViewById(R.id.searchView)
         imgSearch = view.findViewById(R.id.imgSearch)
-        // tvDelete = view.findViewById(R.id.tvDelete)
         txtSave = view.findViewById(R.id.txtSave)
-
         recyclerView = view.findViewById<RecyclerView>(R.id.recycle_internal)
         frAds = view.findViewById<FrameLayout>(R.id.fr_ads)
         Log.d("aaaaaa", tvInformation.text.toString())
-
-
         toolbar = view.findViewById<Toolbar>(R.id.toolbar_menu)
+        //mInterstitialAd = Admod.getInstance().getInterstitalAds(context, getString(R.string.id_interstitial_click_file))
+        // request ads từ gg ve => can time
+
         toolbar.setOnMenuItemClickListener(this)
+
+        txtSave.visibility = View.VISIBLE
+        imgSearch.visibility = View.VISIBLE
+        searchView.visibility = View.INVISIBLE
+        searchView.setQuery("",false)
+        searchView.clearFocus()
         imgSearch.setOnClickListener {
             searchView.isIconified = false
 
@@ -165,6 +170,11 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         val bundle = this.arguments
         filePath = bundle?.getString("path")
         setUpRecyclerView()
+        txtSave.visibility = View.VISIBLE
+        imgSearch.visibility = View.VISIBLE
+        searchView.visibility = View.INVISIBLE
+        searchView.setQuery("",false)
+        searchView.clearFocus()
         displayFiles()
 
     }
@@ -247,23 +257,18 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
                arrayList.clear()
                arrayList.addAll(files)
            }
-
-
            fileList.clear()
            fileList.addAll(findFiles(File(file.absolutePath)))
-           if(countToShowAds % 3==0){
-               showInterstitialAds(fileList)
+            if(countToShowAds % 3==0){
+              showInterstitialAds(fileList)
            }
-
            showListFile(fileList)
            Log.d("fire",countToShowFirebase.toString())
            firebaseAnalytics.logEvent("prox_rating_layout") {
                param("event_type", "click_Folder")
                param("click", countToShowFirebase.toString())
            }
-
        }
-
         else{
            stFileClick.pop() // click file thì xóa đường dẫn
            try {
@@ -288,21 +293,15 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
             fileAdapter.updateData(list)
         }
     }
-    private fun showInterstitialAds(list : ArrayList<File>) {
-        Admod.getInstance().loadSplashInterstitalAds(
-            context,
-            getString(R.string.id_interstitial_click_file),
-            12000,
-            object : AdCallback() {
-                override fun onAdClosed() {
-                    showListFile(list)
-                }
 
-                override fun onAdFailedToLoad(i: LoadAdError?) {
-                    showListFile(list)
-                }
+
+    private fun showInterstitialAds(list : ArrayList<File>) {
+
+        Admod.getInstance().forceShowInterstitial(context, InterstitialUtils.getInteeClickFIle(), object : AdCallback() {
+            override fun onAdClosed() {
+                showListFile(list)
             }
-        )
+        })
         countToShowAds = 0
     }
     override fun onOptionsMenuClicked(view: View, file: File,position:Int) {

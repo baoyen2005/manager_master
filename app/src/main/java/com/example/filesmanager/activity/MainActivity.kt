@@ -11,6 +11,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         share = getSharedPreferences("ck", MODE_PRIVATE)
         shareEdit = share.edit()
         late = getSharedPreferences("ckccc", MODE_PRIVATE)
@@ -81,12 +83,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         viewPager.adapter = adapter
         navigationViewStart.setNavigationItemSelectedListener(this)
 
-
+       // clearSearchViewInFileFragment()
         requestPermission()
         setFragment()
 
     }
+    private fun clearSearchViewInFileFragment(){
 
+        fileFrag.txtSave.visibility = View.VISIBLE
+        fileFrag.imgSearch.visibility = View.VISIBLE
+        fileFrag.searchView.visibility = View.INVISIBLE
+        fileFrag.searchView.setQuery("",false)
+        fileFrag.searchView.clearFocus()
+    }
     private fun requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, permission.READ_EXTERNAL_STORAGE) !=
@@ -163,18 +172,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     viewPager.currentItem = 0
                     fragment = fileFrag
                     fileFrag.displayFiles()
+                   clearSearchViewInFileFragment()
                     true
                 }
                 R.id.ic_tool -> {
                     toolFrag.displayImage()
                     viewPager.currentItem = 1
                     fragment = toolFrag
+                    clearSearchViewInFileFragment()
                     true
 
                 }
                 R.id.ic_cleanup -> {
                     fragment = cleanFrag
                     viewPager.currentItem = 2
+                    clearSearchViewInFileFragment()
                     true
                 }
 
@@ -285,6 +297,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         else {
             viewPager.currentItem = viewPager.currentItem - 1
+            clearSearchViewInFileFragment()
         }
     }
 
