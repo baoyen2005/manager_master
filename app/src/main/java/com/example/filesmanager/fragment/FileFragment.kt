@@ -93,6 +93,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         frAds = view.findViewById<FrameLayout>(R.id.fr_ads)
         Log.d("aaaaaa", tvInformation.text.toString())
         toolbar = view.findViewById<Toolbar>(R.id.toolbar_menu)
+        InterstitialUtils.loadAdsNative(requireContext(), frAds!!)
         //mInterstitialAd = Admod.getInstance().getInterstitalAds(context, getString(R.string.id_interstitial_click_file))
         // request ads từ gg ve => can time
 

@@ -19,8 +19,8 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
         InterstitialUtils.initInterstitialStartup(this)
-        fileFrag.frAds!!.visibility = View.GONE
-        InterstitialUtils.loadAdsNative(this, fileFrag.frAds!!)
+        //fileFrag.frAds!!.visibility = View.GONE
+
 
         Admod.getInstance().loadSplashInterstitalAds(
             this,
