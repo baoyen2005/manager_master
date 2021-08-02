@@ -90,15 +90,11 @@ class DisplayAllImageFragment() : Fragment(), RecentlyImageAdapter.OnItemClickLi
 
 
         for (singleImg in files) {
-            if (!singleImg.isHidden && singleImg.isDirectory) {
-                arrayList.addAll(findFileImage(singleImg))
-            } else {
-                if (singleImg.extension=="png" ||
-                    singleImg.extension=="jpg" ||
-                    singleImg.extension=="jpeg"
-                ) {
-                    arrayList.add(singleImg)
-                }
+            if (singleImg.extension=="png" ||
+                singleImg.extension=="jpg" ||
+                singleImg.extension=="jpeg"
+            ) {
+                arrayList.add(singleImg)
             }
         }
 
