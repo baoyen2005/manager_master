@@ -166,13 +166,17 @@ class ImageAdapter(
                     var length = 0
 
                     val files = fileItem.listImage
+                    if (fileItem.name.lowercase().equals("Download")){
+                        Log.d("folder", "so file trong download: "+ fileItem.listImage.size)
+                    }
                     if (files != null) {
                         length = files.size
                         if (length >= 1) {
                             if (length == 1) {
                                 holder.tvSize.text = "1 file"
                                 quanlityFile.put(position, 1)
-                            } else {
+                            }
+                            else {
                                 holder.tvSize.text = "$length files"
                                 quanlityFile.put(position, length)
                             }

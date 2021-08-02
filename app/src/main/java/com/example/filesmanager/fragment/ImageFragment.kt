@@ -160,7 +160,7 @@ class ImageFragment : Fragment(), ImageAdapter.OnItemClickListenerTool {
     fun listImage(file: File) {
         if (file.isDirectory && !file.isHidden) {
             val listFile = file.listFiles()
-            if (listFile != null && listFile.size > 0) {
+            if (listFile != null && listFile.isNotEmpty()) {
                 for (f in listFile) {
                     listImage(f)
                 }

@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -51,6 +52,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var shareEdit: SharedPreferences.Editor
     lateinit var lateRate:SharedPreferences.Editor
     lateinit var firebaseAnalytics : FirebaseAnalytics
+    lateinit var frameAds : FrameLayout
     @SuppressLint("CommitPrefEdits")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +67,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer = findViewById<DrawerLayout>(R.id.drawerLayoutFile)
         txtInform = findViewById(R.id.txt_infomation)
         firebaseAnalytics = Firebase.analytics
+     //   frameAds =findViewById<FrameLayout>(R.id.fr_ads)
+
 
         val home = CleanFragment()
         val tool = ToolFragment()
@@ -82,7 +86,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         adapter.addFragment(cleanFrag, "Clean")
         viewPager.adapter = adapter
         navigationViewStart.setNavigationItemSelectedListener(this)
-
        // clearSearchViewInFileFragment()
         requestPermission()
         setFragment()
