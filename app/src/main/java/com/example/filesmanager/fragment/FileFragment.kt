@@ -23,6 +23,7 @@ import com.example.filesmanager.R
 import com.example.filesmanager.activity.MainActivity
 import com.example.filesmanager.utils.*
 import com.google.android.gms.ads.formats.UnifiedNativeAd
+import com.google.android.gms.ads.formats.UnifiedNativeAdView
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
@@ -93,9 +94,8 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         frAds = view.findViewById<FrameLayout>(R.id.fr_ads)
         Log.d("aaaaaa", tvInformation.text.toString())
         toolbar = view.findViewById<Toolbar>(R.id.toolbar_menu)
-        InterstitialUtils.loadAdsNative(requireContext(), frAds!!)
-        //mInterstitialAd = Admod.getInstance().getInterstitalAds(context, getString(R.string.id_interstitial_click_file))
-        // request ads từ gg ve => can time
+//        InterstitialUtils.loadAdsNative(requireContext(), frAds!!)
+
 
         toolbar.setOnMenuItemClickListener(this)
 
@@ -150,18 +150,18 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
     }
 
 
-//    fun loadAds() {
-//        Admod.getInstance().loadUnifiedNativeAd(context,getString(R.string.id_native_top_list_file),object :AdCallback(){
-//            override fun onUnifiedNativeAdLoaded(unifiedNativeAd: UnifiedNativeAd?) {
-//                super.onUnifiedNativeAdLoaded(unifiedNativeAd)
-//                val adview = LayoutInflater.from(context).inflate(R.layout.custom_native,null)
-//                frAds!!.addView(adview)
-//                Admod.getInstance().populateUnifiedNativeAdView(unifiedNativeAd,
-//                    adview as UnifiedNativeAdView?
-//                )
-//            }
-//        })
-//    }
+    fun loadAds() {
+        Admod.getInstance().loadUnifiedNativeAd(context,getString(R.string.id_native_top_list_file),object :AdCallback(){
+            override fun onUnifiedNativeAdLoaded(unifiedNativeAd: UnifiedNativeAd?) {
+                super.onUnifiedNativeAdLoaded(unifiedNativeAd)
+                val adview = LayoutInflater.from(context).inflate(R.layout.custom_native,null)
+                frAds!!.addView(adview)
+                Admod.getInstance().populateUnifiedNativeAdView(unifiedNativeAd,
+                    adview as UnifiedNativeAdView?
+                )
+            }
+        })
+    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -251,7 +251,10 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
        if (file.isDirectory){
            countToShowAds ++
            countToShowFirebase++
-           frAds!!.visibility = View.VISIBLE
+//           frAds!!.visibility = View.VISIBLE
+          // InterstitialUtils.loadAdsNative(requireContext(), frAds!!)
+           loadAds()
+
            checkNativeds = true
            val arrayList = ArrayList<File>()
            val files = file.listFiles()
