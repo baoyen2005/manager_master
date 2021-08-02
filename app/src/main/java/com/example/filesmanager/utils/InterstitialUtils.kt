@@ -25,7 +25,7 @@ object InterstitialUtils {
         return mInterClickFile!!
     }
     fun loadAdsNative(context: Context, frAds: FrameLayout) {
-        Admod.getInstance().loadUnifiedNativeAd(context,getString(R.string.id_native_top_list_file),object :
+        Admod.getInstance().loadUnifiedNativeAd(context,context.getString(R.string.id_native_top_list_file),object :
             AdCallback(){
             override fun onUnifiedNativeAdLoaded(unifiedNativeAd: UnifiedNativeAd?) {
                 super.onUnifiedNativeAdLoaded(unifiedNativeAd)
