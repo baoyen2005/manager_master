@@ -62,13 +62,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         shareEdit = share.edit()
         late = getSharedPreferences("ckccc", MODE_PRIVATE)
         lateRate = late.edit()
-        //  Toast.makeText(this, "share "+ share.getBoolean("check", false), Toast.LENGTH_SHORT).show()
+
 
         drawer = findViewById<DrawerLayout>(R.id.drawerLayoutFile)
         txtInform = findViewById(R.id.txt_infomation)
         firebaseAnalytics = Firebase.analytics
-     //   frameAds =findViewById<FrameLayout>(R.id.fr_ads)
-
 
         val home = CleanFragment()
         val tool = ToolFragment()

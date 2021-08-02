@@ -94,8 +94,6 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
         frAds = view.findViewById<FrameLayout>(R.id.fr_ads)
         Log.d("aaaaaa", tvInformation.text.toString())
         toolbar = view.findViewById<Toolbar>(R.id.toolbar_menu)
-//        InterstitialUtils.loadAdsNative(requireContext(), frAds!!)
-
 
         toolbar.setOnMenuItemClickListener(this)
 
@@ -251,8 +249,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
        if (file.isDirectory){
            countToShowAds ++
            countToShowFirebase++
-//           frAds!!.visibility = View.VISIBLE
-          // InterstitialUtils.loadAdsNative(requireContext(), frAds!!)
+
            loadAds()
 
            checkNativeds = true
