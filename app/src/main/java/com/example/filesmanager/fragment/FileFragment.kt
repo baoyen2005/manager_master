@@ -151,8 +151,10 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
 
 
     fun loadAds() {
-        Admod.getInstance().loadUnifiedNativeAd(context,getString(R.string.id_native_top_list_file),object :AdCallback(){
+        Log.d("adsss", "Trét: "+ R.string.id_native_top_file)
+        Admod.getInstance().loadUnifiedNativeAd(context,getString(R.string.id_native_top_file),object :AdCallback(){
             override fun onUnifiedNativeAdLoaded(unifiedNativeAd: UnifiedNativeAd?) {
+                Log.d("adsss", "onUnifiedNativeAdLoaded: "+ R.string.id_native_top_file)
                 super.onUnifiedNativeAdLoaded(unifiedNativeAd)
                 val adview = LayoutInflater.from(context).inflate(R.layout.custom_native,null)
                 frAds!!.addView(adview)

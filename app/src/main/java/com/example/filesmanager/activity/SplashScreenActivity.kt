@@ -13,16 +13,13 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 
 class SplashScreenActivity : AppCompatActivity() {
-    private var mInterstitialAd: InterstitialAd? = null
-    private var fileFrag = FileFragment()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
         InterstitialUtils.initInterstitialStartup(this)
-
         Admod.getInstance().loadSplashInterstitalAds(
             this,
-            getString(R.string.id_interstitial_splash),
+            getString(R.string.id_interstitial_splash_screen),
             12000,
             object : AdCallback() {
                 override fun onAdClosed() {

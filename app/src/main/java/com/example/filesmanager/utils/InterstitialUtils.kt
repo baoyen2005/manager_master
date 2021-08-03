@@ -16,25 +16,12 @@ object InterstitialUtils {
 
     fun initInterstitialStartup(context: Context) {
         if (mInterClickFile == null) {
-            mInterClickFile = Admod.getInstance().getInterstitalAds(context, context.getString(R.string.id_interstitial_click_file))
+            mInterClickFile = Admod.getInstance().getInterstitalAds(context, context.getString(R.string.id_interstitial_click_folder))
         }
 
     }
 
     fun getInteeClickFIle() : InterstitialAd {
         return mInterClickFile!!
-    }
-    fun loadAdsNative(context: Context, frAds: FrameLayout) {
-        Admod.getInstance().loadUnifiedNativeAd(context,context.getString(R.string.id_native_top_list_file),object :
-            AdCallback(){
-            override fun onUnifiedNativeAdLoaded(unifiedNativeAd: UnifiedNativeAd?) {
-                super.onUnifiedNativeAdLoaded(unifiedNativeAd)
-                val adview = LayoutInflater.from(context).inflate(R.layout.custom_native,null)
-                frAds!!.addView(adview)
-                Admod.getInstance().populateUnifiedNativeAdView(unifiedNativeAd,
-                    adview as UnifiedNativeAdView?
-                )
-            }
-        })
     }
 }

@@ -20,9 +20,9 @@ android {
     buildTypes {
         debug {
             resValue "string", "id_app_ad", "ca-app-pub-3940256099942544~3347511713"
-            resValue "string", "id_interstitial_splash", "ca-app-pub-3940256099942544/1033173712"
-            resValue "string", "id_interstitial_click_file", "ca-app-pub-3940256099942544/1033173712"
-            resValue "string", "id_native_top_list_file", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "id_interstitial_splash_screen", "ca-app-pub-3940256099942544/1033173712"
+            resValue "string", "id_interstitial_click_folder", "ca-app-pub-3940256099942544/1033173712"
+            resValue "string", "id_native_top_file", "ca-app-pub-3940256099942544/2247696110"
             resValue "string", "id_open_app", "ca-app-pub-3940256099942544/3419835294"
         }
 
@@ -30,9 +30,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "id_app_ad", "ca-app-pub-3940256099942544~3347511713"
-            resValue "string", "id_interstitial_splash", "ca-app-pub-3940256099942544/1033173712"
-            resValue "string", "id_interstitial_click_file", "ca-app-pub-3940256099942544/1033173712"
-            resValue "string", "id_native_top_list_file", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "id_interstitial_splash_screen", "ca-app-pub-3940256099942544/1033173712"
+            resValue "string", "id_interstitial_click_folder", "ca-app-pub-3940256099942544/1033173712"
+            resValue "string", "id_native_top_file", "ca-app-pub-3940256099942544/2247696110"
             resValue "string", "id_open_app", "ca-app-pub-3940256099942544/3419835294"
         }
     }
