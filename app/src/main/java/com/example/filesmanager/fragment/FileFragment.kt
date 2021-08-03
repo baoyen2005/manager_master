@@ -144,6 +144,8 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
                 return@setOnCloseListener false
             }
         }
+
+        loadAds()
         return view
     }
 
@@ -250,7 +252,7 @@ class FileFragment : Fragment(), FileAdapter.OnItemClickListener ,Toolbar.OnMenu
            countToShowAds ++
            countToShowFirebase++
 
-           loadAds()
+           frAds?.visibility = View.VISIBLE
 
            checkNativeds = true
            val arrayList = ArrayList<File>()
