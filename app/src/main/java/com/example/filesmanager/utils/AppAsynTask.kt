@@ -14,7 +14,7 @@ abstract class AppAsynTask(val context: Context): AsyncTask<Unit, Unit, ArrayLis
         val nonFilteredAppsTemp = ArrayList<App>()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val launcherApps = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
-            val profiles = launcherApps.profiles
+            val profiles =launcherApps.profiles
             for (userHandle in profiles) {
                 val apps = launcherApps.getActivityList(null, userHandle)
                 for (info in apps) {

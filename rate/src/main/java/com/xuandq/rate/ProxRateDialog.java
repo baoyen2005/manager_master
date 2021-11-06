@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -74,7 +75,7 @@ public class ProxRateDialog extends DialogFragment {
                         new androidx.appcompat.app.AlertDialog.Builder(context).create();
                 alertDialog.setTitle("Notify");
                 alertDialog.setMessage("Please select star !");
-                alertDialog.setButton(androidx.appcompat.app.AlertDialog.BUTTON_NEUTRAL, "OK",
+                alertDialog.setButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
@@ -86,23 +87,19 @@ public class ProxRateDialog extends DialogFragment {
                 androidx.appcompat.app.AlertDialog alertDialog = new androidx.appcompat.app.AlertDialog.Builder(context).create();
                 alertDialog.setTitle("Thanks!");
                 alertDialog.setMessage("Thank for rating");
-                alertDialog.setButton(androidx.appcompat.app.AlertDialog.BUTTON_NEUTRAL, "OK",
+                alertDialog.show();
+                mConfig.listener.onSubmitButtonClicked((int) ratingBar.getRating(), edComment.getText().toString());
+                alertDialog.setButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                             }
                         });
-                this.dismiss();
-                alertDialog.show();
-                mConfig.listener.onSubmitButtonClicked((int) ratingBar.getRating(), edComment.getText().toString());
-
-                // them
+                //alertDialog.show();
+                //alertDialog.dismiss();
                 bundle = new Bundle();
-
                 check = true;
             }
-
-
         });
 
         view.findViewById(R.id.layout_later).setOnClickListener(v -> {
